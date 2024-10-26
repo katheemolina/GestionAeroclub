@@ -82,8 +82,11 @@ function GestorAeronaves() {
   }, []);
 
   return (
-    <div className="alertaAeronavesContainer">
-      {loading ? <p>Cargando...</p> : aeronavesElements}
+    <div className="content">
+      <h1>Gestión de Aeronaves</h1>
+      <div className="alertaAeronavesContainer">
+        {loading ? <p>Cargando...</p> : aeronavesElements}
+      </div>
     </div>
   );
 }

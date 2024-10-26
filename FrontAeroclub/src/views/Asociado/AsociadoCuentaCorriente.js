@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import CuentaCorriente from '../../components/CuentaCorriente';
 import { apiCuentaCorriente } from '../../services/apiCuentaCorriente.ts';
-import "../../styles/background.css"
+import { apiUsuarios } from '../../services/apiUsuarios.ts';
+import { apiTransacciones } from '../../services/apiTransacciones.ts';
 
 function AsociadoCuentaCorriente() {
   const [movimientos, setMovimientos] = useState([]);
@@ -17,13 +18,29 @@ function AsociadoCuentaCorriente() {
       return null;
     }
   };
+  
+  const getTransacciones = async (id) => {
+    try {
+      const response = await apiTransacciones.getByUsuario(id);
+      return response; // Asegúrate de que `response` sea un número
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
+  
+  // const fetchData = async () => {
+  //   const saldo = await getSaldo(1); // Obtener el saldo
+  //   const nuevosMovimientos = [
+  //     { fecha: '2024-10-01', detalle: 'Vuelo', monto: saldo }, // Usa el saldo obtenido
+  //     { fecha: '2024-10-05', detalle: 'Pago de cuota', monto: saldo },
+  //   ];
+  //   setMovimientos(nuevosMovimientos); // Actualiza el estado con los nuevos movimientos
+  //   setLoading(false); // Cambia el estado de carga
+  // };
 
   const fetchData = async () => {
-    const saldo = await getSaldo(1); // Obtener el saldo
-    const nuevosMovimientos = [
-      { fecha: '2024-10-01', detalle: 'Vuelo', monto: saldo }, // Usa el saldo obtenido
-      { fecha: '2024-10-05', detalle: 'Pago de cuota', monto: 500 },
-    ];
+    const nuevosMovimientos = await getTransacciones(1); // Obtener el saldo
     setMovimientos(nuevosMovimientos); // Actualiza el estado con los nuevos movimientos
     setLoading(false); // Cambia el estado de carga
   };
@@ -36,8 +53,9 @@ function AsociadoCuentaCorriente() {
     return <div className="content"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
   }
   return (
-    <div className="background">
+    <div className="content">
       <h1>Cuenta Corriente</h1>
+      {console.log(movimientos)}
       <CuentaCorriente movimientos={movimientos} />
     </div>
   );

@@ -7,7 +7,7 @@ function CuentaCorriente({ movimientos }) {
       <ul>
         {movimientos.map((mov, index) => (
           <li key={index}>
-            {mov.fecha}: {mov.detalle} - ${mov.monto}
+            {mov.fecha} - {mov.motivo} - ${mov.monto}
           </li>
         ))}
       </ul>
