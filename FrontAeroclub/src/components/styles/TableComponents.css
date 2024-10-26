@@ -1,0 +1,36 @@
+.table-container {
+    margin-top: 20px; /* Espacio superior para separación */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Esconde el desbordamiento */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para efecto elevado */
+}
+
+.table {
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+    border-collapse: collapse; /* Combina bordes adyacentes */
+    background-color: #fff; /* Fondo blanco */
+}
+
+.table th,
+.table td {
+    padding: 12px 15px; /* Espaciado interno */
+    text-align: left; /* Alineación a la izquierda */
+    border-bottom: 1px solid #e0e0e0; /* Línea divisoria inferior */
+}
+
+.table th {
+    background-color: #974141; /* Color de fondo para los encabezados */
+    color: white; /* Texto en blanco */
+    font-weight: bold; /* Negrita para los encabezados */
+    text-transform: uppercase; /* Texto en mayúsculas */
+}
+
+.table tr:hover {
+    background-color:#E4E4E4; /* Color de fondo al pasar el ratón */
+}
+
+.table td {
+    color: #333; /* Color de texto para las celdas */
+}
+
+

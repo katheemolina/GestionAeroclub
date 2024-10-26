@@ -1,0 +1,66 @@
+.content {
+    width: 100%;
+    margin: 0;
+    padding: 4%;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #F5F5F5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  }
+  
+  .edit-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .form-row {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los campos */
+    margin-bottom: 15px; /* Espaciado entre filas */
+  }
+  
+  .edit-form label {
+    flex: 1; /* Ocupa el mismo espacio en la fila */
+    margin-right: 10px; /* Espaciado entre label */
+  }
+
+  .edit-form h2 {
+    margin-bottom: 15px; /* Espaciado inferior para separar del formulario */
+  }
+  
+  .edit-form label:last-child {
+    margin-right: 0; /* Sin margen derecho en el último label */
+  }
+  
+  .edit-form input {
+    width: calc(100% - 10px); /* Ajustar ancho para que quepa con el margen */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px; /* Espaciado entre label y input */
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center; /* Centrar el botón horizontalmente */
+    margin-top: 20px; /* Margen superior para separar del formulario */
+  }
+  
+  button {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
