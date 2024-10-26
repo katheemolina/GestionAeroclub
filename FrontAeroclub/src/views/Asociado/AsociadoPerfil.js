@@ -1,6 +1,7 @@
 import React from 'react';
 import CardComponent from '../../components/CardComponent'; // Asegúrate de importar el componente de tarjeta
 import "./Styles/AsociadoPerfil.css"
+import "../../styles/background.css"
 
 
 function AsociadoPerfil() {
@@ -13,7 +14,7 @@ function AsociadoPerfil() {
   };
 
   return (
-    <div className="content">
+    <div className="background">
       <h1>Perfil</h1>
       <CardComponent
         title={usuario.nombre}

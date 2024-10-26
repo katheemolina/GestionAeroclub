@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import CuentaCorriente from '../../components/CuentaCorriente';
 import { apiCuentaCorriente } from '../../services/apiCuentaCorriente.ts';
-import { apiUsuarios } from '../../services/apiUsuarios.ts';
+import "../../styles/background.css"
 
 function AsociadoCuentaCorriente() {
   const [movimientos, setMovimientos] = useState([]);
@@ -36,7 +36,7 @@ function AsociadoCuentaCorriente() {
     return <div className="content"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
   }
   return (
-    <div className="content">
+    <div className="background">
       <h1>Cuenta Corriente</h1>
       <CuentaCorriente movimientos={movimientos} />
     </div>

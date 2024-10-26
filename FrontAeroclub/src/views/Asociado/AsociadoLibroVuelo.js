@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles/background.css"
 
 function AsociadoLibroVuelo() {
   const vuelos = [
@@ -7,7 +8,7 @@ function AsociadoLibroVuelo() {
   ];
 
   return (
-    <div className="content">
+    <div className="background">
       <h1>Libro de Vuelo</h1>
       <ul>
         {vuelos.map((vuelo, index) => (

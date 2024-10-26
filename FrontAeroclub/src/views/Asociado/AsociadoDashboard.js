@@ -1,8 +1,9 @@
 import React from 'react';
 import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
+import "../../styles/background.css"
 
-function component({ nombre, apellido, saldo, horasVoladas, fechaVencimiento, licencias }) {
+function Dashboard({ nombre, apellido, saldo, horasVoladas, fechaVencimiento, licencias }) {
   // Configuración de columnas y datos de ejemplo para la tabla
   
   const columns = [
@@ -22,7 +23,7 @@ function component({ nombre, apellido, saldo, horasVoladas, fechaVencimiento, li
   
 
   return (
-    <div className="dashboard">
+    <div className="background">
       <header className="header">
         <h1>Kathy Molina</h1>
       </header>
