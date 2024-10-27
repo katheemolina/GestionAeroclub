@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { client } from "./api-backend";
+import { client } from "./api-backend.ts";
 const getTokenLocal = await localStorage.getItem("token");
 
 export const apiTransacciones =  {

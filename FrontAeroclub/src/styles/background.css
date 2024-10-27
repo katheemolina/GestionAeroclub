@@ -2,7 +2,8 @@
 
 /* Estilos generales */
 .background {
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     margin: 0;
     padding: 4%;
     font-family: 'Arial', sans-serif;
@@ -15,8 +16,11 @@
 /* Encabezados generales */
 .header h1 {
     font-size: 2em;
-    font-weight: bold;
-    margin: 0;
+    font-weight: 100;
+    margin-bottom: 1rem;
+    margin: 0;    
+    justify-self: center;
+
 }
 
 h3 {

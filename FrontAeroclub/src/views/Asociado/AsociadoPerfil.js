@@ -15,7 +15,9 @@ function AsociadoPerfil() {
 
   return (
     <div className="background">
-      <h1>Perfil</h1>
+      <header className="header">
+        <h1>Perfil</h1>
+      </header>
       <CardComponent
         title={usuario.nombre}
         subtitle="Información de Usuario"

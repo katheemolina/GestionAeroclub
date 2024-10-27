@@ -48,3 +48,31 @@ button {
 button:hover {
   background-color: rgba(169, 70, 70, 1);
 }
+
+.flex{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.flex h1{
+  margin-right: 2rem;
+}
+
+.header{
+  margin: 0;
+}
+
+.titulo-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.titulo-btn h1 {
+  margin-right: 1rem;
+}
