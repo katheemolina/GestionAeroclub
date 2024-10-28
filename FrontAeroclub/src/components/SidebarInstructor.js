@@ -1,17 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useRole } from '../context/RoleContext';
-
+import { useUser } from '../context/UserContext';
 
 
 function SidebarInstructor() {
   const  {role}  = useRole();
+  const  {user}  = useUser();
   return (
     <div className="sidebar-container">
         <div className="sidebar-header">
           <div className="sidebar-header-img"></div>
           <div className="sidebar-header-info">
-              <span>Nombre Apellido</span>
+              <span>{user ? user.name :"ApellidoNombre"}</span>
               <hr/>
               <span>Licencia - {role} </span>
           </div>

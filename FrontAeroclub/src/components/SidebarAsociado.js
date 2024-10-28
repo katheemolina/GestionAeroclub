@@ -1,17 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/sidebar.css'
+import { useUser} from '../context/UserContext'
 
 import { useRole } from '../context/RoleContext';
 
 function SidebarAsociado() {
+  const { user } = useUser()
   const  {role}  = useRole();
   return (
     <div className="sidebar-container">
         <div className="sidebar-header">
           <div className="sidebar-header-img"></div>
           <div className="sidebar-header-info">
-              <span>Nombre Apellido</span>
+              <span>{user ? user.name :"ApellidoNombre"}</span>
               <hr/>
               <span>Licencia - {role} </span>
           </div>

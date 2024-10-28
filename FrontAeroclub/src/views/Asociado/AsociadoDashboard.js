@@ -6,6 +6,8 @@ import "../../styles/background.css"
 function Dashboard({ nombre, apellido, saldo, horasVoladas, fechaVencimiento, licencias }) {
   // Configuración de columnas y datos de ejemplo para la tabla
   
+  
+
   const columns = [
     { header: 'Avión', accessor: 'avion' },
     { header: 'Último Vuelo', accessor: 'ultimoVuelo' },
