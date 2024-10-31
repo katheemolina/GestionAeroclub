@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/sidebar.css'
 import { useUser} from '../context/UserContext'
-
 import { useRole } from '../context/RoleContext';
+import Boton from './Button';
 
 function SidebarAsociado() {
   const { user } = useUser()
@@ -19,10 +19,11 @@ function SidebarAsociado() {
           </div>
         </div>
         <div className="sidebar-navbar">
-            <Link className="sidebar-navbar-link" to="/asociado/dashboard">Inicio</Link>
-            <Link className="sidebar-navbar-link" to="/asociado/perfil">Mi Perfil</Link>
-            <Link className="sidebar-navbar-link" to="/asociado/libro-vuelo">Libro de Vuelo</Link>
-            <Link className="sidebar-navbar-link" to="/asociado/cuenta-corriente">Cuenta Corriente</Link>
+            <Boton estilos="sidebar-navbar-link" ruta="/asociado/dashboard" texto="Inicio"/>
+            <Boton estilos="sidebar-navbar-link" ruta="/asociado/perfil" texto="Mi Perfil"/>
+            <Boton estilos="sidebar-navbar-link" ruta="/asociado/libro-vuelo" texto="Libro de Vuelo"/>
+            <Boton estilos="sidebar-navbar-link" ruta="/asociado/cuenta-corriente" texto="Cuenta Corriente"/>
+            <Boton estilos="sidebar-navbar-link" ruta="/asociado/cuenta-corriente" texto="Cerrar Sesion" logout={true}/>
         </div>
     </div>
   );

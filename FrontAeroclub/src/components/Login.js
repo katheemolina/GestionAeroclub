@@ -2,12 +2,13 @@ import { GoogleLogin } from '@react-oauth/google';
 import ObtenerDatosPostLogin from '../utils/obtenerDatosLogin';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { useUser } from '../context/UserContext';
+import { UserContext } from '../context/UserContext';
+
 
 
 export default function Login() {
+    const { setUser } = useContext(UserContext); 
     const navigate = useNavigate();
-    const { setUser } = useUser(); // Usa el hook para acceder a setUser
 
     function handleError() {
         console.log("login failed");

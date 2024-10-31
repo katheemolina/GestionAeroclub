@@ -80,7 +80,6 @@ function AsociadoLibroVuelo() {
         <header className="header">
           <h1>Libro de Vuelo</h1>
         </header>
-        <button>Agregar Vuelo</button>
       </div>
       <TableComponent columns={columns} data={data} />
     </div>
