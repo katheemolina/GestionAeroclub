@@ -20,7 +20,7 @@ const TableComponent = ({ columns, data }) => {
           </tr>
         ))}
       </tbody>
-    </table>
+    </table> 
   );
 };
 
