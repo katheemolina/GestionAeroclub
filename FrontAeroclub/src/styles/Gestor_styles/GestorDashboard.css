@@ -1,0 +1,113 @@
+.header{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contenedor-statbox{
+    display: flex;
+    width: 100%;
+}
+
+.statbox{
+    margin: 10px;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #dce1e7;
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statbox h3 {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.num-saldo{
+    font-size: 4em;
+    color: black;
+}
+
+.num-secundario{
+    font-size: 3em;
+    color: black;
+}
+
+.alertas-btn{
+    margin: 10px;
+    width: 160px;
+    background-color: #ddd;
+    border: 1px solid #dce1e7;
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gauge-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.gauge-box{
+    padding: 15px;
+    background-color: #ddd;
+    border-radius: 8px;
+    height: 300px;
+    width: 300px;
+}
+
+.gauge h3{
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.avion-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.avion-box{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #ddd;
+    border-radius: 8px;
+    height: 400px;
+    width: 500px;
+    position: relative;
+}
+
+.nombre-avion{
+    width: 100%;
+    position: absolute;
+    padding: 10px;
+    font-size: 1em;
+    color: #ffffff;
+    background-color: rgba(98, 98, 98, 0.396);
+}
+
+.imagen-avion{
+    background-color: rgb(58, 58, 58);
+    flex-grow: 1;
+    width: 100%;
+    
+}
+
+.tabla-avion{
+    width: 100%;
+}
+
+.tabla-avion th,
+.tabla-avion td{
+    padding: 10px;
+    border: 1px solid #000000;
+    text-align: left;
+}

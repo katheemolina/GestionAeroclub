@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/sidebar.css'
 import { useUser} from '../context/UserContext'
 import { useRole } from '../context/RoleContext';
+import Boton from './Button';
 
 function SidebarGestor() {
   const { user } = useUser()
@@ -17,12 +19,13 @@ function SidebarGestor() {
         </div>
       </div>
       <div className="sidebar-navbar">
-        <Link className="sidebar-navbar-link" to="/gestor/dashboard">Inicio</Link>
-        <Link className="sidebar-navbar-link" to="/gestor/vuelos">Vuelos</Link>
-        <Link className="sidebar-navbar-link" to="/gestor/cuenta-corriente">Cuenta Corriente</Link>
-        <Link className="sidebar-navbar-link" to="/gestor/asociados">Asociados</Link>
-        <Link className="sidebar-navbar-link" to="/gestor/tarifas">Tarifas</Link>
-        <Link className="sidebar-navbar-link" to="/gestor/aeronaves">Aeronaves</Link>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/dashboard" texto="Inicio"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/recibos" texto="Recibos"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/vuelos" texto="Vuelos"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/cuenta-corriente" texto="Cuenta Corriente"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/asociados" texto="Asociados"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/tarifas" texto="Tarifas"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/aeronaves" texto="Aeronaves"/>
       </div>
     </div>
   );
