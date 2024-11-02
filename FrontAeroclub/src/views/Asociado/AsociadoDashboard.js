@@ -1,54 +1,112 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
 import "../../styles/background.css"
 
-function Dashboard({ nombre, apellido, saldo, horasVoladas, fechaVencimiento, licencias }) {
-  // Configuración de columnas y datos de ejemplo para la tabla
-  
-  
+//importo servicios
+import {
+  obtenerDatosDelUsuario,
+  obtenerEstadoCMA,
+  obtenerLicenciasPorUsuario
+} from '../../services/usuariosApi';
+
+import {
+  obtenerSaldoCuentaCorrientePorUsuario
+} from '../../services/movimientosApi';
+
+import {
+  horasVoladasPorUsuario,
+  ultimosVuelosPorUsuario
+} from '../../services/vuelosApi';
+
+
+function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [saldo, setSaldo] = useState(0);
+  const [horasVoladas, setHorasVoladas] = useState(0);
+  const [cma, setCma] = useState('');
+  const [fechaVencimiento, setFechaVencimiento] = useState('');
+  const [data, setData] = useState([]);
+  const [licencias, setLicencias] = useState([]);
 
   const columns = [
-    { header: 'Avión', accessor: 'avion' },
-    { header: 'Último Vuelo', accessor: 'ultimoVuelo' },
-    { header: 'Adaptación', accessor: 'adaptacion' }
+    { header: 'Avión', accessor: 'matricula_aeronave' },
+    { header: 'Último Vuelo', accessor: 'fecha_vuelo' },
+    { header: 'Adaptación', accessor: 'Adaptacion' }
   ];
 
-  const data = [
-    { avion: 'Cessna 172', ultimoVuelo: '2024-10-01', adaptacion: 'Sí' },
-    { avion: 'Piper PA-28', ultimoVuelo: '2024-09-15', adaptacion: 'No' },
-    { avion: 'Beechcraft Bonanza', ultimoVuelo: '2024-08-10', adaptacion: 'Sí' }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener datos del usuario
+        const usuarioResponse = await obtenerDatosDelUsuario(idUsuario);
+        const usuario = usuarioResponse[0]; // Accedemos al primer objeto
+        setNombre(usuario.nombre);
+        setApellido(usuario.apellido);
+        
+        // Obtener saldo
+        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(idUsuario);
+        const saldoData = saldoResponse[0]; // Accedemos al primer objeto
+        setSaldo(saldoData.Saldo);
+        
+        // Obtener horas voladas
+        const horasResponse = await horasVoladasPorUsuario(idUsuario);
+        const horasData = horasResponse[0]; // Accedemos al primer objeto
+        setHorasVoladas(horasData.TotalHoras);
+        
+        // Obtener estado del CMA
+        const cmaResponse = await obtenerEstadoCMA(idUsuario);
+        const cmaData = cmaResponse[0]; // Accedemos al primer objeto
+        setCma(cmaData.estado);
+        setFechaVencimiento(cmaData.fecha_vencimiento_cma);
+        
+        // Obtener últimos vuelos
+        const vuelosResponse = await ultimosVuelosPorUsuario(idUsuario);
+        setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
 
-  const  cma = 'vigente'; 
-  const cmaClass = cma === 'vigente' ? 'cma-vigente' : 'cma-no-vigente';
-  
+        // Obtener licencias
+        const licenciasResponse = await obtenerLicenciasPorUsuario(idUsuario);
+        const formattedLicencias = licenciasResponse.map(licencia => (
+          { codigo: licencia.codigos_licencias, descripcion: licencia.descripcion }
+        ));
+        setLicencias(formattedLicencias); // Mapeamos para obtener solo la información necesaria
+
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    };
+
+    fetchData();
+  }, [idUsuario]);
+
+  const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   return (
     <div className="background">
       <header className="header">
-        <h1>Kathy Molina</h1>
+        <h1>{`${nombre} ${apellido}`}</h1>
       </header>
 
       <section className="stats-section">
         <div className="stat-box">
           <h3>Saldo</h3>
-          <p>$100000</p>
+          <p>${saldo}</p>
         </div>
         <div className="stat-box">
           <h3>Horas Voladas</h3>
-          <p>150</p>
+          <p>{horasVoladas}</p>
         </div>
       </section>
 
       <section className="stats-section">
-      <div className={`stat-box ${cmaClass}`}>
+        <div className={`stat-box ${cmaClass}`}>
           <h3>CMA</h3>
           <p>{cma}</p>
         </div>
         <div className="stat-box">
-          <h3>Horas Voladas</h3>
-          <p>150</p>
+          <h3>CMA - Fecha de vencimiento</h3>
+          <p>{fechaVencimiento}</p>
         </div>
       </section>
 
@@ -60,12 +118,9 @@ function Dashboard({ nombre, apellido, saldo, horasVoladas, fechaVencimiento, li
       <section className="licencias-section">
         <h3>Licencias</h3>
         <ul>
-          <li>SPL - Piloto de Planeador</li>
-          <li>PPL - Piloto Privado</li>
-          <li>CPL - Piloto Comercial</li>
-          <li>ATPL - Piloto de Transporte de Línea Aérea</li>
-          <li>FI - Instructor de vuelo</li>
-          <li>U/L - Piloto de Ul</li>
+          {licencias.map((licencia, index) => (
+            <li key={index}>{`${licencia.codigo} - ${licencia.descripcion}`}</li>
+          ))}
         </ul>
       </section>
     </div>
