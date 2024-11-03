@@ -1,79 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "../../styles/background.css"
 import "./Styles/AsociadoLibroVuelo.css"
 import TableComponent from "../../components/TableComponent"
+import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
 
-function AsociadoLibroVuelo() {
+function AsociadoLibroVuelo({ idUsuario = 3 }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
   const columns = [
     { header: 'Fecha', accessor: 'fecha' },
     { header: 'Origen', accessor: 'origen' },
     { header: 'Destino', accessor: 'destino' },
-    { header: 'Hora de Inicio', accessor: 'horaInicio' },
-    { header: 'Hora de Llegada', accessor: 'horaLlegada' },
-    { header: 'Tiempo de Vuelo', accessor: 'tiempoVuelo' },
+    { header: 'Hora de Inicio', accessor: 'hora_salida' },
+    { header: 'Hora de Llegada', accessor: 'hora_llegada' },
+    { header: 'Tiempo de Vuelo', accessor: 'tiempo_vuelo' },
     { header: 'Finalidad', accessor: 'finalidad' },
     { header: 'Matricula', accessor: 'matricula' },
     { header: 'Instruccion', accessor: 'instruccion' },
-    { header: 'Cant. Aterrizajes', accessor: 'cantAterrizajes' },
-    { header: 'Acciones', accessor: 'acciones' },
+    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' },
   ];
 
-  const data = [
-    {
-      fecha: '2024-10-03',
-      origen: 'Aeropuerto E',
-      destino: 'Aeropuerto F',
-      horaInicio: '09:15',
-      horaLlegada: '10:15',
-      tiempoVuelo: '1h',
-      finalidad: 'Turismo',
-      matricula: 'LMN789',
-      instruccion: 'Piloto C',
-      cantAterrizajes: 1,
-      acciones: ''
-    },
-    {
-      fecha: '2024-10-04',
-      origen: 'Aeropuerto G',
-      destino: 'Aeropuerto H',
-      horaInicio: '16:00',
-      horaLlegada: '17:00',
-      tiempoVuelo: '1h',
-      finalidad: 'Entrenamiento',
-      matricula: 'DEF012',
-      instruccion: 'Piloto D',
-      cantAterrizajes: 2,
-      acciones: ''
-    },
-    {
-      fecha: '2024-10-05',
-      origen: 'Aeropuerto I',
-      destino: 'Aeropuerto J',
-      horaInicio: '08:30',
-      horaLlegada: '09:30',
-      tiempoVuelo: '1h',
-      finalidad: 'Mantenimiento',
-      matricula: 'GHI345',
-      instruccion: 'Piloto E',
-      cantAterrizajes: 1,
-      acciones: ''
-    },
-    {
-      fecha: '2024-10-06',
-      origen: 'Aeropuerto K',
-      destino: 'Aeropuerto L',
-      horaInicio: '13:45',
-      horaLlegada: '14:45',
-      tiempoVuelo: '1h',
-      finalidad: 'Viaje de ocio',
-      matricula: 'JKL678',
-      instruccion: 'Piloto F',
-      cantAterrizajes: 1,
-      acciones: ''
-    }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener vuelos
+        const vuelosResponse = await obtenerLibroDeVueloPorUsuario(idUsuario);
+        setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
 
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+      setLoading(false); // Cambia el estado de carga
+    };
 
+    fetchData();
+  }, [idUsuario]);
+
+  if (loading) {
+    return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
+  }
   return (
     <div className="background">
       <div className="titulo-btn">

@@ -29,6 +29,7 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
   const [fechaVencimiento, setFechaVencimiento] = useState('');
   const [data, setData] = useState([]);
   const [licencias, setLicencias] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const columns = [
     { header: 'Avión', accessor: 'matricula_aeronave' },
@@ -75,6 +76,7 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
+      setLoading(false); // Cambia el estado de carga
     };
 
     fetchData();
@@ -82,6 +84,9 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
 
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
+  if (loading) {
+    return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
+  }
   return (
     <div className="background">
       <header className="header">

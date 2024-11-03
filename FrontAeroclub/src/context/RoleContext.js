@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState } from 'react';
 const RoleContext = createContext();
 
 export const RoleProvider = ({ children }) => {
-  //const [role, setRole] = useState('asociado'); 
-  const [role, setRole] = useState('gestor'); 
+    const [role, setRole] = useState('asociado'); 
+  //const [role, setRole] = useState('gestor'); 
   //const [role, setRole] = useState('instructor'); 
 
   return (
