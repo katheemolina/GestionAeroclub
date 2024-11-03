@@ -25,6 +25,7 @@ function SidebarInstructor() {
             <Boton estilos="sidebar-navbar-link" ruta="/instructor/libro-vuelo" texto="Libro de Vuelo"/>
             <Boton estilos="sidebar-navbar-link" ruta="/instructor/cuenta-corriente" texto="Cuenta Corriente"/>
             <Boton estilos="sidebar-navbar-link" ruta="/instructor/asociados" texto="Asociados"/>
+            <Boton estilos="sidebar-navbar-link" texto="Cerrar Sesion" logout={true}/>
         </div>
     </div>
   );

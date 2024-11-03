@@ -26,6 +26,7 @@ function SidebarGestor() {
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/asociados" texto="Asociados"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/tarifas" texto="Tarifas"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/aeronaves" texto="Aeronaves"/>
+        <Boton estilos="sidebar-navbar-link" texto="Cerrar Sesion" logout={true}/>
       </div>
     </div>
   );
