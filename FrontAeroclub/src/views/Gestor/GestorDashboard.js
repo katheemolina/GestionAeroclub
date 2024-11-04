@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/Gestor_styles/GestorDashboard.css'
+import './Styles/GestorDashboard.css'
 
 function GestorDashboard() {
   return (

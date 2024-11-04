@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './Styles/GestorTarifas.css'
 function GestorTarifas() {
   const tarifas = [
     { concepto: 'Vuelo', monto: 1500 },

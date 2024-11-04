@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
-import "./Styles/AsociadoDashboards.css"
-import "../../styles/background.css"
+import "./Styles/InstructorDashboards.css"
 
 //importo servicios
 import {

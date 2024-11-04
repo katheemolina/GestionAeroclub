@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
-import '../../styles/Gestor_styles/GestorRecibos.css'
+import './Styles/GestorAsociados.css'
 import { listarAsociados } from '../../services/usuariosApi';
 import FiltroComponent from '../../components/FiltroComponent';
 

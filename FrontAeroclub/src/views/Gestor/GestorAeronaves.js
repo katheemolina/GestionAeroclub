@@ -1,6 +1,7 @@
 import { apiAeronaves } from "../../services/apiAeronaves.ts";
 import { useEffect, useState } from "react";
 import React from 'react';
+import './Styles/GestorAeronaves.css'
 
 function GestorAeronaves() {
   const [aeronavesElements, setAeronavesElements] = useState(null);

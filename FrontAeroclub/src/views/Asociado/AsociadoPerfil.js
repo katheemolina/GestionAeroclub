@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CardComponent from '../../components/CardComponent'; // Asegúrate de importar el componente de tarjeta
 import "./Styles/AsociadoPerfil.css"
-import "../../styles/background.css"
 import { obtenerDatosDelUsuario } from '../../services/usuariosApi';
-
 
 function AsociadoPerfil({ idUsuario = 1 }) {
   const [loading, setLoading] = useState(true);

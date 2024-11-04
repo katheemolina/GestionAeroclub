@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
-import '../../styles/Gestor_styles/GestorRecibos.css'
+import './Styles/GestorRecibos.css'
 import { obtenerTodosLosRecibos } from '../../services/recibosApi';
 import FiltroComponent from '../../components/FiltroComponent';
 

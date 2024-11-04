@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
 import { obtenerTodosLosItinerarios } from '../../services/vuelosApi';
 import FiltroComponent from '../../components/FiltroComponent';
+import './Styles/GestorVuelos.css'
 
 function GestorVuelos({idUsuario = 1}){
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "../../styles/background.css"
-import "./Styles/AsociadoLibroVuelo.css"
+import "./Styles/InstructorLibroVuelo.css"
 import TableComponent from "../../components/TableComponent"
 import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
 

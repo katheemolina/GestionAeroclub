@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "../../styles/background.css"
+import "./Styles/InstructorCuentaCorriente.css"
 import TableComponent from "../../components/TableComponent"
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "../../styles/background.css"
+import "./Styles/AsociadoCuentaCorriente.css"
 import TableComponent from "../../components/TableComponent"
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 import FiltroComponent from '../../components/FiltroComponent';
