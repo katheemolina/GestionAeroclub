@@ -22,7 +22,7 @@ function SidebarGestor() {
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/dashboard" texto="Inicio"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/recibos" texto="Recibos"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/vuelos" texto="Vuelos"/>
-        <Boton estilos="sidebar-navbar-link" ruta="/gestor/cuenta-corriente" texto="Cuenta Corriente"/>
+        <Boton estilos="sidebar-navbar-link" ruta="/gestor/cuenta-corriente" texto="Todos Los  Movimientos"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/asociados" texto="Asociados"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/tarifas" texto="Tarifas"/>
         <Boton estilos="sidebar-navbar-link" ruta="/gestor/aeronaves" texto="Aeronaves"/>

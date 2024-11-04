@@ -26,6 +26,8 @@ import InstructorPerfil from './views/Instructor/InstructorPerfil';
 import { useRole } from './context/RoleContext';
 import './styles/Index.css';
 import Inicio from './Inicio';
+import Bienvenida from './views/Bienvenida';
+import Sidebar from './components/Sidebar';
 
 
 
@@ -52,10 +54,7 @@ function App() {
       </Routes>
 
       <div className="app-container">
-        {/* Sidebar condicional según el rol */}
-        {role === 'asociado' && <SidebarAsociado />}
-        {role === 'gestor' && <SidebarGestor />}
-        {role === 'instructor' && <SidebarInstructor />}
+        <Sidebar />
         {/* Rutas según el rol */}
         <div className="layout">
           <Routes>
@@ -82,12 +81,7 @@ function App() {
             <Route path="/instructor/asociados" element={<ProtectedRoute component={InstructorAsociados} allowedRoles={['instructor']} />} />
 
             {/* Ruta por defecto */}
-            <Route path="/Bienvenido" element={
-              <>
-                <h1>Bienvenido al Sistema de Gestión de Aeroclubes</h1>
-                <p>Selecciona tu rol para acceder a las funcionalidades correspondientes.</p>
-              </>
-            } />
+            <Route path="/Bienvenido" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
           </Routes>
         </div>
       </div>

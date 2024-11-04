@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "../../styles/background.css"
 import TableComponent from "../../components/TableComponent"
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
+import FiltroComponent from '../../components/FiltroComponent';
 
 function AsociadoCuentaCorriente({ idUsuario = 1 }) {
   const [data, setData] = useState([]);
@@ -36,6 +37,11 @@ function AsociadoCuentaCorriente({ idUsuario = 1 }) {
       <header className="header">
         <h1>Cuenta Corriente</h1>
       </header>
+      <FiltroComponent
+        mostrarUsuario={false} // Cambia a false si no quieres mostrar el filtro de usuario
+        mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
+        onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
+      }}/>
       <TableComponent columns={columns} data={data} />
     </div>
   );

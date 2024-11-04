@@ -3,6 +3,7 @@ import "../../styles/background.css"
 import "./Styles/AsociadoLibroVuelo.css"
 import TableComponent from "../../components/TableComponent"
 import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
+import FiltroComponent from '../../components/FiltroComponent';
 
 function AsociadoLibroVuelo({ idUsuario = 3 }) {
   const [data, setData] = useState([]);
@@ -47,6 +48,11 @@ function AsociadoLibroVuelo({ idUsuario = 3 }) {
           <h1>Libro de Vuelo</h1>
         </header>
       </div>
+      <FiltroComponent
+        mostrarUsuario={false} // Cambia a false si no quieres mostrar el filtro de usuario
+        mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
+        onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
+      }}/>
       <TableComponent columns={columns} data={data} />
     </div>
   );

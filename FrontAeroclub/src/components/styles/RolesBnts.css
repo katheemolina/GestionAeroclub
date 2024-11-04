@@ -1,0 +1,13 @@
+.botones-por-rol{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+.botones-por-rol>button{
+    border: solid;
+    font-size: small;
+    padding: 0.2rem;
+}

@@ -1,11 +1,15 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const RoleContext = createContext();
 
 export const RoleProvider = ({ children }) => {
-    const [role, setRole] = useState('asociado'); 
-  //const [role, setRole] = useState('gestor'); 
-  //const [role, setRole] = useState('instructor'); 
+  // Inicializa el rol desde localStorage o usa 'asociado' como valor por defecto
+  const [role, setRole] = useState(localStorage.getItem('role') || 'asociado');
+
+  // Actualiza localStorage cuando el rol cambia
+  useEffect(() => {
+    localStorage.setItem('role', role);
+  }, [role]);
 
   return (
     <RoleContext.Provider value={{ role, setRole }}>

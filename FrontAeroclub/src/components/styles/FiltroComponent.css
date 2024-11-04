@@ -1,0 +1,17 @@
+.filtrar-dropdown{
+    padding: 10px 25px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(187, 187, 187);
+    flex-grow: 3;
+}
+
+.fecha-campo{
+    padding: 10px 25px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(187, 187, 187);
+    flex-grow: 2;
+}

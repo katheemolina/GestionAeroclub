@@ -1,70 +1,53 @@
-import React from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import '../../styles/Instructor_styles/InstructorLibroVuelo.css';
-import TableComponent from '../../components/TableComponent';
+import React, { useEffect, useState } from 'react';
+import "../../styles/background.css"
+import "./Styles/AsociadoLibroVuelo.css"
+import TableComponent from "../../components/TableComponent"
+import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
 
-function InstructorLibroVuelo() {
-
-  /*
-  const [vuelos, setVuelos] = useState([]); // Estado para almacenar datos de vuelos
-
-  useEffect(() => {
-    const fetchVuelos = async () => {
-      try {
-        const response = await fetch('URL_DEL_BACKEND'); // Reemplaza con la URL real
-        const data = await response.json();
-        setVuelos(data); // Actualizamos el estado con los datos obtenidos
-      } catch (error) {
-        console.error('Error fetching vuelos:', error);
-      }
-    };
-
-    fetchVuelos();
-  }, []);
-  */
-
-
-  //Ejemplos:
-  const vuelos = [
-    { fecha: '2024-09-25', origen: 'Lincoln', destino: 'C. Sarmiento', inicio: '08:00', llegada: '10:00', tiempo: '2h', finalidad: 'Travesía', matricula: 'LV-C172', instruccion: 'Si', aterrizajes: 3 },
-    { fecha: '2024-09-28', origen: 'Arrecifes', destino: 'Lincoln', inicio: '09:30', llegada: '12:00', tiempo: '2.5h', finalidad: 'Bautismo', matricula: 'LV-PA28', instruccion: 'No', aterrizajes: 1 },
-  ];
-
+function InstructorLibroVuelo({ idUsuario = 3 }) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
   const columns = [
     { header: 'Fecha', accessor: 'fecha' },
     { header: 'Origen', accessor: 'origen' },
     { header: 'Destino', accessor: 'destino' },
-    { header: 'Hr inicio', accessor: 'inicio' },
-    { header: 'Hr llegada', accessor: 'llegada' },
-    { header: 'Hs de vuelo', accessor: 'tiempo' },
+    { header: 'Hora de Inicio', accessor: 'hora_salida' },
+    { header: 'Hora de Llegada', accessor: 'hora_llegada' },
+    { header: 'Tiempo de Vuelo', accessor: 'tiempo_vuelo' },
     { header: 'Finalidad', accessor: 'finalidad' },
-    { header: 'Matrícula', accessor: 'matricula' },
-    { header: 'Instrucción', accessor: 'instruccion' },
-    { header: 'Nº aterrizajes', accessor: 'aterrizajes' },
-    { header: 'Acciones', accessor: 'acciones' },
+    { header: 'Matricula', accessor: 'matricula' },
+    { header: 'Instruccion', accessor: 'instruccion' },
+    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' },
   ];
 
-  const vuelosConAcciones = vuelos.map((vuelo) => ({
-    ...vuelo,
-    acciones: (
-      <>
-        <button className="icon-btn edit-btn">
-          <FaEdit />
-        </button>
-        <button className="icon-btn delete-btn">
-          <FaTrash />
-        </button>
-      </>
-    ),
-  }));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener vuelos
+        const vuelosResponse = await obtenerLibroDeVueloPorUsuario(idUsuario);
+        setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
 
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+      setLoading(false); // Cambia el estado de carga
+    };
+
+    fetchData();
+  }, [idUsuario]);
+
+  if (loading) {
+    return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
+  }
   return (
-    <div className="libro-vuelo-container">
-      <div className="libro-vuelo-header">
-        <h1>Libro de Vuelo</h1>
-        <button className="agregar-vuelo-btn">Agregar vuelo</button>
+    <div className="background">
+      <div className="titulo-btn">
+        <header className="header">
+          <h1>Libro de Vuelo</h1>
+        </header>
       </div>
-      <TableComponent columns={columns} data={vuelosConAcciones} />
+      <TableComponent columns={columns} data={data} />
     </div>
   );
 }
