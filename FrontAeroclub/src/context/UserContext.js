@@ -7,17 +7,18 @@ export const UserContext = createContext();
 export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
+    const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
 
     useEffect(() => {
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user));
         } else {
-          localStorage.removeItem('user');
+            localStorage.removeItem('user');
         }
-      }, [user]);
+    }, [user]);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId }}>
             {children}
         </UserContext.Provider>
     );
@@ -27,3 +28,8 @@ export function UserProvider({ children }) {
 export function useUser() {
     return useContext(UserContext);
 }
+
+/*
+ Para usar el IdUsuario obtenido desde la base
+ const { usuarioId } = useUser(); 
+ */
