@@ -26,7 +26,7 @@ function SidebarAsociado() {
             <Boton estilos="sidebar-navbar-link" ruta="/asociado/perfil" texto="Mi Perfil"/>
             <Boton estilos="sidebar-navbar-link" ruta="/asociado/libro-vuelo" texto="Libro de Vuelo"/>
             <Boton estilos="sidebar-navbar-link" ruta="/asociado/cuenta-corriente" texto="Cuenta Corriente"/>
-            <Boton estilos="sidebar-navbar-link" ruta="/asociado/cuenta-corriente" texto="Cerrar Sesion" logout={true}/>
+            <Boton estilos="sidebar-navbar-link" texto="Cerrar Sesion" logout={true}/>
         </div>
     </div>
   );
