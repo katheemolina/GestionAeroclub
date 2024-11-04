@@ -53,7 +53,7 @@ function FiltroComponent({ mostrarUsuario = true, mostrarFecha = true, onBuscar 
 
       {/* Botón de búsqueda */}
       <div className="button-container">
-        <button onClick={handleBuscar}>Buscar</button>
+        <button onClick={handleBuscar} className="boton-busqueda">Buscar</button>
       </div>
     </div>
   );
