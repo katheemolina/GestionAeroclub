@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Styles/GestorRecibos.css'
 import estiloTabla from '../../styles/estiloTabla';
 import { obtenerTodosLosRecibos } from '../../services/recibosApi';
@@ -43,7 +44,7 @@ function GestorRecibos({idUsuario = 0}){
         <header className="header">
           <h1>Recibos</h1>
         </header>
-        <div className="nuevo-recibo-btn"> Nuevo </div>
+        <Link to="/gestor/recibos/nuevo" className="nuevo-recibo-btn">Nuevo</Link>
         <FiltroComponent
         mostrarUsuario={true} // Cambia a false si no quieres mostrar el filtro de usuario
         mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha

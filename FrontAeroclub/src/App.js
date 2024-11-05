@@ -16,6 +16,8 @@ import GestorAsociados from './views/Gestor/GestorAsociados';
 import GestorVuelos from './views/Gestor/GestorVuelos';
 import GestorTarifas from './views/Gestor/GestorTarifas';
 import GestorAeronaves from './views/Gestor/GestorAeronaves';
+
+import GestorNuevoRecibo from './views/Gestor/GestorNuevoRecibo';
 // Instructores
 import InstructorAsociados from './views/Instructor/InstructorAsociados';
 import InstructorCuentaCorriente from './views/Instructor/InstructorCuentaCorriente';
@@ -58,13 +60,13 @@ function App() {
         {/* Rutas según el rol */}
         <div className="layout">
           <Routes>
-            {/* Rutas para Asociado */}
+          {/* Rutas para Asociado */}
             <Route path="/asociado/dashboard" element={<ProtectedRoute component={AsociadoDashboard} allowedRoles={['asociado']} />} />
             <Route path="/asociado/cuenta-corriente" element={<ProtectedRoute component={AsociadoCuentaCorriente} allowedRoles={['asociado']} />} />
             <Route path="/asociado/libro-vuelo" element={<ProtectedRoute component={AsociadoLibroVuelo} allowedRoles={['asociado']} />} />
             <Route path="/asociado/perfil" element={<ProtectedRoute component={AsociadoPerfil} allowedRoles={['asociado']} />} />
             
-            {/* Rutas para Gestor */}
+          {/* Rutas para Gestor */}
             <Route path="/gestor/dashboard" element={<ProtectedRoute component={GestorDashboard} allowedRoles={['gestor']} />} />
             <Route path="/gestor/recibos" element={<ProtectedRoute component={GestorRecibos} allowedRoles={['gestor']} />} />
             <Route path="/gestor/vuelos" element={<ProtectedRoute component={GestorVuelos} allowedRoles={['gestor']} />} />
@@ -72,15 +74,17 @@ function App() {
             <Route path="/gestor/asociados" element={<ProtectedRoute component={GestorAsociados} allowedRoles={['gestor']} />} />
             <Route path="/gestor/tarifas" element={<ProtectedRoute component={GestorTarifas} allowedRoles={['gestor']} />} />
             <Route path="/gestor/aeronaves" element={<ProtectedRoute component={GestorAeronaves} allowedRoles={['gestor']} />} />
+              {/* ruta nuevo recibo */}
+            <Route path="/gestor/recibos/nuevo" element={<ProtectedRoute component={GestorNuevoRecibo} allowedRoles={['gestor']} />} />
             
-            {/* Rutas para Instructor */}
+          {/* Rutas para Instructor */}
             <Route path="/instructor/dashboard" element={<ProtectedRoute component={InstructorDashboard} allowedRoles={['instructor']} />} />
             <Route path="/instructor/perfil" element={<ProtectedRoute component={InstructorPerfil} allowedRoles={['instructor']} />} />
             <Route path="/instructor/libro-vuelo" element={<ProtectedRoute component={InstructorLibroVuelo} allowedRoles={['instructor']} />} />
             <Route path="/instructor/cuenta-corriente" element={<ProtectedRoute component={InstructorCuentaCorriente} allowedRoles={['instructor']} />} />
             <Route path="/instructor/asociados" element={<ProtectedRoute component={InstructorAsociados} allowedRoles={['instructor']} />} />
 
-            {/* Ruta por defecto */}
+          {/* Ruta por defecto */}
             <Route path="/Bienvenido" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
           </Routes>
         </div>
