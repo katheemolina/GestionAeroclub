@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from "../../components/TableComponent"
 import './Styles/GestorRecibos.css'
+import estiloTabla from '../../styles/estiloTabla';
 import { obtenerTodosLosRecibos } from '../../services/recibosApi';
 import FiltroComponent from '../../components/FiltroComponent';
+import DataTable from 'react-data-table-component';
 
 function GestorRecibos({idUsuario = 0}){
 
     const columns = [
-        { header: 'Fecha', accessor: 'fecha' },
-        { header: 'Usuario', accessor: 'usuario' },
-        { header: 'N° Recibo', accessor: 'numero_recibo' },
-        { header: 'Tipo de Recibo', accessor: 'tipo_recibo' },
-        { header: 'Importe', accessor: 'importe' }
-      ];
+      { name: 'Fecha', selector: row => row.fecha, sortable: true },
+      { name: 'Usuario', selector: row => row.Usuario, sortable: true },
+      { name: 'N° Recibo', selector: row => row.numero_recibo, sortable: true },
+      { name: 'Tipo de Recibo', selector: row => row.tipo_recibo, sortable: true },
+      { name: 'Importe', selector: row => row.importe, sortable: true },
+    ]
 
+    
+    
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
         const fetchData = async () => {
         try {
-            // Obtener vuelos
+            // Obtener recibos
             const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
             setData(recibosResponse);
         } catch (error) {
@@ -46,7 +49,17 @@ function GestorRecibos({idUsuario = 0}){
         mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
         onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
         }}/>
-        <TableComponent columns={columns} data={data} />
+        
+        <DataTable  
+          columns={columns} 
+          data={data} 
+          pagination 
+          highlightOnHover 
+          striped 
+          selectableRows
+          paginationPerPage={15}
+          customStyles={estiloTabla}
+        />
       </div>
     );
 }

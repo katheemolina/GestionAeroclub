@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import "./Styles/InstructorCuentaCorriente.css"
-import TableComponent from "../../components/TableComponent"
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
+import DataTable from 'react-data-table-component';
+import estiloTabla from '../../styles/estiloTabla';
 
 function AsociadoCuentaCorriente({ idUsuario = 1 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const columns = [
-    { header: 'Fecha', accessor: 'fecha' },
-    { header: 'Concepto', accessor: 'descripcion_completa' },
-    { header: 'Importe', accessor: 'importe' }
+    { name: 'Fecha', selector: row => row.fecha, sortable: true },
+    { name: 'Concepto', selector: row => row.descripcion_completa, sortable: true },
+    { name: 'Importe', selector: row => row.importe, sortable: true },
   ];
 
   useEffect(() => {
@@ -36,7 +37,15 @@ function AsociadoCuentaCorriente({ idUsuario = 1 }) {
       <header className="header">
         <h1>Cuenta Corriente</h1>
       </header>
-      <TableComponent columns={columns} data={data} />
+      <DataTable  
+          columns={columns} 
+          data={data} 
+          pagination 
+          highlightOnHover 
+          striped 
+          paginationPerPage={15}
+          customStyles={estiloTabla}
+        />
     </div>
   );
 }

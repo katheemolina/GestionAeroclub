@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from "../../components/TableComponent";
 import './Styles/InstructorAsociados.css';
 import { listarAsociados } from '../../services/usuariosApi';
 import FiltroComponent from '../../components/FiltroComponent';
+import DataTable from 'react-data-table-component';
+import estiloTabla from '../../styles/estiloTabla';
 
 function InstructorAsociados({idUsuario = 0}){
+    
     const columns = [
-        { header: 'Usuario', accessor: 'usuario' },
-        { header: 'Fecha Vencimiento CMA', accessor: 'fecha_vencimiento_cma' },
-        { header: 'Estado CC', accessor: 'estado_cuenta_corriente' },
-        { header: 'Saldo', accessor: 'saldo' }
-      ];
+      { name: 'Usuario', selector: row => row.usuario, sortable: true },
+      { name: 'Fecha Vencimiento CMA', selector: row => row.fecha_vencimiento_cma, sortable: true },
+      { name: 'Estado CC', selector: row => row.estado_cuenta_corriente, sortable: true },
+      { name: 'Saldo', selector: row => row.saldo, sortable: true },
+    ]
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,7 +45,16 @@ function InstructorAsociados({idUsuario = 0}){
         mostrarFecha={false} // Cambia a false si no quieres mostrar los filtros de fecha
         onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
         }}/>
-        <TableComponent columns={columns} data={data} />
+        <DataTable  
+          columns={columns} 
+          data={data} 
+          pagination 
+          highlightOnHover 
+          striped 
+          selectableRows
+          paginationPerPage={15}
+          customStyles={estiloTabla}
+        />
       </div>
     );
 }

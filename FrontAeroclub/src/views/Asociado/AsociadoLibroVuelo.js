@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import "./Styles/AsociadoLibroVuelo.css"
-import TableComponent from "../../components/TableComponent"
 import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
 import FiltroComponent from '../../components/FiltroComponent';
+import DataTable from 'react-data-table-component';
+import estiloTabla from '../../styles/estiloTabla';
 
 function AsociadoLibroVuelo({ idUsuario = 3 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const columns = [
-    { header: 'Fecha', accessor: 'fecha' },
-    { header: 'Origen', accessor: 'origen' },
-    { header: 'Destino', accessor: 'destino' },
-    { header: 'Hora de Inicio', accessor: 'hora_salida' },
-    { header: 'Hora de Llegada', accessor: 'hora_llegada' },
-    { header: 'Tiempo de Vuelo', accessor: 'tiempo_vuelo' },
-    { header: 'Finalidad', accessor: 'finalidad' },
-    { header: 'Matricula', accessor: 'matricula' },
+    { name: 'Fecha', selector: row => row.fecha, sortable: true },
+    { name: 'Origen', selector: row => row.origen, sortable: true },
+    { name: 'Destino', selector: row => row.destino, sortable: true },
+    { name: 'Hora de Inicio', selector: row => row.hora_salida, sortable: true },
+    { name: 'Hora de Llegada', selector: row => row.hora_llegada, sortable: true },
+    { name: 'Tiempo de Vuelo', selector: row => row.tiempo_vuelo, sortable: true },
+    { name: 'Finalidad', selector: row => row.finalidad, sortable: true },
+    { name: 'Matricula', selector: row => row.matricula, sortable: true },
     { header: 'Instruccion', accessor: 'instruccion' },
-    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' },
+    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' }
   ];
 
   useEffect(() => {
@@ -52,7 +53,15 @@ function AsociadoLibroVuelo({ idUsuario = 3 }) {
         mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
         onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
       }}/>
-      <TableComponent columns={columns} data={data} />
+      <DataTable  
+          columns={columns} 
+          data={data} 
+          pagination 
+          highlightOnHover 
+          striped 
+          paginationPerPage={15}
+          customStyles={estiloTabla}
+        />
     </div>
   );
 }

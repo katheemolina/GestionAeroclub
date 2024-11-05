@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import "../../styles/background.css"
 import "./Styles/InstructorLibroVuelo.css"
-import TableComponent from "../../components/TableComponent"
+import TableComponent from "../../components/TableComponent";
 import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
+import DataTable from 'react-data-table-component';
+import estiloTabla from '../../styles/estiloTabla';
 
 function InstructorLibroVuelo({ idUsuario = 3 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const columns = [
-    { header: 'Fecha', accessor: 'fecha' },
-    { header: 'Origen', accessor: 'origen' },
-    { header: 'Destino', accessor: 'destino' },
-    { header: 'Hora de Inicio', accessor: 'hora_salida' },
-    { header: 'Hora de Llegada', accessor: 'hora_llegada' },
-    { header: 'Tiempo de Vuelo', accessor: 'tiempo_vuelo' },
-    { header: 'Finalidad', accessor: 'finalidad' },
-    { header: 'Matricula', accessor: 'matricula' },
+    { name: 'Fecha', selector: row => row.fecha, sortable: true },
+    { name: 'Origen', selector: row => row.origen, sortable: true },
+    { name: 'Destino', selector: row => row.destino, sortable: true },
+    { name: 'Hora de Inicio', selector: row => row.hora_salida, sortable: true },
+    { name: 'Hora de Llegada', selector: row => row.hora_llegada, sortable: true },
+    { name: 'Tiempo de Vuelo', selector: row => row.tiempo_vuelo, sortable: true },
+    { name: 'Finalidad', selector: row => row.finalidad, sortable: true },
+    { name: 'Matricula', selector: row => row.matricula, sortable: true },
     { header: 'Instruccion', accessor: 'instruccion' },
-    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' },
+    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' }
   ];
 
   useEffect(() => {
@@ -47,7 +49,15 @@ function InstructorLibroVuelo({ idUsuario = 3 }) {
           <h1>Libro de Vuelo</h1>
         </header>
       </div>
-      <TableComponent columns={columns} data={data} />
+      <DataTable  
+          columns={columns} 
+          data={data} 
+          pagination 
+          highlightOnHover 
+          striped 
+          paginationPerPage={15}
+          customStyles={estiloTabla}
+        />
     </div>
   );
 }
