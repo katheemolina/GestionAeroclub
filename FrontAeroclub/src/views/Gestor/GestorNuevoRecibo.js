@@ -13,26 +13,42 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         'Instructor 3'
         // Agrega los nombres de los instructores aquí
     ]);
-    const handleItinerariosChange = (e) => {
-        const value = parseInt(e.target.value, 10);
-        setItinerarios(value);
-
-        // Ajustar el número de itinerarios en `itinerarioData`
+    
+    const handleItinerariosChange = (e) => { // Declara la función que maneja cambios en el número de itinerarios.
+        const value = parseInt(e.target.value, 10); // Convierte el valor del campo de entrada a un número entero.
+        setItinerarios(value); // Actualiza el estado `itinerarios` al nuevo valor.
+    
+        // Ajusta el número de itinerarios en `itinerarioData`.
         setItinerarioData((prev) => 
-            Array.from({ length: value }, (_, i) => prev[i] || { origen: '', destino: '', horaSalida: '', horaLlegada: '' })
+            Array.from({ length: value }, (_, i) => // Crea un nuevo array con longitud `value`.
+                prev[i] || { // Si existe un itinerario anterior en `prev` en la posición `i`.
+                    origen: '', // Si no, crea un nuevo objeto con valores vacíos.
+                    destino: '',
+                    horaSalida: '',
+                    horaLlegada: ''
+                }
+            )
         );
     };
 
-    const handleItinerarioChange = (index, field, value) => {
-        setItinerarioData((prev) => 
-            prev.map((itinerario, i) => i === index ? { ...itinerario, [field]: value } : itinerario)
+    const handleItinerarioChange = (index, field, value) => { // Declara la función que maneja cambios en un itinerario específico.
+        setItinerarioData((prev) => // Actualiza el estado `itinerarioData`.
+            prev.map((itinerario, i) => // Mapea sobre los itinerarios existentes en `prev`.
+                i === index ? { // Si el índice actual coincide con el índice del itinerario que se está cambiando.
+                    ...itinerario, // Crea un nuevo objeto itinerario con los datos existentes.
+                    [field]: value // Actualiza solo el campo específico con el nuevo valor.
+                } : itinerario // Si no coincide, devuelve el itinerario sin cambios.
+            )
         );
     };
 
-    const handleCheckboxChange = (index) => {
-        setItinerarioData((prev) => 
-            prev.map((itinerario, i) => 
-                i === index ? { ...itinerario, instruccion: !itinerario.instruccion } : itinerario
+    const handleCheckboxChange = (index) => { // Declara la función que maneja el cambio de estado del checkbox.
+        setItinerarioData((prev) => // Actualiza el estado `itinerarioData`.
+            prev.map((itinerario, i) => // Mapea sobre los itinerarios existentes en `prev`.
+                i === index ? { // Si el índice actual coincide con el índice del itinerario que se está cambiando.
+                    ...itinerario, // Crea un nuevo objeto itinerario con los datos existentes.
+                    instruccion: !itinerario.instruccion // Invierte el estado del campo `instruccion`.
+                } : itinerario // Si no coincide, devuelve el itinerario sin cambios.
             )
         );
     };
@@ -139,7 +155,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             {/* Renderiza la lista de instructores si el checkbox de instrucción está marcado */}
             {itinerarioData[index]?.instruccion && (
                 <div className="form-group">
-                    <label className="label-recibo">Selecc. Instructor:</label>
+                    <label className="label-recibo">Selecc. instructor:</label>
                     <select className="input-recibo">
                         {instructores.map((instructor, i) => (
                             <option key={i} value={instructor}>{instructor}</option>
