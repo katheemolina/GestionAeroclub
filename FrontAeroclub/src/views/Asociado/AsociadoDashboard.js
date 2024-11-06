@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
+import { Link } from 'react-router-dom';
 
 //importo servicios
 import {
@@ -93,15 +94,19 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
       </header>
 
       <section className="stats-section">
+      <Link to="/asociado/cuenta-corriente" style={{ textDecoration: 'none', flex: 1 }}>
         <div className="stat-box">
           <h3>Saldo</h3>
           <p>${saldo}</p>
         </div>
+      </Link>
+      <Link to="/asociado/libro-vuelo" style={{ textDecoration: 'none', flex: 1 }}>
         <div className="stat-box">
           <h3>Horas Voladas</h3>
           <p>{horasVoladas}</p>
         </div>
-      </section>
+      </Link>
+    </section>
 
       <section className="stats-section">
         <div className={`stat-box ${cmaClass}`}>
