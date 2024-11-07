@@ -1,0 +1,120 @@
+
+.p-datatable {
+    border-radius: 10px; /* Adjust the value as needed */
+    overflow: hidden; /* Prevents content from overflowing rounded corners */
+    margin-top: 5px;
+}
+
+.p-datatable-thead{
+    background-color: rgba(169, 70, 70, 1);
+    color: white;
+    text-align: center;
+}
+
+.p-datatable-thead tr th{
+    padding: 12px 12px;
+}
+
+.p-datatable-tbody td{ 
+    padding: 12px 12px;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.p-datatable-tbody tr:nth-child(odd) td {
+    background-color: #e8e8e8; /* Change to the color you prefer */
+}
+
+.p-paginator{
+    background-color: #e8e8e8;
+    padding: 10px;
+}
+
+.p-paginator-page,
+.p-paginator-first,
+.p-paginator-prev,
+.p-paginator-next,
+.p-paginator-last {
+  margin-right: 8px; /* Adjust this value as needed */
+  background-color: rgba(169, 70, 70, 1);
+  cursor: pointer;
+}
+
+.p-paginator-page{
+    padding-top: 11px;
+    padding-bottom: 11px;
+}
+
+.p-dropdown{
+    box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    gap: 5px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.p-dropdown-panel{
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+}
+
+.p-dropdown-item{
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 3px;
+    background-color: rgba(169, 70, 70, 1);
+    color: white;
+}
+
+.p-dropdown-item:hover{
+    background-color: #777;
+}
+
+.p-sortable-column-icon {
+    margin-left: 8px; /* Add space to the left of the sorting icon */
+}
+
+
+/* Estilado del botón de filtros y su menú */
+
+.p-column-filter {
+    background-color: rgb(143, 53, 53);
+    border-radius: 5px;        
+    border: none;              
+    padding: 4px 4px;         
+    font-size: 14px;   
+}
+
+.p-column-filter .p-inputtext {
+    background-color: #f9f9f9;      /* Change background color */
+    border: 1px solid #ccc;         /* Add border */                   /* Add padding inside the input */
+    font-size: 14px;                 /* Change font size */
+    border-radius: 4px;             /* Add rounded corners */
+    width: 100%;                     /* Ensure the input takes full width of the dropdown */
+}
+
+.p-column-filter-menu-button {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.p-column-filter-overlay{
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+}
+
+.p-column-filter-row-item{
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 3px;
+    background-color: rgba(169, 70, 70, 1);
+    color: white;
+}

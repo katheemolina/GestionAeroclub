@@ -1,6 +1,7 @@
+
 .header{
     text-align: center;
-    margin-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 .button-container{
@@ -47,3 +48,4 @@
     background-color: rgb(187, 187, 187);
     flex-grow: 2;
 }
+

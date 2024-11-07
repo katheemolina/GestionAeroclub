@@ -4,7 +4,7 @@
 }
 
 .sidebar-container{
-    min-width: 250px;
+    min-width: 400px; /* min-width: 250px;*/
     width: 20%;
     background-color: #E4E4E4;
     box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4);
