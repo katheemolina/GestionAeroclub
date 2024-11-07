@@ -12,7 +12,8 @@ function Boton({ texto, ruta, estilos, logout }) {
       // Si logout es true, remuevo al usuario del LS y navego a la pagina del login
       setUser(null);
       localStorage.removeItem('user');
-      navigate('/'); 
+      localStorage.removeItem('role');
+      navigate('/InicioSesion'); 
     } else if (ruta) {
     // Si no es logout, entonces es para navegar (por ahora)
       navigate(ruta);

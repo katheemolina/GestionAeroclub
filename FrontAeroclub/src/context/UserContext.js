@@ -8,6 +8,7 @@ export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
+    const isAuthenticated = !!user;
 
     useEffect(() => {
         if (user) {
@@ -18,7 +19,7 @@ export function UserProvider({ children }) {
     }, [user]);
 
     return (
-        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId }}>
+        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId, isAuthenticated}}>
             {children}
         </UserContext.Provider>
     );

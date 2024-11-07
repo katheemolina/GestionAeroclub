@@ -26,6 +26,7 @@ import InstructorLibroVuelo from './views/Instructor/InstructorLibroVuelo';
 import InstructorPerfil from './views/Instructor/InstructorPerfil';
 
 import { useRole } from './context/RoleContext';
+import { useUser } from './context/UserContext';
 import './styles/Index.css';
 import Inicio from './Inicio';
 import Bienvenida from './views/Bienvenida';
@@ -37,11 +38,18 @@ import Sidebar from './components/Sidebar';
 
 function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
   const { role } = useRole();
+  const { user, isAuthenticated } = useUser();
 
-  return allowedRoles.includes(role) ? (
+  if (!isAuthenticated) {
+    // Si no está autenticado, redirige al login
+    return <Navigate to="/InicioSesion" replace />;
+}
+
+
+  return allowedRoles.includes(role) & isAuthenticated ? (
     <Component {...rest} />
   ) : (
-    <Navigate to="/" replace />
+    <Navigate to="/Bienvenido" replace />
   );
 }
 
@@ -52,7 +60,7 @@ function App() {
       {/* <Navbar /> */}
 
       <Routes>
-      <Route path="/" element={<ProtectedRoute component={Inicio} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
+      <Route path="/InicioSesion" element={<Inicio />} />
       </Routes>
 
       <div className="app-container">
@@ -84,8 +92,8 @@ function App() {
             <Route path="/instructor/cuenta-corriente" element={<ProtectedRoute component={InstructorCuentaCorriente} allowedRoles={['instructor']} />} />
             <Route path="/instructor/asociados" element={<ProtectedRoute component={InstructorAsociados} allowedRoles={['instructor']} />} />
 
-          {/* Ruta por defecto */}
-            <Route path="/Bienvenido" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
+          
+            <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
           </Routes>
         </div>
       </div>
