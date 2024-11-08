@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './styles/FiltroComponent.css';
 
 function FiltroComponent({ mostrarUsuario = true, mostrarFecha = true, onBuscar }) {
+  const hoy = new Date().toISOString().split("T")[0]; // Para iniciar los filtros con la fecha actual
   const [usuario, setUsuario] = useState('');
-  const [fechaDesde, setFechaDesde] = useState('');
-  const [fechaHasta, setFechaHasta] = useState('');
+  const [fechaDesde, setFechaDesde] = useState(hoy);
+  const [fechaHasta, setFechaHasta] = useState(hoy);
 
   const handleBuscar = () => {
     // Ejecutar la función de búsqueda pasada como prop

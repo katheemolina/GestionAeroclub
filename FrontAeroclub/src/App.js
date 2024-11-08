@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import SidebarAsociado from './components/SidebarAsociado';
 import SidebarGestor from './components/SidebarGestor';
 import SidebarInstructor from './components/SidebarInstructor';
+import './utils/primeReactConfig';
 // Asociados
 import AsociadoDashboard from './views/Asociado/AsociadoDashboard';
 import AsociadoCuentaCorriente from './views/Asociado/AsociadoCuentaCorriente';
