@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi'; // Import the API functions
-import './Styles/GestorTarifas.css'
+import '../../styles/datatable-style.css'; //Estilado para la tabla
 
 const TarifaCrud = () => {
     const [tarifas, setTarifas] = useState([]);
@@ -76,15 +76,22 @@ const TarifaCrud = () => {
     };
 
     return (
-        <div className="crud-demo">
-            <Button label="Agregar Tarifa" icon="pi pi-plus" onClick={handleAdd} />
-            <DataTable value={tarifas} paginator rows={10} rowsPerPageOptions={[5, 10, 25]} style={{ width: '100%' }} >
+        <div className="background">
+        <header className="header">
+        <h1>Tarifas</h1>
+        </header>
+            <Button label="Agregar Tarifa" onClick={handleAdd} />
+            <DataTable 
+              value={tarifas} 
+              paginator rows={10} 
+              rowsPerPageOptions={[5, 10, 25]} 
+              style={{ width: '100%' }} >
                 <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
                 <Column header="Acciones" body={(rowData) => (
                     <>
-                        <Button icon="pi pi-pencil" onClick={() => handleEdit(rowData)} />
+                        <Button className="editar" label="Editar Tarifa" onClick={() => handleEdit(rowData)} />
                     </>
                 )}></Column>
             </DataTable>
