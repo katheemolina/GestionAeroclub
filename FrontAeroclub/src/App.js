@@ -1,8 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';  // Cambiado Switch a Routes y Redirect a Navigate
-import SidebarAsociado from './components/SidebarAsociado';
-import SidebarGestor from './components/SidebarGestor';
-import SidebarInstructor from './components/SidebarInstructor';
 import './utils/primeReactConfig';
 // Asociados
 import AsociadoDashboard from './views/Asociado/AsociadoDashboard';
@@ -17,8 +14,9 @@ import GestorAsociados from './views/Gestor/GestorAsociados';
 import GestorVuelos from './views/Gestor/GestorVuelos';
 import GestorTarifas from './views/Gestor/GestorTarifas';
 import GestorAeronaves from './views/Gestor/GestorAeronaves';
-
+import GestorAsociadoDashboard from './views/Gestor/GestorAsociadoDashboard';
 import GestorNuevoRecibo from './views/Gestor/GestorNuevoRecibo';
+
 // Instructores
 import InstructorAsociados from './views/Instructor/InstructorAsociados';
 import InstructorCuentaCorriente from './views/Instructor/InstructorCuentaCorriente';
@@ -80,6 +78,7 @@ function App() {
             
           {/* Rutas para Gestor */}
             <Route path="/gestor/dashboard" element={<ProtectedRoute component={GestorDashboard} allowedRoles={['gestor']} />} />
+            <Route path="/gestor/dashboardAsociado" element={<ProtectedRoute component={GestorAsociadoDashboard} allowedRoles={['gestor']} />} />
             <Route path="/gestor/recibos" element={<ProtectedRoute component={GestorRecibos} allowedRoles={['gestor']} />} />
             <Route path="/gestor/vuelos" element={<ProtectedRoute component={GestorVuelos} allowedRoles={['gestor']} />} />
             <Route path="/gestor/cuenta-corriente" element={<ProtectedRoute component={GestorCuentaCorriente} allowedRoles={['gestor']} />} />

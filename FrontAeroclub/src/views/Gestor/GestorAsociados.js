@@ -8,9 +8,12 @@ import { listarAsociados, actualizarEstadoAsociado } from '../../services/usuari
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import './Styles/GestorAeronaves.css';
+import './Styles/GestorAsociados.css';
+import { useNavigate } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
 
 const GestorAsociados  = () => {
+    const navigate = useNavigate();
     const [asociados, setAsociados] = useState([]);
     const [asociadosDialog, setAsociadosDialog] = useState(false);
     const [asocicadosData, setAsociadosData] = useState({
@@ -52,7 +55,13 @@ const GestorAsociados  = () => {
         setAsociadosDialog(true);
     };
 
-   
+    // Función para manejar la redirección cuando se hace clic en el botón
+    const handleGoToDetails = (user) => {
+        navigate('/gestor/dashboardAsociado', {
+          state: { user }  // Aquí pasamos el objeto 'user' como estado
+        });
+      };
+      
     return (
         <div className="background">
             <header className="header">
@@ -68,15 +77,24 @@ const GestorAsociados  = () => {
                 <Column field="estado_cuenta_corriente" header="Estado Cuenta Corriente"></Column>
                 <Column field="saldo" header="Saldo"></Column>
                 <Column field="estado" header="Estado"></Column>
-                <Column header="Acciones" body={(rowData) => (
-                    <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                        <EditIcon />
-                    </IconButton>
-                )}></Column>
+                <Column header="Acciones"
+                        body={(rowData) => (
+                            <div className='acciones'>
+                            {/* Botón de editar */}
+                            <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
+                                <EditIcon />
+                            </IconButton>
+
+                            {/* Botón de detalles */}
+                            <IconButton color="primary" aria-label="view-details" onClick={() => handleGoToDetails(rowData.id_usuario)}>
+                                <AccountCircleIcon />
+                            </IconButton>
+                            </div>
+                        )}
+                        />
             </DataTable>
 
             <Dialog header={isEdit ? 'Actualizar Estado Asociado' : 'Agregar Aeronave'} visible={asociadosDialog} onHide={() => setAsociadosDialog(false)}>
-                
                     <div className="p-field">
                         <label htmlFor="estado">Estado</label>
                         <InputText
@@ -85,7 +103,6 @@ const GestorAsociados  = () => {
                             onChange={(e) => setAsociadosData({ ...asocicadosData, estado: e.target.value })}
                             placeholder="Estado"
                         />
-                    
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAsociadosDialog(false)} />
                         <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
