@@ -1,37 +1,59 @@
 const API_URL = 'http://localhost:8000/api';
 
-// Función para obtener las horas voladas por un usuario
-export const horasVoladasPorUsuario = async (idUsuario) => {
-    const response = await fetch(`${API_URL}/vuelos/${idUsuario}/horasVoladas`);
-    if (!response.ok) {
-        throw new Error('Error al obtener las horas voladas');
+// Función para obtener todas las aeronaves
+export const obtenerAeronaves = async () => {
+    try {
+        const response = await fetch(`${API_URL}/aeronaves`);
+        if (!response.ok) {
+            throw new Error('Error al obtener las aeronaves');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
-    return response.json();
 };
 
-// Función para obtener los últimos vuelos de un usuario
-export const ultimosVuelosPorUsuario = async (idUsuario) => {
-    const response = await fetch(`${API_URL}/vuelos/${idUsuario}/ultimosVuelos`);
-    if (!response.ok) {
-        throw new Error('Error al obtener los últimos vuelos');
+// Función para insertar una nueva aeronave
+export const insertarAeronave = async (Data) => {
+    try {
+        const response = await fetch(`${API_URL}/aeronaves`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Data),
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error al insertar la aeronave');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
-    return response.json();
 };
 
-// Función para obtener el libro de vuelo de un usuario
-export const obtenerLibroDeVueloPorUsuario = async (idUsuario) => {
-    const response = await fetch(`${API_URL}/vuelos/${idUsuario}/libroVuelo`);
-    if (!response.ok) {
-        throw new Error('Error al obtener el libro de vuelo');
-    }
-    return response.json();
-};
+// Función para actualizar una aeronave existente
+export const actualizarAeronave = async (id, Data) => {
+    try {
+        const response = await fetch(`${API_URL}/aeronaves/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Data),
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error al actualizar la aeronave');
+        }
 
-//Funcion para obtener todos los itinerarios
-export const obtenerTodosLosItinerarios = async () => {
-    const response = await fetch(`${API_URL}/itinerarios`);
-    if (!response.ok) {
-        throw new Error('Error al obtener todos los itinerarios');
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
-    return response.json();
 };

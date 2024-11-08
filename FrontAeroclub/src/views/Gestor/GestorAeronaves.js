@@ -1,95 +1,190 @@
-import { apiAeronaves } from "../../services/apiAeronaves.ts";
-import { useEffect, useState } from "react";
-import React from 'react';
-import './Styles/GestorAeronaves.css'
+import React, { useState, useEffect } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { Dialog } from 'primereact/dialog';
+import { obtenerAeronaves, insertarAeronave, actualizarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
+import '../../styles/datatable-style.css';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import './Styles/GestorAeronaves.css';
 
-function GestorAeronaves() {
-  const [aeronavesElements, setAeronavesElements] = useState(null);
-  const [loading, setLoading] = useState(true);
+const AeronaveCrud = () => {
+    const [aeronaves, setAeronaves] = useState([]);
+    const [aeronaveDialog, setAeronaveDialog] = useState(false);
+    const [aeronaveData, setAeronaveData] = useState({
+        marca: '',
+        modelo: '',
+        matricula: '',
+        potencia: '',
+        clase: '',
+        fecha_adquisicion: '',
+        consumo_por_hora: '',
+        estado: 'activo',
+    });
+    const [isEdit, setIsEdit] = useState(false);
 
-  async function fetchAeronaves() {
-    setLoading(true);
-    try {
-      const aeronaves = await apiAeronaves.get();
-      console.log(aeronaves); // Verifica la respuesta de la API
+    // Fetch aeronaves data from the API
+    const fetchAeronaves = async () => {
+        try {
+            const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
+            setAeronaves(data);
+        } catch (error) {
+            console.error('Error fetching aeronaves:', error);
+        }
+    };
 
-      // Verifica que la respuesta sea un arreglo
-      if (!Array.isArray(aeronaves)) {
-        throw new Error("Se esperaba un arreglo");
-      }
+    useEffect(() => {
+        fetchAeronaves();
+    }, []);
 
-      const elements = (
-        <div className="mostrarAeronavesContainer">
-          {aeronaves.map((aeronave) => (
-            <article key={aeronave.id_aeronaves} id="tarjetaAeronave">
-              <div className="nombreAeronave">
-                <img alt="" />
-                <div>
-                  <h2>{aeronave.modelo}</h2>
-                  <p>{aeronave.matricula}</p>
+    // Handle adding or updating aeronave
+    const handleSave = async () => {
+        try {
+            if (isEdit) {
+                await actualizarAeronave(aeronaveData.id_aeronave, aeronaveData);
+            } else {
+                await insertarAeronave(aeronaveData);
+            }
+            setAeronaveDialog(false);
+            fetchAeronaves(); // Refresh the list
+        } catch (error) {
+            console.error('Error saving aeronave:', error);
+        }
+    };
+
+    // Handle edit
+    const handleEdit = (aeronave) => {
+        setAeronaveData(aeronave);
+        setIsEdit(true);
+        setAeronaveDialog(true);
+    };
+
+    // Handle add new aeronave
+    const handleAdd = () => {
+        setAeronaveData({
+            marca: '',
+            modelo: '',
+            matricula: '',
+            potencia: '',
+            clase: '',
+            fecha_adquisicion: '',
+            consumo_por_hora: '',
+            estado: 'activo',
+        });
+        setIsEdit(false);
+        setAeronaveDialog(true);
+    };
+
+    // Column definitions
+    const consumoTemplate = (rowData) => {
+        return <span>{rowData.consumo_por_hora} L/hr</span>;
+    };
+
+    const dateTemplate = (rowData) => {
+        return <span>{rowData.fecha_adquisicion}</span>;
+    };
+
+    return (
+        <div className="background">
+            <header className="header">
+                <h1>Aeronaves</h1>
+            </header>
+            <Button className="nuevo" label="Agregar Aeronave" onClick={handleAdd} />
+            <DataTable 
+                value={aeronaves} 
+                paginator rows={10} 
+                rowsPerPageOptions={[5, 10, 25]} 
+                style={{ width: '100%' }} >
+                <Column field="marca" header="Marca"></Column>
+                <Column field="modelo" header="Modelo"></Column>
+                <Column field="matricula" header="Matrícula"></Column>
+                <Column field="potencia" header="Potencia (HP)"></Column>
+                <Column field="clase" header="Clase"></Column>
+                <Column field="fecha_adquisicion" header="Fecha Adquisición" body={dateTemplate}></Column>
+                <Column field="consumo_por_hora" header="Consumo por Hora" body={consumoTemplate}></Column>
+                <Column field="estado" header="Estado"></Column>
+                <Column header="Acciones" body={(rowData) => (
+                    <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
+                        <EditIcon />
+                    </IconButton>
+                )}></Column>
+            </DataTable>
+
+            <Dialog header={isEdit ? 'Actualizar Aeronave' : 'Agregar Aeronave'} visible={aeronaveDialog} onHide={() => setAeronaveDialog(false)}>
+                <div className="p-fluid">
+                    <div className="p-field">
+                        <label htmlFor="marca">Marca</label>
+                        <InputText
+                            id="marca"
+                            value={aeronaveData.marca}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, marca: e.target.value })}
+                            placeholder="Marca"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="modelo">Modelo</label>
+                        <InputText
+                            id="modelo"
+                            value={aeronaveData.modelo}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, modelo: e.target.value })}
+                            placeholder="Modelo"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="matricula">Matrícula</label>
+                        <InputText
+                            id="matricula"
+                            value={aeronaveData.matricula}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, matricula: e.target.value })}
+                            placeholder="Matrícula"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="potencia">Potencia (HP)</label>
+                        <InputText
+                            id="potencia"
+                            value={aeronaveData.potencia}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, potencia: e.target.value })}
+                            placeholder="Potencia"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="clase">Clase</label>
+                        <InputText
+                            id="clase"
+                            value={aeronaveData.clase}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, clase: e.target.value })}
+                            placeholder="Clase"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="fecha_adquisicion">Fecha de Adquisición</label>
+                        <InputText
+                            id="fecha_adquisicion"
+                            value={aeronaveData.fecha_adquisicion}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, fecha_adquisicion: e.target.value })}
+                            placeholder="Fecha de Adquisición"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="consumo_por_hora">Consumo por Hora (L/hr)</label>
+                        <InputText
+                            id="consumo_por_hora"
+                            value={aeronaveData.consumo_por_hora}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, consumo_por_hora: e.target.value })}
+                            placeholder="Consumo por Hora"
+                        />
+                    </div>
+                    <div className="p-d-flex p-jc-end">
+                        <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAeronaveDialog(false)} />
+                        <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
+                    </div>
                 </div>
-                <div className="estado">
-                  <h4 style={{ backgroundColor: backgroundColor(aeronave.estados_aeronaves_id) }}>
-                    {estado(aeronave.estados_aeronaves_id)}
-                  </h4>
-                </div>
-              </div>
-            </article>
-          ))}
+            </Dialog>
         </div>
-      );
+    );
+};
 
-      setAeronavesElements(elements);
-    } catch (error) {
-      console.error("Error al cargar aeronaves:", error);
-      setAeronavesElements(<div>Error al cargar aeronaves</div>); // Manejo del estado de error
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function estado(estadoId) {
-    switch (estadoId) {
-      case 1:
-        return "Habilitado";
-      case 2:
-        return "Deshabilitado";
-      case 3:
-        return "En mantenimiento";
-      case 4:
-        return "Fuera de servicio";
-      default:
-        return "Desconocido";
-    }
-  }
-
-  function backgroundColor(estadoId) {
-    switch (estadoId) {
-      case 1:
-        return "var(--verdeSemaforo)";
-      case 2:
-        return "var(--rojoSemaforo)";
-      case 3:
-        return "var(--amarilloSemaforo)";
-      case 4:
-        return "var(--gris)";
-      default:
-        return "var(--gris)";
-    }
-  }
-
-  useEffect(() => {
-    fetchAeronaves();
-  }, []);
-
-  return (
-    <div className="content">
-      <h1>Gestión de Aeronaves</h1>
-      <div className="alertaAeronavesContainer">
-        {loading ? <p>Cargando...</p> : aeronavesElements}
-      </div>
-    </div>
-  );
-}
-
-export default GestorAeronaves;
+export default AeronaveCrud;
