@@ -47,7 +47,7 @@ function Sidebar() {
         <div className="sidebar-header-info">
           <span>{user ? user.name : 'ApellidoNombre'}</span>
           <hr />
-          <span>Licencia - {role}</span>
+          {role.toUpperCase()}
         </div>
         <BotonesPorRol rol={role} /> {/* Botones para cambiar el rol */}
       </div>
