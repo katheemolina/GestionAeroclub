@@ -1,26 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import "./Styles/AsociadoLibroVuelo.css"
 import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
-import FiltroComponent from '../../components/FiltroComponent';
-import DataTable from 'react-data-table-component';
-import estiloTabla from '../../styles/estiloTabla';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 function AsociadoLibroVuelo({ idUsuario = 3 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  const columns = [
-    { name: 'Fecha', selector: row => row.fecha, sortable: true },
-    { name: 'Origen', selector: row => row.origen, sortable: true },
-    { name: 'Destino', selector: row => row.destino, sortable: true },
-    { name: 'Hora de Inicio', selector: row => row.hora_salida, sortable: true },
-    { name: 'Hora de Llegada', selector: row => row.hora_llegada, sortable: true },
-    { name: 'Tiempo de Vuelo', selector: row => row.tiempo_vuelo, sortable: true },
-    { name: 'Finalidad', selector: row => row.finalidad, sortable: true },
-    { name: 'Matricula', selector: row => row.matricula, sortable: true },
-    { header: 'Instruccion', accessor: 'instruccion' },
-    { header: 'Cant. Aterrizajes', accessor: 'aterrizajes' }
-  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,20 +34,26 @@ function AsociadoLibroVuelo({ idUsuario = 3 }) {
           <h1>Libro de Vuelo</h1>
         </header>
       </div>
-      <FiltroComponent
-        mostrarUsuario={false} // Cambia a false si no quieres mostrar el filtro de usuario
-        mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
-        onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
-      }}/>
-      <DataTable  
-          columns={columns} 
-          data={data} 
-          pagination 
-          highlightOnHover 
-          striped 
-          paginationPerPage={15}
-          customStyles={estiloTabla}
-        />
+      <DataTable 
+        value={data} 
+        paginator rows={15} 
+        rowsPerPageOptions={[10, 15, 25, 50]} 
+        removableSort 
+        filterDisplay="row"
+        scrollable
+        scrollHeight="800px"
+        >
+        <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false}  ></Column>
+        <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="hora_salida" header="Salida" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="hora_llegada" header="Llegada" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="finalidad" header="Finalidad" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="matricula" header="Matricula" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="aterrizajes" header="Aterrizajes" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+      </DataTable>
     </div>
   );
 }

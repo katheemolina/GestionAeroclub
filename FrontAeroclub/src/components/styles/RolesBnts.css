@@ -1,3 +1,7 @@
+.menu-desplegable {
+    place-items: center;
+}
+
 .botones-por-rol{
     display: flex;
     align-items: center;
@@ -9,5 +13,9 @@
 .botones-por-rol>button{
     border: solid;
     font-size: small;
-    padding: 0.2rem;
+    padding: 0.1rem;
+}
+
+.opcion-boton{
+    font-size: 14px;
 }

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import './Styles/GestorRecibos.css'
 import { obtenerTodosLosRecibos } from '../../services/recibosApi';
-import FiltroComponent from '../../components/FiltroComponent';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -32,19 +30,10 @@ function GestorRecibos({idUsuario = 0}){
   }
   return (
     <div className="background">
-      
       <header className="header">
         <h1>Recibos</h1>
       </header>
-
-      
-      {/* <Link to="/gestor/recibos/nuevo" className="nuevo-recibo-btn">Nuevo</Link>
-      <FiltroComponent
-      mostrarUsuario={true} // Cambia a false si no quieres mostrar el filtro de usuario
-      mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
-      onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
-      }}/> */}
-      
+      {console.log(data)}
       <DataTable 
         value={data} 
         paginator rows={15} 
@@ -58,6 +47,7 @@ function GestorRecibos({idUsuario = 0}){
         <Column field="usuario" header="Usuario" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="numero_recibo" header="N° Recibo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="tipo_recibo" header="Tipo de recibo" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} ></Column>
+        <Column field="estado" header="Estado" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} ></Column>
         <Column field="importe" header="importe" sortable filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} ></Column>
       </DataTable>
       
