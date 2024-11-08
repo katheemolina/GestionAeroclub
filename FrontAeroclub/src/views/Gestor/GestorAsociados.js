@@ -1,63 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import './Styles/GestorAsociados.css'
-import { listarAsociados } from '../../services/usuariosApi';
-import FiltroComponent from '../../components/FiltroComponent';
-import DataTable from 'react-data-table-component';
-import estiloTabla from '../../styles/estiloTabla';
+import React, { useState, useEffect } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { Dialog } from 'primereact/dialog';
+import { listarAsociados, actualizarEstadoAsociado } from '../../services/usuariosApi';
+import '../../styles/datatable-style.css';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import './Styles/GestorAeronaves.css';
 
-function GestorAsociados({idUsuario = 0}){
+const GestorAsociados  = () => {
+    const [asociados, setAsociados] = useState([]);
+    const [asociadosDialog, setAsociadosDialog] = useState(false);
+    const [asocicadosData, setAsociadosData] = useState({
+        estado: ''
+    });
+    const [isEdit, setIsEdit] = useState(false);
 
-    const columns = [
-      { name: 'Usuario', selector: row => row.usuario, sortable: true },
-      { name: 'Fecha Vencimiento CMA', selector: row => row.fecha_vencimiento_cma, sortable: true },
-      { name: 'Estado CC', selector: row => row.estado_cuenta_corriente, sortable: true },
-      { name: 'Saldo', selector: row => row.saldo, sortable: true },
-    ]
-
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    
-    useEffect(() => {
-        const fetchData = async () => {
+    // Fetch aeronaves data from the API
+    const fetchAsociados = async () => {
         try {
-            // Obtener vuelos
-            const asociadosResponse = await listarAsociados(idUsuario);
-            setData(asociadosResponse);
+            const data = await listarAsociados(); // Asumiendo que ya es el array de aeronaves
+            setAsociados(data);
         } catch (error) {
-            console.error("Error al obtener datos:", error);
+            console.error('Error fetching aeronaves:', error);
         }
-        setLoading(false); // Cambia el estado de carga
-        };
+    };
 
-        fetchData();
-    }, [idUsuario]);
-    
-    if (loading) {
-        return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
-    }
+    useEffect(() => {
+        fetchAsociados();
+    }, []);
+
+    // Handle adding or updating aeronave
+    const handleSave = async () => {
+        try {
+            if (isEdit) {
+                await actualizarEstadoAsociado(asocicadosData.id_usuario, asocicadosData);
+            } 
+            setAsociadosDialog(false);
+            fetchAsociados(); // Refresh the list
+        } catch (error) {
+            console.error('Error saving aeronave:', error);
+        }
+    };
+
+    // Handle edit
+    const handleEdit = (asociados) => {
+        setAsociadosData(asociados);
+        setIsEdit(true);
+        setAsociadosDialog(true);
+    };
+
+   
     return (
         <div className="background">
-        <header className="header">
-          <h1>Asociados</h1>
-        </header>
-        <FiltroComponent
-        mostrarUsuario={true} // Cambia a false si no quieres mostrar el filtro de usuario
-        mostrarFecha={false} // Cambia a false si no quieres mostrar los filtros de fecha
-        onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
-        }}/>
-        <DataTable  
-          columns={columns} 
-          data={data} 
-          pagination 
-          highlightOnHover 
-          striped 
-          selectableRows
-          paginationPerPage={15}
-          customStyles={estiloTabla}
-        />
-      </div>
-      
-    );
-}
+            <header className="header">
+                <h1>Asociados</h1>
+            </header>
+            <DataTable 
+                value={asociados} 
+                paginator rows={10} 
+                rowsPerPageOptions={[5, 10, 25]} 
+                style={{ width: '100%' }} >
+                <Column field="usuario" header="Usuario"></Column>
+                <Column field="fecha_vencimiento_cma" header="Fecha Vencimiento CMA"></Column>
+                <Column field="estado_cuenta_corriente" header="Estado Cuenta Corriente"></Column>
+                <Column field="saldo" header="Saldo"></Column>
+                <Column field="estado" header="Estado"></Column>
+                <Column header="Acciones" body={(rowData) => (
+                    <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
+                        <EditIcon />
+                    </IconButton>
+                )}></Column>
+            </DataTable>
 
-export default GestorAsociados;
+            <Dialog header={isEdit ? 'Actualizar Estado Asociado' : 'Agregar Aeronave'} visible={asociadosDialog} onHide={() => setAsociadosDialog(false)}>
+                
+                    <div className="p-field">
+                        <label htmlFor="estado">Estado</label>
+                        <InputText
+                            id="estado"
+                            value={asocicadosData.estado}
+                            onChange={(e) => setAsociadosData({ ...asocicadosData, estado: e.target.value })}
+                            placeholder="Estado"
+                        />
+                    
+                    <div className="p-d-flex p-jc-end">
+                        <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAsociadosDialog(false)} />
+                        <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
+                    </div>
+                </div>
+            </Dialog>
+        </div>
+    );
+};
+
+export default GestorAsociados ;

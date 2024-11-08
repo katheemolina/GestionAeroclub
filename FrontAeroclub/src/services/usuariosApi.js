@@ -60,3 +60,28 @@ export const obtenerIdUsuarioDesdeMail = async (email) => {
     return response.json();
 };
 
+export const actualizarEstadoAsociado = async (usuarioId, estado) => {
+    try {
+        // Hacemos la solicitud PUT a la API
+        const response = await fetch(`${API_URL}/asociados/${usuarioId}/modificarEstado`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                Estado: estado,  // Enviamos el estado (habilitado o deshabilitado)
+            }),
+        });
+
+        // Si la respuesta no es exitosa, lanzamos un error
+        if (!response.ok) {
+            throw new Error('Error al modificar el estado del asociado');
+        }
+
+        // Devolvemos la respuesta si la solicitud es exitosa
+        return await response.json();
+    } catch (error) {
+        console.error('Error al modificar el estado del asociado:', error);
+        throw error;  // Lanza el error para que el componente lo maneje
+    }
+};

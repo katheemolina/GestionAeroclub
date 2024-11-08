@@ -33,6 +33,9 @@ import Inicio from './Inicio';
 import Bienvenida from './views/Bienvenida';
 import Sidebar from './components/Sidebar';
 
+import 'primereact/resources/themes/lara-light-indigo/theme.css';  // O cualquier tema que prefieras
+import 'primereact/resources/primereact.min.css';
+
 
 
 
