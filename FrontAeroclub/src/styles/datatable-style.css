@@ -118,3 +118,25 @@
     background-color: rgba(169, 70, 70, 1);
     color: white;
 }
+
+.nuevo {
+    display: flex;
+    align-items: center;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.nuevo i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.nuevo:hover {
+    background-color: #45a049;
+}
+

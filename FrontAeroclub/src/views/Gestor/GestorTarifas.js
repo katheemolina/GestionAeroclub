@@ -6,6 +6,9 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi'; // Import the API functions
 import '../../styles/datatable-style.css'; //Estilado para la tabla
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import './Styles/GestorTarifas.css'
 
 const TarifaCrud = () => {
     const [tarifas, setTarifas] = useState([]);
@@ -80,7 +83,7 @@ const TarifaCrud = () => {
         <header className="header">
         <h1>Tarifas</h1>
         </header>
-            <Button label="Agregar Tarifa" onClick={handleAdd} />
+            <Button className="nuevo" label="Agregar Tarifa" onClick={handleAdd} />
             <DataTable 
               value={tarifas} 
               paginator rows={10} 
@@ -91,7 +94,9 @@ const TarifaCrud = () => {
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
                 <Column header="Acciones" body={(rowData) => (
                     <>
-                        <Button className="editar" label="Editar Tarifa" onClick={() => handleEdit(rowData)} />
+                       <IconButton color="primary" aria-label="edit">
+        <EditIcon />
+    </IconButton>
                     </>
                 )}></Column>
             </DataTable>
