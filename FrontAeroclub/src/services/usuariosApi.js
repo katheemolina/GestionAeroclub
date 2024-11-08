@@ -63,7 +63,7 @@ export const obtenerIdUsuarioDesdeMail = async (email) => {
 export const actualizarEstadoAsociado = async (usuarioId, estado) => {
     try {
         // Hacemos la solicitud PUT a la API
-        const response = await fetch(`${API_URL}/asociados/${usuarioId}/modificarEstado`, {
+        const response = await fetch(`${API_URL}/modificarEstado/${usuarioId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
