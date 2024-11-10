@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './Styles/GestorNuevoRecibo.css';
-import { FaSearch } from 'react-icons/fa';
 import { Dropdown } from 'primereact/dropdown';
 import { obtenerAeronaves } from '../../services/aeronavesApi';
 import { obtenerTarifas } from '../../services/tarifasApi';
 import { listarAsociados } from '../../services/usuariosApi';
 import { useNavigate } from 'react-router-dom';
+import { generarReciboApi, listarInstructores, obtenerTiposVuelos } from '../../services/generarReciboApi';
 
 
 function FormularioGestorRecibos({ idUsuario = 0 }) {
@@ -18,17 +18,6 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     // Traigo datos de tipos de recibos
     const [tipoRecibo, setTipoRecibo] = useState([{ 'value': "Vuelo" }, { 'value': "Combustible" }]);
     const [tipoReciboSeleccionado, setTipoReciboSeleccionado] = useState(null);
-    // const fetchTiposRecibos = async () => {
-    //     try {
-    //         const data = [{ 'value': 1 }, { 'value': 2 }];//await obtenerTiposRecibos();
-    //         setTipoRecibo(data.data);
-    //     } catch (error) {
-    //         console.error('Error fetching tarifas:', error);
-    //     }
-    // };
-    // useEffect(() => {
-    //     fetchTiposRecibos();
-    // }, []);
 
     // Traigo datos de aeronaves
     const [aeronaves, setAeronaves] = useState([]);
@@ -65,8 +54,8 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     const [tiposVueloSeleccionado, setTiposVueloSeleccionado] = useState(null);
     const fetchTiposVuelo = async () => {
         try {
-            const data = [];//await obtenerTiposVuelo();
-            setTiposVuelo(data);
+            const data = await obtenerTiposVuelos();
+            setTiposVuelo(data.data);
         } catch (error) {
             console.error('Error fetching tarifas:', error);
         }
@@ -95,8 +84,8 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     const [instructoresSeleccionado, setInstructoresSeleccionado] = useState(null);
     const fetchInstructores = async () => {
         try {
-            const data = [];//await listarInstructores();
-            setInstructores(data);
+            const data = await listarInstructores();
+            setInstructores(data.data);
         } catch (error) {
             console.error('Error fetching tarifas:', error);
         }
@@ -401,10 +390,42 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         navigate('/gestor/recibos');
     };
 
-    const handleGenerar= () => {
-        // Hacer la llamda a la api con la informacion
+    const handleGenerar = async () => {
+        // Verificar que todos los campos obligatorios están completos
+        if (!tipoReciboSeleccionado || !aeronavesSeleccionado || !tarifasSeleccionado || !asociadosSeleccionado) {
+            alert("Por favor, completa todos los campos obligatorios.");
+            return;
+        }
+    
+        // Construir el objeto con los datos del formulario
+        const reciboData = {
+            tipoRecibo: tipoReciboSeleccionado.value,
+            aeronave: aeronavesSeleccionado,
+            tarifa: tarifasSeleccionado,
+            asociado: asociadosSeleccionado,
+            fechaVuelo: new Date().toISOString(), // Fecha actual del vuelo (puedes cambiarla si es otro campo en el formulario)
+            instructoresSeleccionado: instructorSeleccionado,
+            itinerarios: itinerarioData,
+            instruccionSeleccionada: instruccionSeleccionada,
+        };
+    
+        try {
+            // Hacer la llamada a la API para generar el recibo
+            const response = await generarReciboApi(reciboData);
+    
+            // Manejar la respuesta de la API
+            if (response.success) {
+                alert("Recibo generado exitosamente!");
+                navigate('/gestor/recibos'); // Redirigir a la lista de recibos
+            } else {
+                alert("Error al generar el recibo. Intenta de nuevo.");
+            }
+        } catch (error) {
+            console.error("Error al generar el recibo: ", error);
+            alert("Hubo un error al generar el recibo.");
+        }
     };
-
+    
     return (
         <div className="formulario-recibos">
             <h1>Nuevo Recibo</h1>

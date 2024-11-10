@@ -16,6 +16,8 @@ function Sidebar() {
       { ruta: '/asociado/perfil', texto: 'Mi Perfil' },
       { ruta: '/asociado/libro-vuelo', texto: 'Libro de Vuelo' },
       { ruta: '/asociado/cuenta-corriente', texto: 'Cuenta Corriente' },
+      { ruta: '/asociado/aeronaves', texto: 'Aeronaves' },
+      { ruta: '/asociado/tarifas', texto: 'Tarifas' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
     gestor: [
@@ -33,6 +35,8 @@ function Sidebar() {
       { ruta: '/instructor/perfil', texto: 'Mi Perfil' },
       { ruta: '/instructor/libro-vuelo', texto: 'Libro de Vuelo' },
       { ruta: '/instructor/cuenta-corriente', texto: 'Cuenta Corriente' },
+      { ruta: '/instructor/aeronaves', texto: 'Aeronaves' },
+      { ruta: '/instructor/tarifas', texto: 'Tarifas' },
       { ruta: '/instructor/asociados', texto: 'Asociados' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],

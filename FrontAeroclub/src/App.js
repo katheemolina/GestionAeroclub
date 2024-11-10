@@ -31,6 +31,8 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';  // O cualquie
 import 'primereact/resources/primereact.min.css';
 import InstructorAsociadoDashboard from './views/Instructor/InstructorAsociadoDashboard';
 import InstructorVuelosPorUsuario from './views/Instructor/InstructorVuelosPorUsuario';
+import AsociadoTarifas from './views/Asociado/AsociadoTarifas';
+import AsociadoAeronaves from './views/Asociado/AsociadoAeronaves';
 
 
 
@@ -73,6 +75,8 @@ function App() {
             <Route path="/asociado/cuenta-corriente" element={<ProtectedRoute component={AsociadoCuentaCorriente} allowedRoles={['asociado']} />} />
             <Route path="/asociado/libro-vuelo" element={<ProtectedRoute component={AsociadoLibroVuelo} allowedRoles={['asociado']} />} />
             <Route path="/asociado/perfil" element={<ProtectedRoute component={AsociadoPerfil} allowedRoles={['asociado']} />} />
+            <Route path="/asociado/aeronaves" element={<ProtectedRoute component={AsociadoAeronaves} allowedRoles={['asociado']} />} />
+            <Route path="/asociado/tarifas" element={<ProtectedRoute component={AsociadoTarifas} allowedRoles={['asociado']} />} />
             
           {/* Rutas para Gestor */}
             <Route path="/gestor/dashboard" element={<ProtectedRoute component={GestorDashboard} allowedRoles={['gestor']} />} />
@@ -94,6 +98,8 @@ function App() {
             <Route path="/instructor/cuenta-corriente" element={<ProtectedRoute component={AsociadoCuentaCorriente} allowedRoles={['instructor']} />} />
             <Route path="/instructor/asociados" element={<ProtectedRoute component={InstructorAsociados} allowedRoles={['instructor']} />} />
             <Route path="/instructor/vuelos" element={<ProtectedRoute component={InstructorVuelosPorUsuario} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/aeronaves" element={<ProtectedRoute component={AsociadoAeronaves} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/tarifas" element={<ProtectedRoute component={AsociadoTarifas} allowedRoles={['instructor']} />} />
 
           
             <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
