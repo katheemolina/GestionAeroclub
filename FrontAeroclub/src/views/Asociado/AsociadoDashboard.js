@@ -20,7 +20,7 @@ import {
 } from '../../services/vuelosApi';
 
 
-function Dashboard({ idUsuario = 3 }) { // Establecer idUsuario para traer su informacion
+function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [saldo, setSaldo] = useState(0);
@@ -84,6 +84,7 @@ function Dashboard({ idUsuario = 3 }) { // Establecer idUsuario para traer su in
     fetchData();
   }, [idUsuario]);
 
+
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   if (loading) {
@@ -111,14 +112,18 @@ function Dashboard({ idUsuario = 3 }) { // Establecer idUsuario para traer su in
     </section>
 
       <section className="stats-section">
+      <Link to="/asociado/perfil" style={{ textDecoration: 'none', flex: 1 }}>
         <div className={`stat-box ${cmaClass}`}>
           <h3>CMA</h3>
           <p>{cma}</p>
         </div>
+        </Link>
+        <Link to="/asociado/perfil" style={{ textDecoration: 'none', flex: 1 }}>
         <div className="stat-box">
           <h3>CMA - Fecha de vencimiento</h3>
           <p>{fechaVencimiento}</p>
         </div>
+        </Link>
       </section>
 
       {console.log(data)}
@@ -134,6 +139,10 @@ function Dashboard({ idUsuario = 3 }) { // Establecer idUsuario para traer su in
             <li key={index}>{`${licencia.codigo} - ${licencia.descripcion}`}</li>
           ))}
         </ul>
+        <div className="button-container">
+        <Link to="/asociado/perfil" style={{ textDecoration: 'none', flex: 1 }}>
+          <button type="submit">Editar licencias</button></Link>
+        </div>
       </section>
     </div>
   );
