@@ -5,11 +5,14 @@ import { obtenerTodosLosRecibos } from '../../services/recibosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css'; //Estilado para la tabla
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 
 function GestorRecibos({idUsuario = 0}){
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     const fetchData = async () => {
     try {
@@ -25,6 +28,12 @@ function GestorRecibos({idUsuario = 0}){
     fetchData();
   }, [idUsuario]);
   
+  function reciboAdd(){
+    navigate('/gestor/recibos/nuevo', {
+      state: {  }  // Aquí pasamos el objeto 'user' como estado
+    });
+  }
+
   if (loading) {
     return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
   }
@@ -33,7 +42,7 @@ function GestorRecibos({idUsuario = 0}){
       <header className="header">
         <h1>Recibos</h1>
       </header>
-      {console.log(data)}
+      <Button className="nuevo" label="Agregar Recibo" onClick={reciboAdd} />
       <DataTable 
         value={data} 
         paginator rows={15} 

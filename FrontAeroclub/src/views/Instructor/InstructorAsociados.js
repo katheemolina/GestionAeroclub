@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './Styles/InstructorAsociados.css';
 import { listarAsociados } from '../../services/usuariosApi';
-import FiltroComponent from '../../components/FiltroComponent';
-import DataTable from 'react-data-table-component';
-import estiloTabla from '../../styles/estiloTabla';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
+import { useNavigate } from 'react-router-dom';
 
 function InstructorAsociados({idUsuario = 0}){
-    
-    const columns = [
-      { name: 'Usuario', selector: row => row.usuario, sortable: true },
-      { name: 'Fecha Vencimiento CMA', selector: row => row.fecha_vencimiento_cma, sortable: true },
-      { name: 'Estado CC', selector: row => row.estado_cuenta_corriente, sortable: true },
-      { name: 'Saldo', selector: row => row.saldo, sortable: true },
-    ]
-
+  const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     
@@ -32,6 +28,19 @@ function InstructorAsociados({idUsuario = 0}){
         fetchData();
     }, [idUsuario]);
     
+    // Función para manejar la redirección cuando se hace clic en el botón
+    const handleGoToDetails = (user) => {
+      navigate('/instructor/dashboardAsociado', {
+        state: { user }  // Aquí pasamos el objeto 'user' como estado
+      });
+    };
+
+    const handleGoToLibroVuelo = (user) => {
+      navigate('/instructor/vuelos', {
+        state: { user }  // Aquí pasamos el objeto 'user' como estado
+      });
+    };
+
     if (loading) {
         return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
     }
@@ -40,21 +49,31 @@ function InstructorAsociados({idUsuario = 0}){
         <header className="header">
           <h1>Asociados</h1>
         </header>
-        <FiltroComponent
-        mostrarUsuario={true} // Cambia a false si no quieres mostrar el filtro de usuario
-        mostrarFecha={false} // Cambia a false si no quieres mostrar los filtros de fecha
-        onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
-        }}/>
-        <DataTable  
-          columns={columns} 
-          data={data} 
-          pagination 
-          highlightOnHover 
-          striped 
-          selectableRows
-          paginationPerPage={15}
-          customStyles={estiloTabla}
-        />
+        <DataTable 
+                value={data} 
+                paginator rows={10} 
+                rowsPerPageOptions={[5, 10, 25]} 
+                style={{ width: '100%' }} >
+                <Column field="usuario" header="Asociado"></Column>
+                <Column field="estado" header="Estado"></Column>
+                <Column field="horas_vuelo" header="Horas de vuelo totales"></Column>
+                <Column field="estadoCMA" header="Estado del CMA"></Column>
+                <Column header="Acciones"
+                        body={(rowData) => (
+                            <div className='acciones'>
+                            {/* Botón de editar */}
+                            <IconButton color="primary" aria-label="edit" onClick={() => handleGoToLibroVuelo(rowData)}>
+                                <EditIcon />
+                            </IconButton>
+
+                            {/* Botón de detalles */}
+                            <IconButton color="primary" aria-label="view-details" onClick={() => handleGoToDetails(rowData.id_usuario)}>
+                                <AccountCircleIcon />
+                            </IconButton>
+                            </div>
+                        )}
+                        />
+            </DataTable>
       </div>
     );
 }

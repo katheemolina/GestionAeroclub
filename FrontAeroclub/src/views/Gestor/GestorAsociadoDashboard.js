@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 //importo servicios
 import {
@@ -99,18 +99,14 @@ function GestorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario pa
       </header>
 
       <section className="stats-section">
-      <Link to="/asociado/cuenta-corriente" style={{ textDecoration: 'none', flex: 1 }}>
         <div className="stat-box">
           <h3>Saldo</h3>
           <p>${saldo}</p>
         </div>
-      </Link>
-      <Link to="/asociado/libro-vuelo" style={{ textDecoration: 'none', flex: 1 }}>
         <div className="stat-box">
           <h3>Horas Voladas</h3>
           <p>{horasVoladas}</p>
         </div>
-      </Link>
     </section>
 
       <section className="stats-section">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
-import "./Styles/InstructorDashboards.css"
+import "./Styles/AsociadoDashboards.css"
+import { useLocation } from 'react-router-dom';
 
 //importo servicios
 import {
@@ -10,19 +11,14 @@ import {
 } from '../../services/usuariosApi';
 
 import {
-  obtenerSaldoCuentaCorrientePorUsuario
-} from '../../services/movimientosApi';
-
-import {
   horasVoladasPorUsuario,
   ultimosVuelosPorUsuario
 } from '../../services/vuelosApi';
 
 
-function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
+function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
-  const [saldo, setSaldo] = useState(0);
   const [horasVoladas, setHorasVoladas] = useState(0);
   const [cma, setCma] = useState('');
   const [fechaVencimiento, setFechaVencimiento] = useState('');
@@ -36,6 +32,11 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
     { header: 'Adaptación', accessor: 'Adaptacion' }
   ];
 
+  const location = useLocation();  // Hook para obtener el estado de la navegación
+  const { user } = location.state || {};  // Accedemos al estado pasad
+
+  idUsuario = user;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,11 +45,6 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
         const usuario = usuarioResponse[0]; // Accedemos al primer objeto
         setNombre(usuario.nombre);
         setApellido(usuario.apellido);
-        
-        // Obtener saldo
-        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(idUsuario);
-        const saldoData = saldoResponse[0]; // Accedemos al primer objeto
-        setSaldo(saldoData.Saldo);
         
         // Obtener horas voladas
         const horasResponse = await horasVoladasPorUsuario(idUsuario);
@@ -94,14 +90,10 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
 
       <section className="stats-section">
         <div className="stat-box">
-          <h3>Saldo</h3>
-          <p>${saldo}</p>
-        </div>
-        <div className="stat-box">
           <h3>Horas Voladas</h3>
           <p>{horasVoladas}</p>
         </div>
-      </section>
+    </section>
 
       <section className="stats-section">
         <div className={`stat-box ${cmaClass}`}>
@@ -131,4 +123,4 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
   );
 }
 
-export default Dashboard;
+export default InstructorAsociadoDashboard;

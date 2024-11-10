@@ -7,10 +7,10 @@ import { Dialog } from 'primereact/dialog';
 import { listarAsociados, actualizarEstadoAsociado } from '../../services/usuariosApi';
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
 import EditIcon from '@mui/icons-material/Edit';
 import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
 
 const GestorAsociados  = () => {
     const navigate = useNavigate();
@@ -72,11 +72,12 @@ const GestorAsociados  = () => {
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                <Column field="usuario" header="Usuario"></Column>
-                <Column field="fecha_vencimiento_cma" header="Fecha Vencimiento CMA"></Column>
+                <Column field="usuario" header="Asociado"></Column>
+                <Column field="estado" header="Estado"></Column>
+                <Column field="horas_vuelo" header="Horas de vuelo totales"></Column>
+                <Column field="estadoCMA" header="Estado del CMA"></Column>
                 <Column field="estado_cuenta_corriente" header="Estado Cuenta Corriente"></Column>
                 <Column field="saldo" header="Saldo"></Column>
-                <Column field="estado" header="Estado"></Column>
                 <Column header="Acciones"
                         body={(rowData) => (
                             <div className='acciones'>

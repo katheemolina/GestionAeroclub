@@ -19,10 +19,6 @@ import GestorNuevoRecibo from './views/Gestor/GestorNuevoRecibo';
 
 // Instructores
 import InstructorAsociados from './views/Instructor/InstructorAsociados';
-import InstructorCuentaCorriente from './views/Instructor/InstructorCuentaCorriente';
-import InstructorDashboard from './views/Instructor/InstructorDashboard';
-import InstructorLibroVuelo from './views/Instructor/InstructorLibroVuelo';
-import InstructorPerfil from './views/Instructor/InstructorPerfil';
 
 import { useRole } from './context/RoleContext';
 import { useUser } from './context/UserContext';
@@ -33,6 +29,8 @@ import Sidebar from './components/Sidebar';
 
 import 'primereact/resources/themes/lara-light-indigo/theme.css';  // O cualquier tema que prefieras
 import 'primereact/resources/primereact.min.css';
+import InstructorAsociadoDashboard from './views/Instructor/InstructorAsociadoDashboard';
+import InstructorVuelosPorUsuario from './views/Instructor/InstructorVuelosPorUsuario';
 
 
 
@@ -89,11 +87,13 @@ function App() {
             <Route path="/gestor/recibos/nuevo" element={<ProtectedRoute component={GestorNuevoRecibo} allowedRoles={['gestor']} />} />
             
           {/* Rutas para Instructor */}
-            <Route path="/instructor/dashboard" element={<ProtectedRoute component={InstructorDashboard} allowedRoles={['instructor']} />} />
-            <Route path="/instructor/perfil" element={<ProtectedRoute component={InstructorPerfil} allowedRoles={['instructor']} />} />
-            <Route path="/instructor/libro-vuelo" element={<ProtectedRoute component={InstructorLibroVuelo} allowedRoles={['instructor']} />} />
-            <Route path="/instructor/cuenta-corriente" element={<ProtectedRoute component={InstructorCuentaCorriente} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/dashboard" element={<ProtectedRoute component={AsociadoDashboard} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/dashboardAsociado" element={<ProtectedRoute component={InstructorAsociadoDashboard} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/perfil" element={<ProtectedRoute component={AsociadoPerfil} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/libro-vuelo" element={<ProtectedRoute component={AsociadoLibroVuelo} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/cuenta-corriente" element={<ProtectedRoute component={AsociadoCuentaCorriente} allowedRoles={['instructor']} />} />
             <Route path="/instructor/asociados" element={<ProtectedRoute component={InstructorAsociados} allowedRoles={['instructor']} />} />
+            <Route path="/instructor/vuelos" element={<ProtectedRoute component={InstructorVuelosPorUsuario} allowedRoles={['instructor']} />} />
 
           
             <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />

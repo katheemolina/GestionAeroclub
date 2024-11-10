@@ -1,21 +1,110 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Styles/GestorNuevoRecibo.css';
 import { FaSearch } from 'react-icons/fa';
+import { Dropdown } from 'primereact/dropdown';
+import { obtenerAeronaves } from '../../services/aeronavesApi';
+import { obtenerTarifas } from '../../services/tarifasApi';
+import { listarAsociados } from '../../services/usuariosApi';
+import { useNavigate } from 'react-router-dom';
+
 
 function FormularioGestorRecibos({ idUsuario = 0 }) {
-    const [tipoRecibo, setTipoRecibo] = useState("Vuelo");
     const [itinerarios, setItinerarios] = useState(1);
     const [currentItinerario, setCurrentItinerario] = useState(0); // Estado para el tab seleccionado
     const [itinerarioData, setItinerarioData] = useState([{ origen: '', destino: '', horaSalida: '', horaLlegada: '',instruccion: false }]);
-    const [instructores] = useState([
-        'Instructor 1',
-        'Instructor 2',
-        'Instructor 3'
-        // Agrega los nombres de los instructores aquí
-    ]);
     const [instruccionSeleccionada, setInstruccionSeleccionada] = useState(false);
     const [instructorSeleccionado, setInstructorSeleccionado] = useState('');
     
+    // Traigo datos de tipos de recibos
+    const [tipoRecibo, setTipoRecibo] = useState([{ 'value': "Vuelo" }, { 'value': "Combustible" }]);
+    const [tipoReciboSeleccionado, setTipoReciboSeleccionado] = useState(null);
+    // const fetchTiposRecibos = async () => {
+    //     try {
+    //         const data = [{ 'value': 1 }, { 'value': 2 }];//await obtenerTiposRecibos();
+    //         setTipoRecibo(data.data);
+    //     } catch (error) {
+    //         console.error('Error fetching tarifas:', error);
+    //     }
+    // };
+    // useEffect(() => {
+    //     fetchTiposRecibos();
+    // }, []);
+
+    // Traigo datos de aeronaves
+    const [aeronaves, setAeronaves] = useState([]);
+    const [aeronavesSeleccionado, setAeronavesSeleccionado] = useState(null);
+    const fetchAeronaves = async () => {
+        try {
+            const data = await obtenerAeronaves();
+            setAeronaves(data);
+        } catch (error) {
+            console.error('Error fetching tarifas:', error);
+        }
+    };
+    useEffect(() => {
+        fetchAeronaves();
+    }, []);
+
+    // Traigo datos de tarifas
+    const [tarifas, setTarifas] = useState([]);
+    const [tarifasSeleccionado, setTarifasSeleccionado] = useState(null);
+    const fetchTarifas = async () => {
+        try {
+            const data = await obtenerTarifas();
+            setTarifas(data.data);
+        } catch (error) {
+            console.error('Error fetching tarifas:', error);
+        }
+    };
+    useEffect(() => {
+        fetchTarifas();
+    }, []);
+
+    // Traigo datos de tipos de vuelo
+    const [tiposVuelo, setTiposVuelo] = useState([]);
+    const [tiposVueloSeleccionado, setTiposVueloSeleccionado] = useState(null);
+    const fetchTiposVuelo = async () => {
+        try {
+            const data = [];//await obtenerTiposVuelo();
+            setTiposVuelo(data);
+        } catch (error) {
+            console.error('Error fetching tarifas:', error);
+        }
+    };
+    useEffect(() => {
+        fetchTiposVuelo();
+    }, []);
+
+    // Traigo datos de asociados
+    const [asociados, setAsociados] = useState([]);
+    const [asociadosSeleccionado, setAsociadosSeleccionado] = useState(null);
+    const fetchAsociados = async () => {
+        try {
+            const data = await listarAsociados();
+            setAsociados(data);
+        } catch (error) {
+            console.error('Error fetching tarifas:', error);
+        }
+    };
+    useEffect(() => {
+        fetchAsociados();
+    }, []);
+
+    // Traigo datos de instructores
+    const [instructores, setInstructores] = useState([]);
+    const [instructoresSeleccionado, setInstructoresSeleccionado] = useState(null);
+    const fetchInstructores = async () => {
+        try {
+            const data = [];//await listarInstructores();
+            setInstructores(data);
+        } catch (error) {
+            console.error('Error fetching tarifas:', error);
+        }
+    };
+    useEffect(() => {
+        fetchInstructores();
+    }, []);
+
     const handleItinerariosChange = (e) => { // Declara la función que maneja cambios en el número de itinerarios.
         const value = parseInt(e.target.value, 10); // Convierte el valor del campo de entrada a un número entero.
         setItinerarios(value); // Actualiza el estado `itinerarios` al nuevo valor.
@@ -56,15 +145,29 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             {/* Campos generales del vuelo */}
             <div className="form-group">
                 <label className="label-recibo">Aeronave:</label>
-                <select className="input-recibo">
-                    <option value="">-</option>
-                </select>
+                {aeronaves && aeronaves.length > 0 ? (
+                <Dropdown value={aeronavesSeleccionado}
+                 onChange={(e) => setAeronavesSeleccionado(e.value)} 
+                 options={aeronaves} 
+                 optionLabel="matricula"
+                 placeholder="Seleciona la aeronave"
+                 filter
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
             <div className="form-group">
                 <label className="label-recibo">Tarifa:</label>
-                <select className="input-recibo">
-                    <option value="-">-</option>
-                </select>
+                {tarifas && tarifas.length > 0 ? (
+                <Dropdown value={tarifasSeleccionado}
+                 onChange={(e) => setTarifasSeleccionado(e.value)} 
+                 options={tarifas} 
+                 optionLabel="importe"
+                 placeholder="Seleciona la tarifa"
+                 filter
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
             <div className="form-group">
                 <label className="label-recibo">Fecha de vuelo:</label>
@@ -72,17 +175,29 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             </div>
             <div className="form-group">
                 <label className="label-recibo">Tipo de vuelo:</label>
-                <select className="input-recibo">
-                    <option value="-">-</option>
-                    <option value="Entrenamiento">Entrenamiento</option>
-                    <option value="Privado">Privado</option>
-                    <option value="Comercial">Comercial</option>
-                </select>
+                {tiposVuelo && tiposVuelo.length > 0 ? (
+                <Dropdown value={tiposVueloSeleccionado}
+                 onChange={(e) => setTiposVueloSeleccionado(e.value)} 
+                 options={tiposVuelo} 
+                 optionLabel="descripcion"
+                 placeholder="Seleciona el tipo de vuelo"
+                 filter
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
-            <div className="form-group asociado-search">
+            <div className="form-group">
                 <label className="label-recibo">Asociado:</label>
-                <input className="input-recibo" type="text" />
-                <button className="search-btn"><FaSearch /></button>
+                {asociados && asociados.length > 0 ? (
+                <Dropdown value={asociadosSeleccionado}
+                 onChange={(e) => setAsociadosSeleccionado(e.value)} 
+                 options={asociados} 
+                 optionLabel="usuario"
+                 placeholder="Seleciona el asociado"
+                 filter 
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
 
              {/* Checkbox de instrucción y selección de instructor */}
@@ -95,15 +210,20 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
                     onChange={handleCheckboxChange}
                 />
             </div>
+
             {instruccionSeleccionada && (
                 <div className="form-group">
-                    <label className="label-recibo">Selecc. instructor:</label>
-                    <select className="input-recibo" value={instructorSeleccionado} onChange={(e) => setInstructorSeleccionado(e.target.value)}>
-                        <option value="">Seleccione un instructor</option>
-                        {instructores.map((instructor, i) => (
-                            <option key={i} value={instructor}>{instructor}</option>
-                        ))}
-                    </select>
+                    <label className="label-recibo">Instructor:</label>
+                    {instructores && instructores.length > 0 ? (
+                    <Dropdown value={instructorSeleccionado}
+                    onChange={(e) => setInstructorSeleccionado(e.value)} 
+                    options={instructores} 
+                    optionLabel="usuario"
+                    placeholder="Seleciona el instructor"
+                    filter 
+                    className="w-full md:w-14rem" /> ) : (
+                        <p>Cargando opciones...</p>
+                    )}
                 </div>
             )}
 
@@ -149,6 +269,8 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         </>
     );
 
+
+    
     const renderFormularioItinerario = (index) => (
         
         <div className="itinerario-form" key={index}>
@@ -222,12 +344,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     
 
     const renderFormularioCombustible = () => (
-        <>
-            <div className="form-group">
-                <label className="label-recibo">N° Recibo:</label>
-                <input className="input-recibo" type="text" placeholder="(número generado automáticamente)" />
-            </div>
-    
+        <>    
             <div className="form-group">
                 <label className="label-recibo">Cantidad:</label>
                 <input className="input-recibo" type="number" min="0" placeholder="Cantidad en litros" />
@@ -235,17 +352,30 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
 
             <div className="form-group">
                 <label className="label-recibo">Tarifa:</label>
-                <select className="input-recibo">
-                    <option value="">Seleccionar</option>
-                    <option value="100LL">Tarifa 100 LL</option>
-                    {/* Puedes agregar más opciones según sea necesario */}
-                </select>
+                {tarifas && tarifas.length > 0 ? (
+                <Dropdown value={tarifasSeleccionado}
+                 onChange={(e) => setTarifasSeleccionado(e.value)} 
+                 options={tarifas} 
+                 optionLabel="importe"
+                 placeholder="Seleciona la tarifa"
+                 filter
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
-    
-            <div className="form-group asociado-search">
+
+            <div className="form-group">
                 <label className="label-recibo">Asociado:</label>
-                <input className="input-recibo" type="text" placeholder='Buscar asociado o tercero'/>
-                <button className="search-btn"><FaSearch /></button>
+                {asociados && asociados.length > 0 ? (
+                <Dropdown value={asociadosSeleccionado}
+                 onChange={(e) => setAsociadosSeleccionado(e.value)} 
+                 options={asociados} 
+                 optionLabel="usuario"
+                 placeholder="Seleciona el asociado"
+                 filter 
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
     
             <div className="form-group">
@@ -266,25 +396,38 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         </>
     );
 
+    const navigate = useNavigate();
+    const handleCancelar = () => {
+        navigate('/gestor/recibos');
+    };
+
+    const handleGenerar= () => {
+        // Hacer la llamda a la api con la informacion
+    };
 
     return (
         <div className="formulario-recibos">
             <h1>Nuevo Recibo</h1>
             <div className="form-group">
                 <label className="label-recibo">Tipo de recibo:</label>
-                <select className="input-recibo" value={tipoRecibo} onChange={(e) => setTipoRecibo(e.target.value)}>
-                    <option value="Vuelo">Vuelo</option>
-                    <option value="Combustible">Combustible</option>
-                </select>
+                {tipoRecibo && tipoRecibo.length > 0 ? (
+                <Dropdown value={tipoReciboSeleccionado}
+                 onChange={(e) => setTipoReciboSeleccionado(e.value)} 
+                 options={tipoRecibo} 
+                 optionLabel="value"
+                 placeholder="Seleciona el tipo de vuelo"
+                 className="w-full md:w-14rem" /> ) : (
+                    <p>Cargando opciones...</p>
+                )}
             </div>
             <hr></hr>
-            {tipoRecibo === "Vuelo" && renderFormularioVuelo()}
-            {tipoRecibo === "Combustible" && renderFormularioCombustible()}
+            {tipoReciboSeleccionado === "Vuelo" && renderFormularioVuelo()}
+            {tipoReciboSeleccionado === "Combustible" && renderFormularioCombustible()}
             {/* Agrega aquí los formularios para otros tipos de recibos si es necesario */}
             
             <div className="buttons">
-                <button className="generate-btn">Generar</button>
-                <button className="cancel-btn">Cancelar</button>
+                <button className="generate-btn" onClick={handleGenerar}>Generar</button>
+                <button className="cancel-btn" onClick={handleCancelar}>Cancelar</button>
             </div>
         </div>
     );

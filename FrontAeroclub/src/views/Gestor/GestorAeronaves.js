@@ -21,6 +21,8 @@ const AeronaveCrud = () => {
         clase: '',
         fecha_adquisicion: '',
         consumo_por_hora: '',
+        horas_para_inspeccion: '',
+        horas_historicas_voladas: '',
         estado: 'activo',
     });
     const [isEdit, setIsEdit] = useState(false);
@@ -71,6 +73,8 @@ const AeronaveCrud = () => {
             clase: '',
             fecha_adquisicion: '',
             consumo_por_hora: '',
+            horas_para_inspeccion: '',
+            horas_historicas_voladas: '',
             estado: 'activo',
         });
         setIsEdit(false);
@@ -104,6 +108,8 @@ const AeronaveCrud = () => {
                 <Column field="clase" header="Clase"></Column>
                 <Column field="fecha_adquisicion" header="Fecha Adquisición" body={dateTemplate}></Column>
                 <Column field="consumo_por_hora" header="Consumo por Hora" body={consumoTemplate}></Column>
+                <Column field="horas_historicas_voladas" header="Horas de vuelo" ></Column>
+                <Column field="horas_para_inspeccion" header="Horas para inspeccion" ></Column>
                 <Column field="estado" header="Estado"></Column>
                 <Column header="Acciones" body={(rowData) => (
                     <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
@@ -174,6 +180,24 @@ const AeronaveCrud = () => {
                             id="consumo_por_hora"
                             value={aeronaveData.consumo_por_hora}
                             onChange={(e) => setAeronaveData({ ...aeronaveData, consumo_por_hora: e.target.value })}
+                            placeholder="Consumo por Hora"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="horas_para_inspeccion">Horas para inspeccion</label>
+                        <InputText
+                            id="horas_para_inspeccion"
+                            value={aeronaveData.horas_para_inspeccion}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_para_inspeccion: e.target.value })}
+                            placeholder="Consumo por Hora"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="horas_historicas_voladas">Horas de vuelo historicas</label>
+                        <InputText
+                            id="horas_historicas_voladas"
+                            value={aeronaveData.horas_historicas_voladas}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_historicas_voladas: e.target.value })}
                             placeholder="Consumo por Hora"
                         />
                     </div>

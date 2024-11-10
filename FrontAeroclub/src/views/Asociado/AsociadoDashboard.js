@@ -20,7 +20,7 @@ import {
 } from '../../services/vuelosApi';
 
 
-function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
+function Dashboard({ idUsuario = 3 }) { // Establecer idUsuario para traer su informacion
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [saldo, setSaldo] = useState(0);
@@ -34,7 +34,9 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
   const columns = [
     { header: 'Avión', accessor: 'matricula_aeronave' },
     { header: 'Último Vuelo', accessor: 'fecha_vuelo' },
-    { header: 'Adaptación', accessor: 'Adaptacion' }
+    { header: 'Tiempo', accessor: 'tiempo_vuelo' },
+    { header: 'Aterrizajes', accessor: 'aterrizajes' },
+    { header: 'Adaptación', accessor: 'Adaptacion' },
   ];
 
   useEffect(() => {
@@ -119,6 +121,7 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
         </div>
       </section>
 
+      {console.log(data)}
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
         <TableComponent columns={columns} data={data} />

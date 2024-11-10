@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { obtenerTodosLosItinerarios } from '../../services/vuelosApi';
-import './Styles/GestorVuelos.css'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { useLocation } from 'react-router-dom';
 
-function GestorVuelos({idUsuario = 1}){
+function InstructorVuelosPorUsuario({idUsuario = 1}){
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     
+    const location = useLocation();  // Hook para obtener el estado de la navegación
+    const { user } = location.state || {};  // Accedemos al estado pasad
+    
+    const [filters, setFilters] = useState({
+        'usuario': { value: user.usuario, matchMode: 'contains' },
+      });
+
     useEffect(() => {
         const fetchData = async () => {
         try {
@@ -36,13 +43,14 @@ function GestorVuelos({idUsuario = 1}){
         paginator rows={15} 
         rowsPerPageOptions={[10, 15, 25, 50]} 
         removableSort 
+        filters={filters}
         filterDisplay="row"
         scrollable
         scrollHeight="800px"
         >
         <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false}  ></Column>
         <Column field="aeronave" header="Aeronave" sortable filter filterPlaceholder="Busar por aeronave" filterMatchMode="contains" showFilterMenu={false}  ></Column>
-        <Column field="usuario" header="Usuario" sortable filter filterPlaceholder="Buscar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="usuario" header="Usuario" sortable filter value='asd' filterPlaceholder="Buscar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}  ></Column>
@@ -52,4 +60,4 @@ function GestorVuelos({idUsuario = 1}){
     );
 }
 
-export default GestorVuelos;
+export default InstructorVuelosPorUsuario;
