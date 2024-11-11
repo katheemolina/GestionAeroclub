@@ -232,6 +232,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
             />
           </label>
         </div>
+        <h2>Completar con datos historicos:</h2>
         <div className="form-row">
           <label>
             Cantidad de Horas de Vuelo:
