@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import CardComponent from '../../components/CardComponent'; // Asegúrate de importar el componente de tarjeta
 import "./Styles/AsociadoPerfil.css"
-import { obtenerDatosDelUsuario,actualizarDatosDelUsuario  } from '../../services/usuariosApi';
+import { obtenerDatosDelUsuario,actualizarDatosDelUsuario ,obtenerLicenciasPorUsuario, actualizarLicencias} from '../../services/usuariosApi';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
+import { Calendar } from 'primereact/calendar';
+
 
 function AsociadoPerfil({ idUsuario = 1 }) {
-  const [loading, setLoading] = useState(true);
+  const [cargando, setCargando] = useState(true);
   const [usuario, setUsuario] = useState([]);
   const [formData, setFormData] = useState({
     Telefono: '',
@@ -17,6 +24,62 @@ function AsociadoPerfil({ idUsuario = 1 }) {
     CantHorasVuelo: '',
     CantAterrizajes: ''
   });
+
+  //Componente para licencias
+
+  
+  const [loading, setLoading] = useState(true);
+  const [licencias, setLicencias] = useState([]); 
+  const [licenciaDialog, setLicenciaDialog] = useState(false); // Controla si el dialog está abierto
+  const [selectedLicencia, setSelectedLicencia] = useState(null); // Almacena la licencia seleccionada
+  const [fechaVencimiento, setFechaVencimiento] = useState(null); // Almacena la fecha de vencimiento
+  const [tiposLicencias] = useState([
+    { label: 'Piloto de planeador', value: 'Piloto de planeador' },
+    { label: 'Piloto privado', value: 'Piloto privado' },
+    { label: 'Piloto comercial', value: 'Piloto comercial' },
+    { label: 'Piloto de transporte de línea aérea', value: 'Piloto de transporte de línea aérea' },
+    { label: 'Instructor de vuelo', value: 'Instructor de vuelo' },
+    { label: 'Piloto de ultraligero', value: 'Piloto de ultraligero' }
+  ]);
+
+
+  const fetchLicencias = async () => {
+    try {
+      const data = await obtenerLicenciasPorUsuario(idUsuario);
+      setLicencias(data);
+    } catch (error) {
+      console.error('Error fetching licencias:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLicencias();
+    setLoading(false);
+  }, []);
+
+  const handleLicenciaUpdate = async () => {
+    if (!selectedLicencia || !fechaVencimiento) {
+      alert("Por favor, seleccione una licencia y una fecha de vencimiento.");
+      return;
+    }
+
+    try {
+      const licenciaData = [
+        { nombreLic: selectedLicencia, fechaVenc: fechaVencimiento.toISOString().split('T')[0] }
+      ];
+      await actualizarLicencias(idUsuario, licenciaData); // Llamada a la API con los datos
+      alert("Licencia actualizada correctamente.");
+      setLicenciaDialog(false); // Cierra el diálogo después de la actualización
+      fetchLicencias(); // Vuelve a cargar las licencias actualizadas
+    } catch (error) {
+      console.error("Error al actualizar licencia:", error);
+      alert("Error al actualizar licencia.");
+    }
+  };
+
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,10 +100,13 @@ function AsociadoPerfil({ idUsuario = 1 }) {
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
-      setLoading(false);
+      setCargando(false);
     };
     fetchData();
   }, [idUsuario]);
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,7 +127,28 @@ function AsociadoPerfil({ idUsuario = 1 }) {
     }
   };
 
-  if (loading) {
+  const formatFecha = (rowData) => {
+    // Extrae solo la fecha de 'fecha_vencimiento' (sin hora)
+    const fecha = new Date(rowData.fecha_vencimiento).toLocaleDateString();
+    return fecha;
+  };
+
+  const calcularEstadoLicencia = (rowData) => {
+    const fechaVencimiento = new Date(rowData.fecha_vencimiento);
+    const hoy = new Date();
+    const diferenciaDias = Math.floor((fechaVencimiento - hoy) / (1000 * 60 * 60 * 24));
+
+    if (diferenciaDias > 30) {
+      return "Vigente";
+    } else if (diferenciaDias >= 0 && diferenciaDias <= 30) {
+      return "Actualizar licencia";
+    } else {
+      return "Licencia vencida";
+    }
+  };
+
+
+  if (cargando) {
     return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
   }
   return (
@@ -145,6 +232,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
             />
           </label>
         </div>
+        <h2>Completar con datos historicos:</h2>
         <div className="form-row">
           <label>
             Cantidad de Horas de Vuelo:
@@ -171,6 +259,55 @@ function AsociadoPerfil({ idUsuario = 1 }) {
           <button type="submit">Guardar Cambios</button>
         </div>
       </form>
+
+      <section className="licencias-section">
+        <h3>Licencias</h3>
+        <DataTable 
+          value={licencias} 
+          style={{ width: '100%' }} >
+          <Column field="codigos_licencias" header="Codigos de licencias"></Column>
+          <Column field="descripcion" header="Descripcion"></Column>
+          <Column field="fecha_vencimiento" header="Fecha de vencimiento" body={formatFecha} /> 
+          <Column header="Estado" body={calcularEstadoLicencia} />
+        </DataTable>
+        <Button label="Actualizar licencias" icon="pi pi-refresh" onClick={() => setLicenciaDialog(true)} />
+      
+      </section>
+      
+      <Dialog
+        header="Actualizar Licencia"
+        visible={licenciaDialog}
+        onHide={() => setLicenciaDialog(false)}
+        style={{ width: '50vw' }}
+      >
+        <div className="p-fluid">
+          <div className="p-field">
+            <label htmlFor="tipoLicencia">Tipo de Licencia</label>
+            <Dropdown
+              id="tipoLicencia"
+              value={selectedLicencia}
+              options={tiposLicencias}
+              onChange={(e) => setSelectedLicencia(e.value)}
+              placeholder="Seleccione una licencia"
+            />
+          </div>
+          <div className="p-field">
+            <label htmlFor="fechaVencimiento">Fecha de Vencimiento</label>
+            <Calendar
+              id="fechaVencimiento"
+              value={fechaVencimiento}
+              onChange={(e) => setFechaVencimiento(e.value)}
+              showIcon
+              dateFormat="yy-mm-dd"
+            />
+          </div>
+          <div className="button-container">
+            <Button label="Actualizar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
+            <Button label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary" />
+          </div>
+        </div>
+      </Dialog>
+
       </div>
   );
 }
