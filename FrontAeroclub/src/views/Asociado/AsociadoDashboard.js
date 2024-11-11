@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
 import { Link } from 'react-router-dom';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import '../../styles/datatable-style.css'
 
 //importo servicios
 import {
@@ -129,7 +132,20 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
       {console.log(data)}
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
-        <TableComponent columns={columns} data={data} />
+        <DataTable 
+          value={data} 
+          // paginator rows={4} 
+          // rowsPerPageOptions={[10, 15, 25, 50]} 
+          removableSort 
+          scrollable
+          scrollHeight="800px"
+          >
+          <Column field="matricula_aeronave" header="Avión" sortable ></Column>
+          <Column field="fecha_vuelo" header="Último vuelo" sortable ></Column>
+          <Column field="tiempo_vuelo" header="Tiempo" sortable ></Column>
+          <Column field="aterrizajes" header="Aterrizajes" sortable></Column>
+          <Column field="Adaptacion" header="Adaptación" sortable></Column>
+        </DataTable>
       </section>
 
       <section className="licencias-section">

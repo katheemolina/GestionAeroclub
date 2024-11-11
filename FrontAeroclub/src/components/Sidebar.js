@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
 import Boton from './Button';
@@ -8,8 +8,9 @@ import '../styles/sidebar.css';
 function Sidebar() {
   const { user } = useUser();
   const { role } = useRole();
+  
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  // Configuración de enlaces por rol
   const enlacesPorRol = {
     asociado: [
       { ruta: '/asociado/dashboard', texto: 'Inicio' },
@@ -42,20 +43,41 @@ function Sidebar() {
     ],
   };
 
-  // Obtiene los enlaces correspondientes al rol actual
   const enlaces = enlacesPorRol[role] || [];
 
+  // Alternar visibilidad completa solo en móviles
+  const toggleSidebar = () => {
+    if (window.innerWidth <= 768) { // Solo permite expandir en móviles
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  // Determina si la flecha debe ser visible solo en móviles
+  const isMobile = window.innerWidth <= 768;
+
+  // Manejar el clic en cualquier enlace para cerrar el sidebar en móviles
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setIsExpanded(false);
+    }
+  };
+
   return (
-    <div className="sidebar-container">
+    <div className={`sidebar-container ${isExpanded ? 'full-screen' : ''}`}>
       <div className="sidebar-header">
         <div className="sidebar-header-info">
           <span>{user ? user.name : 'ApellidoNombre'}</span>
-          <hr />
+          <hr className="divisor-header"/>
           {role.toUpperCase()}
         </div>
-        <BotonesPorRol rol={role} /> {/* Botones para cambiar el rol */}
+        {isMobile && (
+          <div className="toggle-arrow" onClick={toggleSidebar}>
+            {isExpanded ? '▲' : '▼'}
+          </div>
+        )}
       </div>
-      <div className="sidebar-navbar">
+      <BotonesPorRol rol={role} />
+      <div className={`sidebar-navbar ${isExpanded ? 'show' : ''}`}>
         {enlaces.map((enlace, index) => (
           <Boton
             key={index}
@@ -63,6 +85,7 @@ function Sidebar() {
             ruta={enlace.ruta}
             texto={enlace.texto}
             logout={enlace.logout || false}
+            onClick={handleLinkClick} // Llamamos a handleLinkClick al hacer clic
           />
         ))}
       </div>

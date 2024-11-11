@@ -85,3 +85,29 @@ export const actualizarEstadoAsociado = async (usuarioId, estado) => {
         throw error;  // Lanza el error para que el componente lo maneje
     }
 };
+
+export const actualizarLicencias = async (idUsuario, licencias) => {
+    try {
+        // Realizar la solicitud PUT a la API
+        const response = await fetch(`${API_URL}/usuarios/${idUsuario}/licencias`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(licencias),  // Convertimos el array de licencias a JSON
+        });
+
+        // Si la respuesta no es exitosa, lanzamos un error
+        if (!response.ok) {
+            throw new Error('Error al actualizar las licencias');
+        }
+
+        // Devolvemos la respuesta si la solicitud es exitosa
+        return await response.json();
+    } catch (error) {
+        console.error('Error al actualizar las licencias:', error);
+        throw error;  // Lanza el error para que el componente lo maneje
+    }
+};
+
+

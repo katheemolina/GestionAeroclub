@@ -1,21 +1,36 @@
-.menu-desplegable {
-    place-items: center;
-}
-
-.botones-por-rol{
+.menu-opciones {
+    margin-top: 5px;
     display: flex;
-    align-items: center;
-    justify-content: space-around;
-    align-content: center;
-    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
 }
 
-.botones-por-rol>button{
-    border: solid;
-    font-size: small;
-    padding: 0.1rem;
+.opcion-boton {
+    font-size: 16px;
+    background-color: #b0b0b0; /* Color de fondo gris claro */
+    color: #333333; /* Texto en gris oscuro */
+    width: 45%;
+    border: 2px solid #999999; /* Borde gris medio */
+    padding: 0.7rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.opcion-boton{
-    font-size: 14px;
+.opcion-boton:hover {
+    background-color: #8e8e8e; /* Color de fondo al pasar el mouse */
+    color: #ffffff; /* Cambia el color del texto a blanco al pasar el mouse */
+}
+
+.opcion-boton.activo {
+    background-color: #6e6e6e; /* Color de fondo para el botón activo */
+    color: #ffffff; /* Texto en blanco para el botón activo */
+    font-weight: bold;
+    border-color: #6e6e6e; /* Borde del mismo color que el fondo del botón activo */
+}
+
+.menu-opciones .opcion-boton:not(:last-child) {
+    margin-right: 0.5rem; /* Espacio entre los botones */
 }

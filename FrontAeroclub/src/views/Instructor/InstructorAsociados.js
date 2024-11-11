@@ -4,7 +4,7 @@ import { listarAsociados } from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
+import FlightIcon from '@mui/icons-material/Flight';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
 import { useNavigate } from 'react-router-dom';
 
@@ -63,7 +63,7 @@ function InstructorAsociados({idUsuario = 0}){
                             <div className='acciones'>
                             {/* Botón de editar */}
                             <IconButton color="primary" aria-label="edit" onClick={() => handleGoToLibroVuelo(rowData)}>
-                                <EditIcon />
+                                <FlightIcon />
                             </IconButton>
 
                             {/* Botón de detalles */}
