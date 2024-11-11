@@ -9,6 +9,10 @@ import { generarReciboApi, listarInstructores, obtenerTiposVuelos } from '../../
 
 
 function FormularioGestorRecibos({ idUsuario = 0 }) {
+    const [cantidad, setCantidad] = useState(''); // Cantidad de combustible
+    const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10)); // Fecha por defecto al día de hoy
+    const [monto, setMonto] = useState(''); // Monto total
+    const [observaciones, setObservaciones] = useState(''); // Observaciones
     const [itinerarios, setItinerarios] = useState(1);
     const [currentItinerario, setCurrentItinerario] = useState(0); // Estado para el tab seleccionado
     const [itinerarioData, setItinerarioData] = useState([{ origen: '', destino: '', horaSalida: '', horaLlegada: '',instruccion: false }]);
@@ -253,7 +257,13 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             {/* Observaciones */}
             <div className="form-group">
                 <label className="label-recibo">Observaciones:</label>
-                <textarea className="textarea-recibo" placeholder="Please enter"></textarea>
+                <textarea
+                    className="input-recibo"
+                    rows="3"
+                    value={observaciones}
+                    onChange={(e) => setObservaciones(e.target.value)}
+                    placeholder="Añadir observaciones"
+                ></textarea>
             </div>
         </>
     );
@@ -331,12 +341,32 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         </div>
     );
     
+    const calcularMonto = () => {
+        if (cantidad > 0 && tarifasSeleccionado) {
+            const nuevoMonto = cantidad * tarifasSeleccionado.importe;
+            setMonto(nuevoMonto);  // Actualizamos el monto calculado
+        } else {
+            setMonto(0);  // Si no hay cantidad o tarifa, el monto es 0
+        }
+    };
+
+    // Llamamos a la función de cálculo cada vez que cambia la cantidad o la tarifa
+    useEffect(() => {
+        calcularMonto();
+    }, [cantidad, tarifasSeleccionado]);
 
     const renderFormularioCombustible = () => (
         <>    
             <div className="form-group">
                 <label className="label-recibo">Cantidad:</label>
-                <input className="input-recibo" type="number" min="0" placeholder="Cantidad en litros" />
+                <input
+                    className="input-recibo"
+                    type="number"
+                    min="0"
+                    value={cantidad}
+                    onChange={(e) => setCantidad(e.target.value)}
+                    placeholder="Cantidad en litros"
+                />
             </div>
 
             <div className="form-group">
@@ -369,17 +399,34 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     
             <div className="form-group">
                 <label className="label-recibo">Fecha:</label>
-                <input className="input-recibo" type="date" />
+                <input
+                    className="input-recibo"
+                    type="date"
+                    value={fecha}
+                    onChange={(e) => setFecha(e.target.value)}
+                />
             </div>
     
             <div className="form-group">
                 <label className="label-recibo">Monto:</label>
-                <input className="input-recibo" type="number" min="0" placeholder="Monto total ya calculado" />
+                <input
+                    className="input-recibo"
+                    type="text"
+                    value={`$${monto.toFixed(2)}`}
+                    readOnly
+                    disabled
+                />
             </div>
     
             <div className="form-group">
                 <label className="label-recibo">Observaciones:</label>
-                <textarea className="input-recibo" rows="3" placeholder="Añadir observaciones"></textarea>
+                <textarea
+                    className="input-recibo"
+                    rows="3"
+                    value={observaciones}
+                    onChange={(e) => setObservaciones(e.target.value)}
+                    placeholder="Añadir observaciones"
+                ></textarea>
             </div>
             <hr/>
         </>
@@ -392,23 +439,29 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
 
     const handleGenerar = async () => {
         // Verificar que todos los campos obligatorios están completos
-        if (!tipoReciboSeleccionado || !aeronavesSeleccionado || !tarifasSeleccionado || !asociadosSeleccionado) {
-            alert("Por favor, completa todos los campos obligatorios.");
-            return;
-        }
+        // if (!tipoReciboSeleccionado || !aeronavesSeleccionado || !tarifasSeleccionado || !asociadosSeleccionado) {
+        //     alert("Por favor, completa todos los campos obligatorios.");
+        //     return;
+        // }
     
         // Construir el objeto con los datos del formulario
         const reciboData = {
-            tipoRecibo: tipoReciboSeleccionado.value,
-            aeronave: aeronavesSeleccionado,
-            tarifa: tarifasSeleccionado,
-            asociado: asociadosSeleccionado,
-            fechaVuelo: new Date().toISOString(), // Fecha actual del vuelo (puedes cambiarla si es otro campo en el formulario)
-            instructoresSeleccionado: instructorSeleccionado,
-            itinerarios: itinerarioData,
-            instruccionSeleccionada: instruccionSeleccionada,
+            IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
+            TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
+            Cantidad: cantidad ?? 0,                                    // Valor predeterminado
+            Importe: monto ?? 0,                                        // Valor predeterminado
+            Fecha: new Date().toISOString(),
+            Instruccion: instruccionSeleccionada ?? 0, // Valor predeterminado
+            IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
+            Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
+            Datos: JSON.stringify(itinerarioData),
+            Observaciones: observaciones,
+            Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0,  // Valor predeterminado
+            Tarifa: tarifasSeleccionado?.id_tarifa ?? 0
         };
     
+        console.log(reciboData);
+
         try {
             // Hacer la llamada a la API para generar el recibo
             const response = await generarReciboApi(reciboData);
@@ -444,7 +497,6 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             <hr></hr>
             {tipoReciboSeleccionado === "Vuelo" && renderFormularioVuelo()}
             {tipoReciboSeleccionado === "Combustible" && renderFormularioCombustible()}
-            {/* Agrega aquí los formularios para otros tipos de recibos si es necesario */}
             
             <div className="buttons">
                 <button className="generate-btn" onClick={handleGenerar}>Generar</button>

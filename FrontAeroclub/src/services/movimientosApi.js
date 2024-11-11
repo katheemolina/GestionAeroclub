@@ -35,3 +35,11 @@ export const obtenerTodosLosMovimientos = async () => {
     }
     return response.json();
 };
+
+export const obtenerCuentaCorrienteAeroclub = async () => {
+    const response = await fetch(`${API_URL}/movimientosAeroclub`);
+    if (!response.ok) {
+        throw new Error('Error al listar asociados');
+    }
+    return response.json();
+};

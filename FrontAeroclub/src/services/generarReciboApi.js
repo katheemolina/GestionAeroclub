@@ -21,7 +21,7 @@ export const listarInstructores = async () => {
 export const generarReciboApi = async (reciboData) => {
     try {
         const response = await fetch(`${API_URL}/generarRecibo`, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
