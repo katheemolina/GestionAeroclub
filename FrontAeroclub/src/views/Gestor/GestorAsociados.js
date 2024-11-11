@@ -8,7 +8,7 @@ import { listarAsociados, actualizarEstadoAsociado } from '../../services/usuari
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
-import EditIcon from '@mui/icons-material/Edit';
+import FlightIcon from '@mui/icons-material/Flight';
 import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -83,7 +83,7 @@ const GestorAsociados  = () => {
                             <div className='acciones'>
                             {/* Botón de editar */}
                             <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                                <EditIcon />
+                                <FlightIcon />
                             </IconButton>
 
                             {/* Botón de detalles */}
