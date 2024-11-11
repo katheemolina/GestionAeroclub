@@ -158,7 +158,9 @@
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-
+.p-dialog-content{
+    padding: 10px;
+}
 .p-dialog-content .p-fluid .p-field{
     margin: 20px 0px 20px 0px;
     gap: 10px;
@@ -181,4 +183,9 @@
 
 #btn-guardar{
     background-color: #4CAF50;
+    margin-top: 10px;
+}
+
+.p-dialog-header-icon{
+    width: 50px;
 }

@@ -1,5 +1,17 @@
+
 .menu-desplegable {
     place-items: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.menu-principal{
+    background-color: rgb(126, 46, 46);
+    width: 100%;
+}
+
+.menu-principal:hover{
+    background-color: rgb(102, 34, 34);
 }
 
 .botones-por-rol{
@@ -18,4 +30,18 @@
 
 .opcion-boton{
     font-size: 14px;
+    background-color: rgb(126, 46, 46);
+    width: 50%;
+}
+
+.opcion-boton:hover{
+    background-color: rgb(102, 34, 34);
+}
+
+.menu-opciones{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
 }

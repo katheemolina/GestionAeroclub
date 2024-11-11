@@ -46,11 +46,12 @@ function Sidebar() {
   const enlaces = enlacesPorRol[role] || [];
 
   return (
+    
     <div className="sidebar-container">
       <div className="sidebar-header">
         <div className="sidebar-header-info">
           <span>{user ? user.name : 'ApellidoNombre'}</span>
-          <hr />
+          <hr className="divisor-header"/>
           {role.toUpperCase()}
         </div>
         <BotonesPorRol rol={role} /> {/* Botones para cambiar el rol */}

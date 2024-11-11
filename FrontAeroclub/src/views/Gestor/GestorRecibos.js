@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Styles/GestorRecibos.css'
 import { obtenerTodosLosRecibos } from '../../services/recibosApi';
-
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css'; //Estilado para la tabla

@@ -8,6 +8,7 @@
     width: 20%;
     background-color: #E4E4E4;
     box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4);
+    font-family: 'Arial', sans-serif; 
 }
 
 .sidebar-header{
@@ -45,4 +46,12 @@
 
 .sidebar-navbar-link:hover{
     color: white;
+}
+
+.divisor-header{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border: none;
+    height: 2px;
+    background-color: rgb(102, 34, 34);
 }

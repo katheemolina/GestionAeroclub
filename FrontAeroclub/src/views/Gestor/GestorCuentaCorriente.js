@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './Styles/GestorCuentaCorriente.css'
 import { obtenerTodosLosMovimientos } from '../../services/movimientosApi';
-import FiltroComponent from '../../components/FiltroComponent';
-import DataTable from 'react-data-table-component';
-import estiloTabla from '../../styles/estiloTabla';
+// import FiltroComponent from '../../components/FiltroComponent';
+
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import '../../styles/datatable-style.css'
 
 function GestorRecibos({idUsuario = 0}){
 
@@ -41,22 +43,26 @@ function GestorRecibos({idUsuario = 0}){
         <header className="header">
           <h1>Todos Los Movimientos</h1>
         </header>
-        <FiltroComponent
+        {/* <FiltroComponent
         mostrarUsuario={true} // Cambia a false si no quieres mostrar el filtro de usuario
         mostrarFecha={true} // Cambia a false si no quieres mostrar los filtros de fecha
         onBuscar={(filtros) => {console.log('Filtros aplicados:', filtros); // Aquí puedes hacer algo con los datos filtrados, como realizar una búsqueda
-        }}/>
-        
-        <DataTable  
-          columns={columns} 
-          data={data} 
-          pagination 
-          highlightOnHover 
-          striped 
-          selectableRows
-          paginationPerPage={15}
-          customStyles={estiloTabla}
-        />
+        }}/> */}     
+        <DataTable 
+          value={data} 
+          paginator rows={15} 
+          rowsPerPageOptions={[10, 15, 25, 50]} 
+          removableSort 
+          filterDisplay="row"
+          scrollable
+          scrollHeight="800px"
+          >
+          <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false}  ></Column>
+          <Column field="usuario" header="Usuario" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+          <Column field="tipo" header="Tipo de movimiento" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+          <Column field="importe" header="Importe" sortable filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} ></Column>
+          <Column field="numero_recibo" header="Recibo" sortable filter filterPlaceholder="Buscar por recibo" filterMatchMode="contains" showFilterMenu={false} ></Column>
+        </DataTable>
       </div>
     );
 }
