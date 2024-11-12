@@ -41,6 +41,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     // Traigo datos de tarifas
     const [tarifas, setTarifas] = useState([]);
     const [tarifasSeleccionado, setTarifasSeleccionado] = useState(null);
+    const [tarifasFiltradas, setTarifasFiltradas] = useState([]);
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
@@ -52,6 +53,31 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     useEffect(() => {
         fetchTarifas();
     }, []);
+
+    // useEffect para filtrar las tarifas cuando la aeronave seleccionada cambia
+    useEffect(() => {
+        if (aeronavesSeleccionado) {
+        // Filtra las tarifas que corresponden a la aeronave seleccionada
+        const tarifasFiltradasPorAeronave = tarifas.filter(
+            (tarifa) => tarifa.id_aeronave === aeronavesSeleccionado.id_aeronave
+        );
+        setTarifasFiltradas(tarifasFiltradasPorAeronave);
+        }
+    }, [aeronavesSeleccionado, tarifas]);  // Vuelve a ejecutar cuando cambian la aeronave o las tarifas
+
+    // Manejar el cambio de aeronave seleccionada
+    const handleAeronaveChange = (e) => {
+    const selectedAeronave = aeronaves.find(
+        (aeronave) => aeronave.id_aeronave === e.target.value
+    );
+        setAeronavesSeleccionado(selectedAeronave);
+        setTarifasSeleccionado(null);  // Reseteamos la tarifa seleccionada al cambiar de aeronave
+    };
+
+    // Manejar el cambio de tarifa seleccionada
+    const handleTarifaChange = (e) => {
+        setTarifasSeleccionado(e.target.value);
+    };
 
     // Traigo datos de tipos de vuelo
     const [tiposVuelo, setTiposVuelo] = useState([]);
@@ -164,7 +190,9 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             </div>
             <div className="form-group">
                 <label className="label-recibo">Fecha de vuelo:</label>
-                <input className="input-recibo" type="date" />
+                <input className="input-recibo" type="date" 
+                    value={fecha}
+                    onChange={(e) => setFecha(e.target.value)} />
             </div>
             <div className="form-group">
                 <label className="label-recibo">Tipo de vuelo:</label>
@@ -287,36 +315,23 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
                 <label className="label-recibo">Hora salida:</label>
                 <input
                     className="input-recibo"
-                    type="text"
+                    type="time"
                     placeholder="HH"
                     maxLength={2}
                     value={itinerarioData[index]?.horaSalida || ''}
                     onChange={(e) => handleItinerarioChange(index, 'horaSalida', e.target.value)}
                 />
-                :
-                <input
-                    className="input-recibo"
-                    type="text"
-                    placeholder="MM"
-                    maxLength={2}
-                />
+                
             </div>
             <div className="form-group">
                 <label className="label-recibo">Hora llegada:</label>
                 <input
                     className="input-recibo"
-                    type="text"
+                    type="time"
                     placeholder="HH"
                     maxLength={2}
                     value={itinerarioData[index]?.horaLlegada || ''}
                     onChange={(e) => handleItinerarioChange(index, 'horaLlegada', e.target.value)}
-                />
-                :
-                <input
-                    className="input-recibo"
-                    type="text"
-                    placeholder="MM"
-                    maxLength={2}
                 />
             </div>
             <div className="form-group">
@@ -437,42 +452,106 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         navigate('/gestor/recibos');
     };
 
-    const handleGenerar = async () => {
-        // Verificar que todos los campos obligatorios están completos
-        // if (!tipoReciboSeleccionado || !aeronavesSeleccionado || !tarifasSeleccionado || !asociadosSeleccionado) {
-        //     alert("Por favor, completa todos los campos obligatorios.");
-        //     return;
-        // }
-    
+    const handleGenerar = async () => {    
         // Construir el objeto con los datos del formulario
-        const reciboData = {
-            IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
-            TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
-            Cantidad: 0,                                    // Valor predeterminado
-            Importe: monto ?? 0,                                        // Valor predeterminado
-            Fecha: fecha,
-            Instruccion: instruccionSeleccionada ?? 0, // Valor predeterminado
-            IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
-            Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
-            Datos: JSON.stringify(itinerarioData),
-            Observaciones: observaciones,
-            Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0,  // Valor predeterminado
-            Tarifa: tarifasSeleccionado?.id_tarifa ?? 0,
-            TipoItinerario: tiposVueloSeleccionado?.id_tipo_itinerario ?? 0
-        };
-    
-        console.log(reciboData);
+        let reciboData = {};
+        if (!['Combustible', 'Vuelo'].includes(tipoReciboSeleccionado)) {
+            alert('El tipo de recibo es inválido');
+            return false;
+        }
+        if (tipoReciboSeleccionado === 'Combustible')
+        {
+            reciboData = {
+                IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,
+                TipoRecibo: 'Combustible',
+                Cantidad: Number(cantidad), 
+                Importe: monto,
+                Fecha: fecha,
+                Instruccion: 0, // Valor predeterminado
+                IdInstructor: 0, // Valor predeterminado
+                Itinerarios: 0,                     // Valor predeterminado
+                Datos: JSON.stringify(''),
+                Observaciones: observaciones ?? '',
+                Aeronave: 0,  // Valor predeterminado
+                Tarifa: 0,
+                TipoItinerario: 0
+            };
+            if (reciboData.IdUsuario === 0) {
+                alert('El usuario es obligatorio');
+                return false;
+            }
+            if (reciboData.Cantidad <= 0 || reciboData.Importe <= 0) {
+                alert('La cantidad y el importe deben ser mayores que 0');
+                return false;
+            }
+            if (!reciboData.Fecha || isNaN(new Date(reciboData.Fecha))) {
+                alert('La fecha es inválida');
+                return false;
+            }
+        } else if (tipoReciboSeleccionado === 'Vuelo'){
+            reciboData = {
+                IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
+                TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
+                Cantidad: 0,                                    // Valor predeterminado
+                Importe: monto ?? 0,                                        // Valor predeterminado
+                Fecha: fecha,
+                Instruccion: instruccionSeleccionada ?? 0, // Valor predeterminado
+                IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
+                Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
+                Datos: JSON.stringify(itinerarioData),
+                Observaciones: observaciones,
+                Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0,  // Valor predeterminado
+                Tarifa: tarifasSeleccionado?.id_tarifa ?? 0,
+                TipoItinerario: tiposVueloSeleccionado?.id_tipo_itinerario ?? 0
+            };
+            // Validaciones
+            if (reciboData.IdUsuario === 0) {
+                alert('El usuario es obligatorio');
+                return false;
+            }
+            if (!reciboData.Fecha || isNaN(new Date(reciboData.Fecha))) {
+                alert('La fecha es inválida');
+                return false;
+            }
+            if (![0, 1,true,false].includes(reciboData.Instruccion)) {
+                alert('El valor de instrucción debe ser 0 o 1');
+                return false;
+            }
+            if (reciboData.IdInstructor === 0) {
+                alert('El instructor es obligatorio');
+                return false;
+            }
+            if (reciboData.Itinerarios <= 0) {
+                alert('Debe haber al menos un itinerario');
+                return false;
+            }
+            if (!reciboData.Datos || reciboData.Datos === '[]') {
+                alert('Los datos de itinerarios son obligatorios');
+                return false;
+            }
+            if (reciboData.Aeronave === 0) {
+                alert('La aeronave es obligatoria');
+                return false;
+            }
+            if (reciboData.Tarifa === 0) {
+                alert('La tarifa es obligatoria');
+                return false;
+            }
+            if (reciboData.TipoItinerario === 0) {
+                alert('El tipo de itinerario es obligatorio');
+                return false;
+            }
+        }
 
         try {
-            // Hacer la llamada a la API para generar el recibo
-            const response = await generarReciboApi(reciboData);
-            
-            // Manejar la respuesta de la API
-            alert(response.mesage);
+            const result = await generarReciboApi(reciboData);
+            console.log('Recibo generado con éxito:', result);
+            // Aquí puedes mostrar un mensaje de éxito al usuario
+            alert(result.message);
             navigate('/gestor/recibos'); // Redirigir a la lista de recibos
         } catch (error) {
-            console.error("Error al generar el recibo: ", error);
-            alert("Hubo un error al generar el recibo.");
+            console.error('Error al generar el recibo:', error);
+            // Aquí puedes manejar el error en el UI, como mostrando un mensaje de error
         }
     };
     
@@ -494,7 +573,6 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             <hr></hr>
             {tipoReciboSeleccionado === "Vuelo" && renderFormularioVuelo()}
             {tipoReciboSeleccionado === "Combustible" && renderFormularioCombustible()}
-            
             <div className="buttons">
                 <button className="generate-btn" onClick={handleGenerar}>Generar</button>
                 <button className="cancel-btn" onClick={handleCancelar}>Cancelar</button>

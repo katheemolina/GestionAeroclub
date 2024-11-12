@@ -21,7 +21,7 @@ export const listarInstructores = async () => {
 export const generarReciboApi = async (reciboData) => {
     try {
         const response = await fetch(`${API_URL}/generarRecibo`, {
-            method: 'PUT',
+            method: 'PUT',  // Usamos PUT porque así lo tienes configurado en el backend
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -30,13 +30,16 @@ export const generarReciboApi = async (reciboData) => {
 
         // Si la respuesta no es exitosa, lanzamos un error
         if (!response.ok) {
-            throw new Error('Error al generar el recibo');
+            const errorData = await response.json();
+            const errorMessage = errorData.error || 'Error desconocido';
+            throw new Error(errorMessage);
         }
 
-        // Devolvemos la respuesta si la solicitud es exitosa
+        // Si la respuesta es exitosa, devolvemos los datos
         return await response.json();
     } catch (error) {
         console.error('Error al generar el recibo:', error);
-        throw error;  // Lanza el error para que el componente lo maneje
+        // Devolver el error para que pueda ser manejado en el componente
+        throw error;
     }
 };
