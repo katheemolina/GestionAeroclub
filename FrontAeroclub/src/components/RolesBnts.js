@@ -1,48 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRole } from '../context/RoleContext';
+import { useUser } from '../context/UserContext';
 import './styles/RolesBnts.css';
+import { obtenerRolPorIdUsuario } from '../services/usuariosApi';
 
-const rolesConfig = {
-  asociado: [
-    { label: "Asociado", nuevoRol: "asociado" },
-    { label: "Gestor", nuevoRol: "gestor" },
-    { label: "Instructor", nuevoRol: "instructor" },
-  ],
-  gestor: [
-    { label: "Asociado", nuevoRol: "asociado" },
-    { label: "Gestor", nuevoRol: "gestor" },
-    { label: "Instructor", nuevoRol: "instructor" },
-  ],
-  instructor: [
-    { label: "Asociado", nuevoRol: "asociado" },
-    { label: "Gestor", nuevoRol: "gestor" },
-    { label: "Instructor", nuevoRol: "instructor" },
-  ],
-};
-
-function BotonesPorRol({ rol }) {
+function BotonesPorRol() {
   const { setRole } = useRole();
-
-  const botones = rolesConfig[rol] || [];
-
-  const handleButtonClick = (boton) => {
-    if (boton.nuevoRol[0].descripcion ) {
-      setRole(boton.nuevoRol[0].descripcion );
-      localStorage.setItem('role', boton.nuevoRol[0].descripcion );
+  const { usuarioId } = useUser(); // Usamos el usuarioId para obtener los roles
+  const [rolesDisponibles, setRolesDisponibles] = useState([]);
+  
+  // Simulación de obtener roles desde una API
+  const obtenerRolesDelAsociado = async () => {
+    try {
+      // Reemplaza con tu llamada a la API para obtener los roles
+      const response = await obtenerRolPorIdUsuario(usuarioId); // Suponiendo que esta API devuelve los roles del usuario
+      setRolesDisponibles(response);
+    } catch (error) {
+      console.error('Error obteniendo los roles del asociado', error);
+      setRolesDisponibles([]); // Si hay un error, no mostramos roles
     }
+  };
+
+  // Llamamos a la función cuando cambia el usuarioId
+  useEffect(() => {
+    if (usuarioId) {
+      obtenerRolesDelAsociado();
+    }
+  }, [usuarioId]);
+
+  // Generamos dinámicamente los botones en función de los roles
+  const handleButtonClick = (rol) => {
+    setRole(rol);
+    localStorage.setItem('role', rol);
   };
 
   return (
     <div className="menu-opciones">
-      {botones.map((boton, index) => (
-        <button
-          key={index}
-          onClick={() => handleButtonClick(boton)}
-          className={`opcion-boton ${rol === boton.nuevoRol[0].descripcion ? 'activo' : ''}`}
-        >
-          {boton.label}
-        </button>
-      ))}
+      {rolesDisponibles.length === 0 ? (
+        <p>Cargando roles...</p>
+      ) : (
+        rolesDisponibles.map((rol, index) => (
+          <button
+            key={index}
+            onClick={() => handleButtonClick(rol.descripcion)}
+            className={`opcion-boton ${rol.descripcion === rol.descripcion ? 'activo' : ''}`} // Compara el rol activado
+          >
+            
+            {rol.descripcion} {/* Aquí el nombre del rol */}
+          </button>
+        ))
+      )}
     </div>
   );
 }

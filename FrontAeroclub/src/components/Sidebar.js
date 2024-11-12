@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
 import Boton from './Button';
@@ -10,9 +10,10 @@ function Sidebar() {
   const { role } = useRole();
   
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Usamos un estado para el tamaño de la ventana
 
   const enlacesPorRol = {
-    asociado: [
+    Asociado: [
       { ruta: '/asociado/dashboard', texto: 'Inicio' },
       { ruta: '/asociado/perfil', texto: 'Mi Perfil' },
       { ruta: '/asociado/libro-vuelo', texto: 'Libro de Vuelo' },
@@ -21,7 +22,7 @@ function Sidebar() {
       { ruta: '/asociado/tarifas', texto: 'Tarifas' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
-    gestor: [
+    Gestor: [
       { ruta: '/gestor/dashboard', texto: 'Inicio' },
       { ruta: '/gestor/recibos', texto: 'Recibos' },
       { ruta: '/gestor/vuelos', texto: 'Vuelos' },
@@ -31,7 +32,7 @@ function Sidebar() {
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
-    instructor: [
+    Instructor: [
       { ruta: '/instructor/dashboard', texto: 'Inicio' },
       { ruta: '/instructor/perfil', texto: 'Mi Perfil' },
       { ruta: '/instructor/libro-vuelo', texto: 'Libro de Vuelo' },
@@ -47,13 +48,23 @@ function Sidebar() {
 
   // Alternar visibilidad completa solo en móviles
   const toggleSidebar = () => {
-    if (window.innerWidth <= 768) { // Solo permite expandir en móviles
+    if (isMobile) { // Solo permite expandir en móviles
       setIsExpanded(!isExpanded);
     }
   };
 
-  // Determina si la flecha debe ser visible solo en móviles
-  const isMobile = window.innerWidth <= 768;
+  // Detectar cambio en el tamaño de la ventana (por ejemplo, cuando se pasa a escritorio o móvil)
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Limpiar el evento al desmontar el componente
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Manejar el clic en cualquier enlace para cerrar el sidebar en móviles
   const handleLinkClick = () => {
@@ -66,7 +77,7 @@ function Sidebar() {
     <div className={`sidebar-container ${isExpanded ? 'full-screen' : ''}`}>
       <div className="sidebar-header">
         <div className="sidebar-header-info">
-          <span>{user ? user.name : 'ApellidoNombre'}</span>
+          <span>{user?.name || 'ApellidoNombre'}</span>
           <hr className="divisor-header"/>
           {role.toUpperCase()}
         </div>
@@ -76,20 +87,20 @@ function Sidebar() {
           </div>
         )}
       </div>
-      <BotonesPorRol rol={role} />
-      <div className={`sidebar-navbar ${isExpanded ? 'show' : ''}`}>
-        {enlaces.map((enlace, index) => (
-          <Boton
-            key={index}
-            estilos="sidebar-navbar-link"
-            ruta={enlace.ruta}
-            texto={enlace.texto}
-            logout={enlace.logout || false}
-            onClick={handleLinkClick} // Llamamos a handleLinkClick al hacer clic
-          />
-        ))}
-      </div>
-    </div>
+       <BotonesPorRol  />
+       <div className={`sidebar-navbar ${isExpanded ? 'show' : ''}`}>
+         {enlaces.map((enlace, index) => (
+           <Boton
+             key={index}
+             estilos="sidebar-navbar-link"
+             ruta={enlace.ruta}
+             texto={enlace.texto}
+             logout={enlace.logout || false}
+             onClick={handleLinkClick} // Llamamos a handleLinkClick al hacer clic
+           />
+         ))}
+       </div>
+     </div>
   );
 }
 

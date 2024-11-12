@@ -48,7 +48,7 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 }
 
 
-  return allowedRoles.includes(role) & isAuthenticated ? (
+  return allowedRoles.includes(role.toLowerCase()) & isAuthenticated ? (
     <Component {...rest} />
   ) : (
     <Navigate to="/Bienvenido" replace />
@@ -56,7 +56,6 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 }
 
 function App() {
-  const { role } = useRole();
   return (
     <Router>
       {/* <Navbar /> */}

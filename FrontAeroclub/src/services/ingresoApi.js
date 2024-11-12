@@ -9,11 +9,11 @@ export const verificarOCrearUsuario = async (usuarioData) => {
             },
             body: JSON.stringify(usuarioData),
         });
-        
+
         if (!response.ok) {
             throw new Error('Error al insertar usuario');
         }
-
+        
         return await response.json();
     } catch (error) {
         console.error(error);

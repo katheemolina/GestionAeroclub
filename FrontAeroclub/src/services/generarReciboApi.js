@@ -28,10 +28,15 @@ export const generarReciboApi = async (reciboData) => {
             body: JSON.stringify(reciboData),
         });
 
-        const result = await response.json();
-        return result; // Aquí se espera una respuesta de la API
+        // Si la respuesta no es exitosa, lanzamos un error
+        if (!response.ok) {
+            throw new Error('Error al generar el recibo');
+        }
+
+        // Devolvemos la respuesta si la solicitud es exitosa
+        return await response.json();
     } catch (error) {
-        console.error("Error en la llamada API:", error);
-        throw error; // Para poder manejarlo en el componente
+        console.error('Error al generar el recibo:', error);
+        throw error;  // Lanza el error para que el componente lo maneje
     }
 };

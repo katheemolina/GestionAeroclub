@@ -13,9 +13,8 @@ export const RoleProvider = ({ children }) => {
       if (usuarioId) {
         try {
           const role = await obtenerRolPorIdUsuario(usuarioId);
-          setRole(role);
-          localStorage.setItem('role', role);
-          console.error(role);
+          setRole(role[0].descripcion);
+          localStorage.setItem('role', role[0].descripcion);
         } catch (error) {
           console.error('Error al obtener el rol del usuario:', error);
           setRole('asociado'); 

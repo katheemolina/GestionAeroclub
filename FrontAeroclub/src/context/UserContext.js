@@ -10,25 +10,21 @@ export function UserProvider({ children }) {
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
     const isAuthenticated = !!user;
-
     
     useEffect(() => {
         const fetchUserId = async () => {
             if (user) {
                 try {
                     const idUsuario = await obtenerIdUsuarioDesdeMail(user);
-                    console.log('ID de Usuario:', idUsuario);
-                    setUsuarioId(idUsuario); // Guarda el ID en el contexto
+                    setUsuarioId(idUsuario.id_usuario); // Guarda el ID en el contexto
                 } catch (error) {
                     console.error('Error al obtener el ID de Usuario:', error);
-                    setUsuarioId(1);
                 }
             }
         };
 
         fetchUserId();
     }, [user, setUsuarioId]);
-
 
     useEffect(() => {
         if (user) {
@@ -49,5 +45,3 @@ export function UserProvider({ children }) {
 export function useUser() {
     return useContext(UserContext);
 }
-
-

@@ -1,9 +1,8 @@
 import { GoogleLogin } from '@react-oauth/google';
 import ObtenerDatosPostLogin from '../utils/obtenerDatosLogin';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import { obtenerIdUsuarioDesdeMail } from '../services/usuariosApi';
 import { verificarOCrearUsuario } from '../services/ingresoApi';
 
 export default function Login() {
