@@ -8,9 +8,10 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import { useUser } from '../../context/UserContext';
 
 
-function AsociadoPerfil({ idUsuario = 1 }) {
+function AsociadoPerfil() {
   const [cargando, setCargando] = useState(true);
   const [usuario, setUsuario] = useState([]);
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
     CantAterrizajes: ''
   });
 
+  const { usuarioId } = useUser();
   //Componente para licencias
 
   
@@ -45,7 +47,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
 
   const fetchLicencias = async () => {
     try {
-      const data = await obtenerLicenciasPorUsuario(idUsuario);
+      const data = await obtenerLicenciasPorUsuario(usuarioId);
       setLicencias(data);
     } catch (error) {
       console.error('Error fetching licencias:', error);
@@ -67,7 +69,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
       const licenciaData = [
         { nombreLic: selectedLicencia, fechaVenc: fechaVencimiento.toISOString().split('T')[0] }
       ];
-      await actualizarLicencias(idUsuario, licenciaData); // Llamada a la API con los datos
+      await actualizarLicencias(usuarioId, licenciaData); // Llamada a la API con los datos
       alert("Licencia actualizada correctamente.");
       setLicenciaDialog(false); // Cierra el diálogo después de la actualización
       fetchLicencias(); // Vuelve a cargar las licencias actualizadas
@@ -83,7 +85,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usuarioResponse = await obtenerDatosDelUsuario(idUsuario);
+        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
         setUsuario(usuarioResponse[0]);
         console.log(usuarioResponse);
         setFormData({
@@ -103,9 +105,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
       setCargando(false);
     };
     fetchData();
-  }, [idUsuario]);
-
-
+  }, [usuarioId]);
 
 
   const handleChange = (e) => {
@@ -119,7 +119,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await actualizarDatosDelUsuario(idUsuario, formData);
+      await actualizarDatosDelUsuario(usuarioId, formData);
       alert("Datos actualizados correctamente");
     } catch (error) {
       console.error("Error al actualizar datos:", error);
@@ -232,7 +232,7 @@ function AsociadoPerfil({ idUsuario = 1 }) {
             />
           </label>
         </div>
-        <h2>Completar con datos historicos:</h2>
+        <h2>Datos historicos:</h2>
         <div className="form-row">
           <label>
             Cantidad de Horas de Vuelo:

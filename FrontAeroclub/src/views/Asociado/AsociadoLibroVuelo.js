@@ -3,16 +3,18 @@ import "./Styles/AsociadoLibroVuelo.css"
 import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { useUser } from '../../context/UserContext';
 
-function AsociadoLibroVuelo({ idUsuario = 3 }) {
+function AsociadoLibroVuelo() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { usuarioId } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Obtener vuelos
-        const vuelosResponse = await obtenerLibroDeVueloPorUsuario(idUsuario);
+        const vuelosResponse = await obtenerLibroDeVueloPorUsuario(usuarioId);
         setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
 
       } catch (error) {
@@ -22,7 +24,7 @@ function AsociadoLibroVuelo({ idUsuario = 3 }) {
     };
 
     fetchData();
-  }, [idUsuario]);
+  }, [usuarioId]);
 
   if (loading) {
     return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos

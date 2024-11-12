@@ -4,7 +4,7 @@ import './Styles/GestorVuelos.css'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-function GestorVuelos({idUsuario = 1}){
+function GestorVuelos(){
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     
@@ -21,7 +21,7 @@ function GestorVuelos({idUsuario = 1}){
         };
 
         fetchData();
-    }, [idUsuario]);
+    }, []);
     
     if (loading) {
         return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos

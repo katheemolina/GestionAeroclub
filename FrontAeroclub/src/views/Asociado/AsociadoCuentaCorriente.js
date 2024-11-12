@@ -3,16 +3,19 @@ import "./Styles/AsociadoCuentaCorriente.css"
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { useUser } from '../../context/UserContext';
 
-function AsociadoCuentaCorriente({ idUsuario = 1 }) {
+function AsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { usuarioId } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Obtener vuelos
-        const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(idUsuario);
+        const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
       } catch (error) {
         console.error("Error al obtener datos:", error);
@@ -21,7 +24,7 @@ function AsociadoCuentaCorriente({ idUsuario = 1 }) {
     };
 
     fetchData();
-  }, [idUsuario]);
+  }, [usuarioId]);
   
   // Función para formatear el importe como moneda
   const formatoMoneda = (rowData) => {

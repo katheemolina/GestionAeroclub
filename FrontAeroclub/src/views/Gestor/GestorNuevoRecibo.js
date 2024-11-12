@@ -448,16 +448,17 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         const reciboData = {
             IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
             TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
-            Cantidad: cantidad ?? 0,                                    // Valor predeterminado
+            Cantidad: 0,                                    // Valor predeterminado
             Importe: monto ?? 0,                                        // Valor predeterminado
-            Fecha: new Date().toISOString(),
+            Fecha: fecha,
             Instruccion: instruccionSeleccionada ?? 0, // Valor predeterminado
             IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
             Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
             Datos: JSON.stringify(itinerarioData),
             Observaciones: observaciones,
             Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0,  // Valor predeterminado
-            Tarifa: tarifasSeleccionado?.id_tarifa ?? 0
+            Tarifa: tarifasSeleccionado?.id_tarifa ?? 0,
+            TipoItinerario: tiposVueloSeleccionado?.id_tipo_itinerario ?? 0
         };
     
         console.log(reciboData);
@@ -465,14 +466,10 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
         try {
             // Hacer la llamada a la API para generar el recibo
             const response = await generarReciboApi(reciboData);
-    
+            
             // Manejar la respuesta de la API
-            if (response.success) {
-                alert("Recibo generado exitosamente!");
-                navigate('/gestor/recibos'); // Redirigir a la lista de recibos
-            } else {
-                alert("Error al generar el recibo. Intenta de nuevo.");
-            }
+            alert(response.mesage);
+            navigate('/gestor/recibos'); // Redirigir a la lista de recibos
         } catch (error) {
             console.error("Error al generar el recibo: ", error);
             alert("Hubo un error al generar el recibo.");

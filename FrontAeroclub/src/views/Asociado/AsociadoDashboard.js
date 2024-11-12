@@ -21,9 +21,10 @@ import {
   horasVoladasPorUsuario,
   ultimosVuelosPorUsuario
 } from '../../services/vuelosApi';
+import { useUser } from '../../context/UserContext';
 
 
-function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
+function Dashboard() { // Establecer idUsuario para traer su informacion
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [saldo, setSaldo] = useState(0);
@@ -33,46 +34,39 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
   const [data, setData] = useState([]);
   const [licencias, setLicencias] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const columns = [
-    { header: 'Avión', accessor: 'matricula_aeronave' },
-    { header: 'Último Vuelo', accessor: 'fecha_vuelo' },
-    { header: 'Tiempo', accessor: 'tiempo_vuelo' },
-    { header: 'Aterrizajes', accessor: 'aterrizajes' },
-    { header: 'Adaptación', accessor: 'Adaptacion' },
-  ];
-
+  const { usuarioId } = useUser();
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Obtener datos del usuario
-        const usuarioResponse = await obtenerDatosDelUsuario(idUsuario);
+        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
         const usuario = usuarioResponse[0]; // Accedemos al primer objeto
         setNombre(usuario.nombre);
         setApellido(usuario.apellido);
         
         // Obtener saldo
-        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(idUsuario);
+        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
         const saldoData = saldoResponse[0]; // Accedemos al primer objeto
         setSaldo(saldoData.Saldo);
         
         // Obtener horas voladas
-        const horasResponse = await horasVoladasPorUsuario(idUsuario);
+        const horasResponse = await horasVoladasPorUsuario(usuarioId);
         const horasData = horasResponse[0]; // Accedemos al primer objeto
         setHorasVoladas(horasData.TotalHoras);
         
         // Obtener estado del CMA
-        const cmaResponse = await obtenerEstadoCMA(idUsuario);
+        const cmaResponse = await obtenerEstadoCMA(usuarioId);
         const cmaData = cmaResponse[0]; // Accedemos al primer objeto
         setCma(cmaData.estado);
         setFechaVencimiento(cmaData.fecha_vencimiento_cma);
         
         // Obtener últimos vuelos
-        const vuelosResponse = await ultimosVuelosPorUsuario(idUsuario);
+        const vuelosResponse = await ultimosVuelosPorUsuario(usuarioId);
         setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
 
         // Obtener licencias
-        const licenciasResponse = await obtenerLicenciasPorUsuario(idUsuario);
+        const licenciasResponse = await obtenerLicenciasPorUsuario(usuarioId);
         const formattedLicencias = licenciasResponse.map(licencia => (
           { codigo: licencia.codigos_licencias, descripcion: licencia.descripcion }
         ));
@@ -85,7 +79,7 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
     };
 
     fetchData();
-  }, [idUsuario]);
+  }, [usuarioId]);
 
 
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
@@ -129,7 +123,7 @@ function Dashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su in
         </Link>
       </section>
 
-      {console.log(data)}
+      
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
         <DataTable 
