@@ -51,12 +51,12 @@ function GestorRecibos({idUsuario = 0}){
         scrollable
         scrollHeight="800px"
         >
-        <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false}  ></Column>
-        <Column field="usuario" header="Usuario" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
-        <Column field="numero_recibo" header="N° Recibo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
-        <Column field="tipo_recibo" header="Tipo de recibo" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} ></Column>
-        <Column field="estado" header="Estado" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} ></Column>
-        <Column field="importe" header="importe" sortable filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} ></Column>
+        <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false} className="columna-ancho-min" ></Column>
+        <Column field="usuario" header="Usuario" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
+        <Column field="numero_recibo" header="N° Recibo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
+        <Column field="tipo_recibo" header="Tipo de recibo" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
+        <Column field="estado" header="Estado" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
+        <Column field="importe" header="importe" sortable filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
       </DataTable>
       
     </div>
