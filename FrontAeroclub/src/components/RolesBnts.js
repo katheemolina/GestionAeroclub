@@ -8,7 +8,8 @@ function BotonesPorRol() {
   const { setRole } = useRole();
   const { usuarioId } = useUser(); // Usamos el usuarioId para obtener los roles
   const [rolesDisponibles, setRolesDisponibles] = useState([]);
-  
+  const [rolActivo, setRolActivo] = useState(null);
+
   // Simulación de obtener roles desde una API
   const obtenerRolesDelAsociado = async () => {
     try {
@@ -32,6 +33,7 @@ function BotonesPorRol() {
   const handleButtonClick = (rol) => {
     setRole(rol);
     localStorage.setItem('role', rol);
+    setRolActivo(rol);
   };
 
   return (
@@ -43,7 +45,7 @@ function BotonesPorRol() {
           <button
             key={index}
             onClick={() => handleButtonClick(rol.descripcion)}
-            className={`opcion-boton ${rol.descripcion === rol.descripcion ? 'activo' : ''}`} // Compara el rol activado
+            className={`opcion-boton ${rol.descripcion === rolActivo ? 'activo' : ''}`} // Compara el rol activado
           >
             
             {rol.descripcion} {/* Aquí el nombre del rol */}
