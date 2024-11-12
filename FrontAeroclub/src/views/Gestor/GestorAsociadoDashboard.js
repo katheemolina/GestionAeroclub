@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
 import { useLocation } from 'react-router-dom';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import '../../styles/datatable-style.css';
 
 //importo servicios
 import {
@@ -122,7 +125,11 @@ function GestorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario pa
 
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
-        <TableComponent columns={columns} data={data} />
+        <DataTable value={data}>  
+            <Column field="matricula_aeronave" header="Avión"></Column>
+            <Column field="fecha_vuelo" header="Último vuelo"></Column>
+            <Column field="Adaptacion" header="Adaptación"></Column>
+        </DataTable>
       </section>
 
       <section className="licencias-section">
