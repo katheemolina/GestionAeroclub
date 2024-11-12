@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from "../../components/TableComponent"
+import CardComponent from '../../components/CardComponent';
+
 import "./Styles/AsociadoDashboards.css"
 import { useLocation } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
@@ -23,9 +24,9 @@ import {
 } from '../../services/vuelosApi';
 
 
-function GestorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
+function GestorAsociadoDashboard() { // Establecer idUsuario para traer su informacion
+  
+  const [usuario, setUsuario] = useState(null);
   const [saldo, setSaldo] = useState(0);
   const [horasVoladas, setHorasVoladas] = useState(0);
   const [cma, setCma] = useState('');
@@ -34,25 +35,19 @@ function GestorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario pa
   const [licencias, setLicencias] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const columns = [
-    { header: 'Avión', accessor: 'matricula_aeronave' },
-    { header: 'Último Vuelo', accessor: 'fecha_vuelo' },
-    { header: 'Adaptación', accessor: 'Adaptacion' }
-  ];
 
   const location = useLocation();  // Hook para obtener el estado de la navegación
   const { user } = location.state || {};  // Accedemos al estado pasad
 
-  idUsuario = user;
+  const idUsuario = user;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Obtener datos del usuario
         const usuarioResponse = await obtenerDatosDelUsuario(idUsuario);
-        const usuario = usuarioResponse[0]; // Accedemos al primer objeto
-        setNombre(usuario.nombre);
-        setApellido(usuario.apellido);
+        const usuarioData = usuarioResponse[0]; 
+        setUsuario(usuarioData);
         
         // Obtener saldo
         const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(idUsuario);
@@ -92,14 +87,27 @@ function GestorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario pa
 
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
+  const fechaNacimientoFormateada = usuario?.fecha_nacimiento
+  ? new Date(usuario.fecha_nacimiento).toLocaleDateString()
+  : "Fecha no disponible";
+
   if (loading) {
     return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
   }
   return (
     <div className="background">
       <header className="header">
-        <h1>{`${nombre} ${apellido}`}</h1>
+      <h1>{`${usuario?.nombre || ''} ${usuario?.apellido || ''}`}</h1>
       </header>
+
+      <CardComponent
+        dni={usuario?.dni || "No disponible"}
+        localidad={`📍 ${usuario?.localidad || "No disponible"}`}
+        direccion={usuario?.direccion}
+        telefono={`📞 ${usuario?.telefono || "No disponible"}`}
+        email={`✉️ ${usuario?.email || "No disponible"}`} 
+        fecha_nacimiento={`🎂 ${fechaNacimientoFormateada || "Fecha no disponible"}`}
+      />
 
       <section className="stats-section">
         <div className="stat-box">
