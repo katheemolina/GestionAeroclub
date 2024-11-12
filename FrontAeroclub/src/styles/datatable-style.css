@@ -12,7 +12,7 @@
 }
 
 .p-datatable-thead tr th{
-    padding: 12px 12px;
+    padding: 8px 4px;
 }
 
 .p-datatable-tbody td{ 
@@ -79,14 +79,6 @@
 }
 
 /* Estilado del botón de filtros y su menú */
-
-.p-column-filter {
-    background-color: rgb(143, 53, 53);
-    border-radius: 5px;        
-    border: none;              
-    padding: 4px 4px;         
-    font-size: 14px;   
-}
 
 .p-column-filter .p-inputtext {
     background-color: #f9f9f9;      
@@ -188,4 +180,43 @@
 
 .p-dialog-header-icon{
     width: 50px;
+}
+
+.p-column-filter-clear-button{
+    display: none;
+}
+
+
+@media(max-width:750px){
+   
+    .p-column-header-content{
+        padding: 4px
+    }
+
+    .p-sortable-column-icon{
+        width: 10px;
+        height: 10px;
+    }
+    
+    .p-paginator-page,
+    .p-paginator-first,
+    .p-paginator-prev,
+    .p-paginator-next,
+    .p-paginator-last {
+    padding: 0px !important;
+    height: 30px;
+    }
+
+    .p-dropdown{
+        height: 30px;
+        padding: 4px 8px;
+    }
+
+    .p-dropdown-trigger{
+        width: 1rem;
+    }
+
+    .columna-ancho-min{
+        min-width: 200px;;
+    }
 }
