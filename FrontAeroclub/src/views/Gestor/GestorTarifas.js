@@ -94,8 +94,8 @@ const TarifaCrud = () => {
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
                 <Column header="Acciones" body={(rowData) => (
                     <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                    <EditIcon />
-                </IconButton>
+                        <EditIcon />
+                    </IconButton>
                 )}></Column>
             </DataTable>
 

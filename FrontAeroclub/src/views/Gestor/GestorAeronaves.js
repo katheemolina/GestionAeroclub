@@ -203,7 +203,7 @@ const AeronaveCrud = () => {
                     </div>
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAeronaveDialog(false)} />
-                        <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
+                        <Button label="Guardar" icon="pi pi-check" id="btn-guardar" onClick={handleSave} />
                     </div>
                 </div>
             </Dialog>

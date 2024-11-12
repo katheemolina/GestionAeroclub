@@ -11,9 +11,6 @@ function Sidebar() {
   const { role } = useRole();
   const currentLocation = useLocation();
   
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Usamos un estado para el tamaño de la ventana
-
   const enlacesPorRol = {
     Asociado: [
       { ruta: '/asociado/dashboard', texto: 'Inicio' },
@@ -48,49 +45,17 @@ function Sidebar() {
 
   const enlaces = enlacesPorRol[role] || [];
 
-  // Alternar visibilidad completa solo en móviles
-  const toggleSidebar = () => {
-    if (isMobile) { // Solo permite expandir en móviles
-      setIsExpanded(!isExpanded);
-    }
-  };
-
-  // Detectar cambio en el tamaño de la ventana (por ejemplo, cuando se pasa a escritorio o móvil)
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    window.addEventListener('resize', handleResize);
-
-    // Limpiar el evento al desmontar el componente
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Manejar el clic en cualquier enlace para cerrar el sidebar en móviles
-  const handleLinkClick = () => {
-    if (isMobile) {
-      setIsExpanded(false);
-    }
-  };
-
   return (
-    <div className={`sidebar-container ${isExpanded ? 'full-screen' : ''}`}>
+    <div className={`sidebar-container `}>
       <div className="sidebar-header">
         <div className="sidebar-header-info">
           <span>{user?.name || 'ApellidoNombre'}</span>
           <hr className="divisor-header"/>
           {role.toUpperCase()}
         </div>
-        {isMobile && (
-          <div className="toggle-arrow" onClick={toggleSidebar}>
-            {isExpanded ? '▲' : '▼'}
-          </div>
-        )}
       </div>
        <BotonesPorRol  />
-       <div className={`sidebar-navbar ${isExpanded ? 'show' : ''}`}>
+       <div className={`sidebar-navbar`}>
          {enlaces.map((enlace, index) => (
            <Boton
              key={index}
@@ -100,7 +65,6 @@ function Sidebar() {
              ruta={enlace.ruta}
              texto={enlace.texto}
              logout={enlace.logout || false}
-             onClick={handleLinkClick} // Llamamos a handleLinkClick al hacer clic
            />
          ))}
        </div>

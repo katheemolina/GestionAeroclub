@@ -10,6 +10,10 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { useUser } from '../../context/UserContext';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
 
 function AsociadoPerfil() {
   const [cargando, setCargando] = useState(true);
@@ -61,7 +65,7 @@ function AsociadoPerfil() {
 
   const handleLicenciaUpdate = async () => {
     if (!selectedLicencia || !fechaVencimiento) {
-      alert("Por favor, seleccione una licencia y una fecha de vencimiento.");
+      toast.warning("Por favor, seleccione una licencia y una fecha de vencimiento.");
       return;
     }
 
@@ -70,12 +74,12 @@ function AsociadoPerfil() {
         { nombreLic: selectedLicencia, fechaVenc: fechaVencimiento.toISOString().split('T')[0] }
       ];
       await actualizarLicencias(usuarioId, licenciaData); // Llamada a la API con los datos
-      alert("Licencia actualizada correctamente.");
+      toast.success("Licencia actualizada correctamente.");
       setLicenciaDialog(false); // Cierra el diálogo después de la actualización
       fetchLicencias(); // Vuelve a cargar las licencias actualizadas
     } catch (error) {
       console.error("Error al actualizar licencia:", error);
-      alert("Error al actualizar licencia.");
+      toast.error("Error al actualizar licencia.");
     }
   };
 
@@ -120,10 +124,10 @@ function AsociadoPerfil() {
     e.preventDefault();
     try {
       await actualizarDatosDelUsuario(usuarioId, formData);
-      alert("Datos actualizados correctamente");
+      toast.success("Datos actualizados correctamente");
     } catch (error) {
       console.error("Error al actualizar datos:", error);
-      alert("Error al actualizar datos");
+      toast.error("Error al actualizar datos");
     }
   };
 
@@ -153,6 +157,7 @@ function AsociadoPerfil() {
   }
   return (
     <div className="background">
+      <ToastContainer />
       <header className="header">
         <h1>Perfil</h1>
       </header>

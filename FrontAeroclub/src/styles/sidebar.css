@@ -54,7 +54,6 @@
     list-style: none; /* Eliminar los puntos de lista */
     display: flex;
     flex-direction: column; /* Colocar los elementos en columna */
-    display: none; /* Ocultar los enlaces por defecto en móvil */
 }
 
 /* Mostrar los enlaces cuando el sidebar esté expandido */
@@ -77,48 +76,6 @@
 .sidebar-navbar-link:hover {
     color: white; /* Color de texto blanco al pasar el ratón */
     background-color: rgb(225, 179, 179); /* Fondo rojo cuando se pasa el ratón */
-}
-
-/* Estilos para dispositivos móviles (pantallas más pequeñas) */
-@media (max-width: 768px) {
-    .sidebar-container {
-        position: relative; /* Relativo para la posición */
-        width: 100%; /* El sidebar ocupa el 100% del ancho */
-        min-width: unset; /* Elimina el ancho mínimo */
-        height: auto; /* Ajuste dinámico de altura */
-        overflow: hidden; /* Ocultar el contenido que se desborda */
-    }
-
-    /* El sidebar ocupa toda la pantalla cuando está expandido en móviles */
-    .sidebar-container.full-screen {
-        position: fixed; /* Posición fija para que ocupe toda la pantalla */
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-
-    /* Mostrar los enlaces de forma visible cuando el sidebar esté expandido en móviles */
-    .sidebar-navbar.show {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    /* Ajuste de la posición del texto en dispositivos móviles */
-    .sidebar-header-info {
-        text-align: center;
-    }
-}
-
-/* Ocultar la flecha y mostrar el sidebar en pantallas grandes */
-@media (min-width: 769px) {
-    .sidebar-navbar {
-        display: flex !important; /* Mostrar siempre el sidebar */
-    }
-    .toggle-arrow {
-        display: none; /* Ocultar la flecha en pantallas grandes */
-    }
 }
 
 .sidebar-navbar-link.active {

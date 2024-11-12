@@ -8,7 +8,11 @@ import { listarAsociados, actualizarEstadoAsociado } from '../../services/usuari
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
-import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import BlockIcon from '@mui/icons-material/Block';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import Tooltip from '@mui/material/Tooltip';
 import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -69,33 +73,63 @@ const GestorAsociados  = () => {
             </header>
             <DataTable 
                 value={asociados} 
-                paginator rows={10} 
+                paginator 
+                rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
+                removableSort 
+                scrollable
+                scrollHeight="800px"
                 style={{ width: '100%' }} >
-                <Column field="usuario" header="Asociado"></Column>
-                <Column field="estado" header="Estado"></Column>
-                <Column field="horas_vuelo" header="Horas de vuelo totales"></Column>
-                <Column field="estadoCMA" header="Estado del CMA"></Column>
-                <Column field="estado_cuenta_corriente" header="Estado Cuenta Corriente"></Column>
-                <Column field="saldo" header="Saldo"></Column>
-                <Column header="Acciones"
+                <Column field="usuario" header="Asociado" sortable ></Column>
+                <Column field="estado" header="Estado" sortable></Column>
+                <Column field="horas_vuelo" header="Horas de vuelo totales" sortable></Column>
+                <Column field="estadoCMA" header="Estado del CMA" sortable></Column>
+                <Column field="saldo" header="Saldo" sortable ></Column>
+                <Column header="Acciones" 
                         body={(rowData) => (
                             <div className='acciones'>
-                            {/* Botón de editar */}
-                            <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                                <EditIcon />
-                            </IconButton>
 
-                            {/* Botón de detalles */}
+                            {/* BOTON HABILTIAR USUARIO */}
+                            <Tooltip title="Habilitar usuario">
+                            <IconButton color="primary" aria-label="CheckCircle"  >
+                                <CheckCircleIcon /> 
+                            </IconButton>
+                            </Tooltip>
+
+                            {/* BOTON DESHABILITAR USUARIO */}
+                            <Tooltip title="Deshabilitar usuario">
+                            <IconButton color="primary" aria-label="Block"  >
+                                <BlockIcon /> 
+                            </IconButton>
+                            </Tooltip>
+
+                            {/* BOTON CAMBIO DE ROLES */}
+                            <Tooltip title="Cambio de roles">
+                            <IconButton color="primary" aria-label="settings" onClick={() => handleEdit(rowData)}>
+                                <SettingsIcon /> 
+                            </IconButton>
+                            </Tooltip>
+
+                            {/* Botón de detalles del asociado */}
+                            <Tooltip title="Ver perfil">
                             <IconButton color="primary" aria-label="view-details" onClick={() => handleGoToDetails(rowData.id_usuario)}>
                                 <AccountCircleIcon />
                             </IconButton>
+                            </Tooltip>
+                            
+                             {/* BOTON DESHABILITAR USUARIO */}
+                             <Tooltip title="Ver cuenta corriente">
+                             <IconButton color="primary" aria-label="RequestQuote" >
+                                <RequestQuoteIcon /> 
+                            </IconButton>
+                            </Tooltip>
+
                             </div>
                         )}
                         />
             </DataTable>
 
-            <Dialog header={isEdit ? 'Actualizar Estado Asociado' : 'Agregar Aeronave'} visible={asociadosDialog} onHide={() => setAsociadosDialog(false)}>
+            <Dialog header={isEdit ? 'Actualizar Estado Asociado' : ''} visible={asociadosDialog} onHide={() => setAsociadosDialog(false)}>
                     <div className="p-field">
                         <label htmlFor="estado">Estado</label>
                         <InputText
@@ -106,7 +140,7 @@ const GestorAsociados  = () => {
                         />
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAsociadosDialog(false)} />
-                        <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
+                        <Button label="Guardar" icon="pi pi-check" id='btn-guardar' onClick={handleSave} />
                     </div>
                 </div>
             </Dialog>
