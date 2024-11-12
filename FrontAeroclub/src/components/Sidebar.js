@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
+import { useLocation } from 'react-router-dom';
 import Boton from './Button';
 import BotonesPorRol from './RolesBnts';
 import '../styles/sidebar.css';
@@ -8,6 +9,7 @@ import '../styles/sidebar.css';
 function Sidebar() {
   const { user } = useUser();
   const { role } = useRole();
+  const currentLocation = useLocation();
   
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Usamos un estado para el tamaño de la ventana
@@ -92,7 +94,9 @@ function Sidebar() {
          {enlaces.map((enlace, index) => (
            <Boton
              key={index}
-             estilos="sidebar-navbar-link"
+             estilos={`sidebar-navbar-link ${
+              currentLocation.pathname === enlace.ruta ? 'active' : ''
+            }`}
              ruta={enlace.ruta}
              texto={enlace.texto}
              logout={enlace.logout || false}

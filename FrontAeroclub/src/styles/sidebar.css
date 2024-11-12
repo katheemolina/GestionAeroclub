@@ -76,7 +76,7 @@
 /* Estilo al pasar el ratón sobre un enlace */
 .sidebar-navbar-link:hover {
     color: white; /* Color de texto blanco al pasar el ratón */
-    background-color: rgba(169, 70, 70, 1); /* Fondo rojo cuando se pasa el ratón */
+    background-color: rgb(225, 179, 179); /* Fondo rojo cuando se pasa el ratón */
 }
 
 /* Estilos para dispositivos móviles (pantallas más pequeñas) */
@@ -119,4 +119,10 @@
     .toggle-arrow {
         display: none; /* Ocultar la flecha en pantallas grandes */
     }
+}
+
+.sidebar-navbar-link.active {
+    background-color: rgba(169, 70, 70, 1); /* Color de fondo cuando el botón está activo */
+    color: white; /* Color del texto en el botón activo */
+    font-weight: bold; /* Opcional: para resaltar más el botón */
 }
