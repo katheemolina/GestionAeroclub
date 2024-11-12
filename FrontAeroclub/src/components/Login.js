@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import { obtenerIdUsuarioDesdeMail } from '../services/usuariosApi';
+import { verificarOCrearUsuario } from '../services/ingresoApi';
 
 export default function Login() {
     const { user, setUser, setUsuarioId } = useContext(UserContext);
@@ -13,27 +14,23 @@ export default function Login() {
         console.log("Login failed");
     }
 
-    function handleSuccess(credentialsResponse) {
+    async function handleSuccess(credentialsResponse) {
         const { payload } = ObtenerDatosPostLogin(credentialsResponse.credential);
         setUser(payload);
+
+        // Envía los datos del usuario al backend para verificar o crear el registro en la base de datos
+        try {
+            await verificarOCrearUsuario({
+                email: payload.email,
+                nombre: payload.given_name,
+                apellido: payload.family_name,
+            });
+        } catch (error) {
+            console.error('Error al insertar usuario:', error);
+        }
         navigate("/Bienvenido");
     }
 
-    useEffect(() => {
-        const fetchUserId = async () => {
-            if (user) {
-                try {
-                    const idUsuario = await obtenerIdUsuarioDesdeMail(user.email);
-                    console.log('ID de Usuario:', idUsuario);
-                    setUsuarioId(idUsuario); // Guarda el ID en el contexto
-                } catch (error) {
-                    console.error('Error al obtener el ID de Usuario:', error);
-                }
-            }
-        };
-
-        fetchUserId();
-    }, [user, setUsuarioId]);
 
     return (
         <div>

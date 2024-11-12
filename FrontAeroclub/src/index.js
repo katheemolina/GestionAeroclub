@@ -8,10 +8,10 @@ import { UserProvider } from './context/UserContext';
 const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RoleProvider>
-      <UserProvider>
+    <UserProvider>
+      <RoleProvider>
         <App />
-      </UserProvider>
-    </RoleProvider>
+      </RoleProvider>
+    </UserProvider>
   </React.StrictMode>
 );

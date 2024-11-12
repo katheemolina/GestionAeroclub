@@ -53,9 +53,25 @@ export const listarAsociados = async () => {
 
 // Función para obtener el IdUsuario con el Email de la persona
 export const obtenerIdUsuarioDesdeMail = async (email) => {
-    const response = await fetch(`${API_URL}/usuarios/idusuario/${email}`);
+    const response = await fetch(`${API_URL}/usuarios/idusuario/${email}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email.email,  // Enviamos el estado (habilitado o deshabilitado)
+        }),
+    });
     if (!response.ok) {
         throw new Error('Error al obtener el id del usuario');
+    }
+    return response.json();
+};
+
+export const obtenerRolPorIdUsuario = async (usuarioId) => {
+    const response = await fetch(`${API_URL}/roles/${usuarioId}`);
+    if (!response.ok) {
+        throw new Error('Error al listar asociados');
     }
     return response.json();
 };

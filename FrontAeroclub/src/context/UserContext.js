@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { obtenerIdUsuarioDesdeMail } from '../services/usuariosApi';
 
 // Crear el contexto
 export const UserContext = createContext();
@@ -9,6 +10,25 @@ export function UserProvider({ children }) {
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
     const isAuthenticated = !!user;
+
+    
+    useEffect(() => {
+        const fetchUserId = async () => {
+            if (user) {
+                try {
+                    const idUsuario = await obtenerIdUsuarioDesdeMail(user);
+                    console.log('ID de Usuario:', idUsuario);
+                    setUsuarioId(idUsuario); // Guarda el ID en el contexto
+                } catch (error) {
+                    console.error('Error al obtener el ID de Usuario:', error);
+                    setUsuarioId(1);
+                }
+            }
+        };
+
+        fetchUserId();
+    }, [user, setUsuarioId]);
+
 
     useEffect(() => {
         if (user) {
@@ -30,7 +50,4 @@ export function useUser() {
     return useContext(UserContext);
 }
 
-/*
- Para usar el IdUsuario obtenido desde la base
- const { usuarioId } = useUser(); 
- */
+

@@ -1,15 +1,30 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useUser } from '../context/UserContext';
+import { obtenerRolPorIdUsuario } from '../services/usuariosApi';
 
 const RoleContext = createContext();
 
 export const RoleProvider = ({ children }) => {
-  // Inicializa el rol desde localStorage o usa 'asociado' como valor por defecto
   const [role, setRole] = useState(localStorage.getItem('role') || 'asociado');
+  const { usuarioId } = useUser();
 
-  // Actualiza localStorage cuando el rol cambia
   useEffect(() => {
-    localStorage.setItem('role', role);
-  }, [role]);
+    const fetchRole = async () => {
+      if (usuarioId) {
+        try {
+          const role = await obtenerRolPorIdUsuario(usuarioId);
+          setRole(role);
+          localStorage.setItem('role', role);
+          console.error(role);
+        } catch (error) {
+          console.error('Error al obtener el rol del usuario:', error);
+          setRole('asociado'); 
+        }
+      }
+    };
+
+    fetchRole();
+  }, [usuarioId]); // Solo se ejecuta cuando usuarioId cambia
 
   return (
     <RoleContext.Provider value={{ role, setRole }}>
