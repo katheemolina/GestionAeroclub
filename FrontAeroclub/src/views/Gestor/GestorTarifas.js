@@ -4,11 +4,13 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
-import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi'; // Import the API functions
-import '../../styles/datatable-style.css'; //Estilado para la tabla
+import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi';
+import '../../styles/datatable-style.css';
+import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import './Styles/GestorTarifas.css'
+import CloseIcon from '@mui/icons-material/Close';
+import './Styles/GestorTarifas.css';
 
 const TarifaCrud = () => {
     const [tarifas, setTarifas] = useState([]);
@@ -59,8 +61,11 @@ const TarifaCrud = () => {
 
     // Handle add new tarifa
     const handleAdd = () => {
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0]; // Formato 'yyyy-mm-dd' para el input de tipo date
+
         setTarifaData({
-            fecha_vigencia: '',
+            fecha_vigencia: formattedDate, // Set the date to today
             tipo_tarifa: '',
             importe: '',
             importe_por_instruccion: '',
@@ -68,6 +73,18 @@ const TarifaCrud = () => {
         setIsEdit(false);
         setTarifaDialog(true);
     };
+
+    /* 
+    const handleDelete = async (tarifa) => {
+        try {
+            await eliminarTarifa(tarifa.id_tarifa); 
+            fetchTarifas();
+        } catch (error) {
+            console.error('Error al eliminar tarifa:', error);
+        }
+    };
+    */
+
 
     // Column definitions
     const dateBodyTemplate = (rowData) => {
@@ -80,22 +97,32 @@ const TarifaCrud = () => {
 
     return (
         <div className="background">
-        <header className="header">
-        <h1>Tarifas</h1>
-        </header>
+            <header className="header">
+                <h1>Tarifas</h1>
+            </header>
             <Button className="nuevo" label="Agregar Tarifa" onClick={handleAdd} />
             <DataTable 
-              value={tarifas} 
-              paginator rows={10} 
-              rowsPerPageOptions={[5, 10, 25]} 
-              style={{ width: '100%' }} >
+                value={tarifas} 
+                paginator rows={10} 
+                rowsPerPageOptions={[5, 10, 25]} 
+                style={{ width: '100%' }} >
                 <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
                 <Column header="Acciones" body={(rowData) => (
-                    <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                        <EditIcon />
-                    </IconButton>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <Tooltip title="Editar">
+                            <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+                        
+                        <Tooltip title="Eliminar">
+                            <IconButton color="secondary" aria-label="delete" /* onClick={() => handleDelete(rowData)} */>
+                                <CloseIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
                 )}></Column>
             </DataTable>
 
@@ -105,9 +132,9 @@ const TarifaCrud = () => {
                         <label htmlFor="fecha_vigencia">Fecha Vigencia</label>
                         <InputText
                             id="fecha_vigencia"
+                            type="date"
                             value={tarifaData.fecha_vigencia}
                             onChange={(e) => setTarifaData({ ...tarifaData, fecha_vigencia: e.target.value })}
-                            placeholder="Fecha de Vigencia"
                         />
                     </div>
                     <div className="p-field">

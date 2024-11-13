@@ -347,7 +347,8 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
                 <label className="label-recibo">Aterrizajes:</label>
                 <input
                     className="input-recibo"
-                    type="text"
+                    type="number"
+                    min={0}
                     value={itinerarioData[index]?.aterrizajes || ''}
                     onChange={(e) => handleItinerarioChange(index, 'aterrizajes', e.target.value)}
                 />

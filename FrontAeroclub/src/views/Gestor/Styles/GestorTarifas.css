@@ -13,11 +13,14 @@
     color: #333;
 }
 
-.dialog-container input {
+.dialog-container input,
+.dialog-container input[type="date"] {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
     width: 100%;
+    color: #333;
+    font-family: inherit; /* Asegura consistencia de fuente */
 }
 
 .dialog-buttons {

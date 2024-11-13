@@ -53,7 +53,7 @@ export const listarAsociados = async () => {
 
 // Función para obtener el IdUsuario con el Email de la persona
 export const obtenerIdUsuarioDesdeMail = async (email) => {
-    const response = await fetch(`${API_URL}/obtenerUsuario/${email.email}`, {
+    const response = await fetch(`${API_URL}/obtenerUsuario/kmolina@alumnos.unsada.edu.ar`, {
         method: 'GET',
     });
     if (!response.ok) {

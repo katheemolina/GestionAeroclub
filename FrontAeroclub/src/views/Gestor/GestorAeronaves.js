@@ -151,6 +151,8 @@ const AeronaveCrud = () => {
                         <label htmlFor="potencia">Potencia (HP)</label>
                         <InputText
                             id="potencia"
+                            type="number"
+                            min={0}
                             value={aeronaveData.potencia}
                             onChange={(e) => setAeronaveData({ ...aeronaveData, potencia: e.target.value })}
                             placeholder="Potencia"
@@ -169,6 +171,7 @@ const AeronaveCrud = () => {
                         <label htmlFor="fecha_adquisicion">Fecha de Adquisición</label>
                         <InputText
                             id="fecha_adquisicion"
+                            type="date"  // Cambiado a tipo "date" para que aparezca el selector de fecha
                             value={aeronaveData.fecha_adquisicion}
                             onChange={(e) => setAeronaveData({ ...aeronaveData, fecha_adquisicion: e.target.value })}
                             placeholder="Fecha de Adquisición"
@@ -178,28 +181,56 @@ const AeronaveCrud = () => {
                         <label htmlFor="consumo_por_hora">Consumo por Hora (L/hr)</label>
                         <InputText
                             id="consumo_por_hora"
+                            type='number'
+                            min={0}
                             value={aeronaveData.consumo_por_hora}
                             onChange={(e) => setAeronaveData({ ...aeronaveData, consumo_por_hora: e.target.value })}
                             placeholder="Consumo por Hora"
                         />
                     </div>
                     <div className="p-field">
-                        <label htmlFor="horas_para_inspeccion">Horas para inspeccion</label>
-                        <InputText
-                            id="horas_para_inspeccion"
-                            value={aeronaveData.horas_para_inspeccion}
-                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_para_inspeccion: e.target.value })}
-                            placeholder="Consumo por Hora"
-                        />
+                        <label htmlFor="horas_para_inspeccion">Horas para inspección</label>
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                            <InputText
+                                id="horas"
+                                type="number"
+                                value={aeronaveData.horas}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, horas: e.target.value })}
+                                placeholder="Horas"
+                                min="0"
+                            />
+                            <InputText
+                                id="minutos"
+                                type="number"
+                                value={aeronaveData.minutos}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, minutos: e.target.value })}
+                                placeholder="Minutos"
+                                min="0"
+                                max="59"
+                            />
+                        </div>
                     </div>
                     <div className="p-field">
-                        <label htmlFor="horas_historicas_voladas">Horas de vuelo historicas</label>
-                        <InputText
-                            id="horas_historicas_voladas"
-                            value={aeronaveData.horas_historicas_voladas}
-                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_historicas_voladas: e.target.value })}
-                            placeholder="Consumo por Hora"
-                        />
+                        <label htmlFor="horas_historicas_voladas">Horas de vuelo históricas</label>
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                            <InputText
+                                id="horas_historicas"
+                                type="number"
+                                value={aeronaveData.horas_historicas || ''}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, horas_historicas: e.target.value })}
+                                placeholder="Horas"
+                                min="0"
+                            />
+                            <InputText
+                                id="minutos_historicos"
+                                type="number"
+                                value={aeronaveData.minutos_historicos || ''}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, minutos_historicos: e.target.value })}
+                                placeholder="Minutos"
+                                min="0"
+                                max="59"
+                            />
+                        </div>
                     </div>
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAeronaveDialog(false)} />
