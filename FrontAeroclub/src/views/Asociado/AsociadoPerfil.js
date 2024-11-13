@@ -275,7 +275,7 @@ function AsociadoPerfil() {
           <Column field="fecha_vencimiento" header="Fecha de vencimiento" body={formatFecha} /> 
           <Column header="Estado" body={calcularEstadoLicencia} />
         </DataTable>
-        <Button label="Actualizar licencias" icon="pi pi-refresh" onClick={() => setLicenciaDialog(true)} />
+        <Button label="Actualizar licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
       
       </section>
       

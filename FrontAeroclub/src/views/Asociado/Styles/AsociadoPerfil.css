@@ -48,3 +48,11 @@ button {
 button:hover {
   background-color: rgba(169, 70, 70, 1);
 }
+
+.licencias-section{
+  margin-top: 10px;
+}
+
+#actualizar-licencias{
+  margin-top: 10px;
+}
