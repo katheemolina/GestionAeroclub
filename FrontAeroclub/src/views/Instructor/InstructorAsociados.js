@@ -6,7 +6,9 @@ import { Column } from 'primereact/column';
 import IconButton from '@mui/material/IconButton';
 import FlightIcon from '@mui/icons-material/Flight';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
+import Tooltip from '@mui/material/Tooltip';
 import { useNavigate } from 'react-router-dom';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 function InstructorAsociados({idUsuario = 0}){
   const navigate = useNavigate();
@@ -42,7 +44,15 @@ function InstructorAsociados({idUsuario = 0}){
     };
 
     if (loading) {
-        return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
+      return <div className="background"> 
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <ProgressSpinner 
+          style={{width: '70px', height: '70px'}}
+          strokeWidth="5"
+          strokeColor="red"
+          /> 
+        </div>
+      </div>;
     }
     return (
         <div className="background">
@@ -61,15 +71,20 @@ function InstructorAsociados({idUsuario = 0}){
                 <Column header="Acciones"
                         body={(rowData) => (
                             <div className='acciones'>
+
                             {/* Botón de editar */}
-                            <IconButton color="primary" aria-label="edit" onClick={() => handleGoToLibroVuelo(rowData)}>
+                            <Tooltip title="Ver libro de vuelo">
+                            <IconButton color="primary" aria-label="view-flight-details" onClick={() => handleGoToLibroVuelo(rowData)}>
                                 <FlightIcon />
                             </IconButton>
+                            </Tooltip>
 
                             {/* Botón de detalles */}
+                            <Tooltip title="Ver detalles">
                             <IconButton color="primary" aria-label="view-details" onClick={() => handleGoToDetails(rowData.id_usuario)}>
                                 <AccountCircleIcon />
                             </IconButton>
+                            </Tooltip>
                             </div>
                         )}
                         />

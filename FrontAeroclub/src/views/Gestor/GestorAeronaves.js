@@ -8,7 +8,9 @@ import { obtenerAeronaves, insertarAeronave, actualizarAeronave } from '../../se
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import Tooltip from '@mui/material/Tooltip';
 import './Styles/GestorAeronaves.css';
+
 
 const AeronaveCrud = () => {
     const [aeronaves, setAeronaves] = useState([]);
@@ -112,9 +114,11 @@ const AeronaveCrud = () => {
                 <Column field="horas_para_inspeccion" header="Horas para inspeccion" ></Column>
                 <Column field="estado" header="Estado"></Column>
                 <Column header="Acciones" body={(rowData) => (
+                    <Tooltip title="Editar">
                     <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
                         <EditIcon />
                     </IconButton>
+                    </Tooltip>
                 )}></Column>
             </DataTable>
 
