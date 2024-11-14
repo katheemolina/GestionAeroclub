@@ -82,3 +82,17 @@ export async function eliminarTarifa(idTarifa) {
         throw error;
     }
 }
+
+// Función para obtener todas las tarifas de combustible
+export const obtenerTarifasCombustible = async () => {
+    try {
+        const response = await fetch(`${API_URL}/tarifasCombustible`);
+        if (!response.ok) {
+            throw new Error('Error al obtener las tarifas');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

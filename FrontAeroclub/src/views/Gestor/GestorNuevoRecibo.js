@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './Styles/GestorNuevoRecibo.css';
 import { Dropdown } from 'primereact/dropdown';
 import { obtenerAeronaves } from '../../services/aeronavesApi';
-import { obtenerTarifas } from '../../services/tarifasApi';
+import { obtenerTarifas, obtenerTarifasCombustible } from '../../services/tarifasApi';
 import { listarAsociados } from '../../services/usuariosApi';
 import { useNavigate } from 'react-router-dom';
 import { generarReciboApi, listarInstructores, obtenerTiposVuelos } from '../../services/generarReciboApi';
 
 
-function FormularioGestorRecibos({ idUsuario = 0 }) {
+function FormularioGestorRecibos() {
     const [cantidad, setCantidad] = useState(''); // Cantidad de combustible
     const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10)); // Fecha por defecto al día de hoy
     const [monto, setMonto] = useState(''); // Monto total
@@ -20,7 +20,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     const [instructorSeleccionado, setInstructorSeleccionado] = useState('');
     
     // Traigo datos de tipos de recibos
-    const [tipoRecibo, setTipoRecibo] = useState([{ 'value': "Vuelo" }, { 'value': "Combustible" }]);
+    const [tipoRecibo] = useState([{ 'value': "Vuelo" }, { 'value': "Combustible" }]);
     const [tipoReciboSeleccionado, setTipoReciboSeleccionado] = useState(null);
 
     // Traigo datos de aeronaves
@@ -31,7 +31,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             const data = await obtenerAeronaves();
             setAeronaves(data);
         } catch (error) {
-            console.error('Error fetching tarifas:', error);
+            console.error('Error fetching aeronaves:', error);
         }
     };
     useEffect(() => {
@@ -41,7 +41,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     // Traigo datos de tarifas
     const [tarifas, setTarifas] = useState([]);
     const [tarifasSeleccionado, setTarifasSeleccionado] = useState(null);
-    const [tarifasFiltradas, setTarifasFiltradas] = useState([]);
+    const [tarifasFiltradasAeronave, setTarifasFiltradasAeronave] = useState([]);
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
@@ -53,17 +53,31 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     useEffect(() => {
         fetchTarifas();
     }, []);
-
     // useEffect para filtrar las tarifas cuando la aeronave seleccionada cambia
+    
     useEffect(() => {
         if (aeronavesSeleccionado) {
         // Filtra las tarifas que corresponden a la aeronave seleccionada
         const tarifasFiltradasPorAeronave = tarifas.filter(
             (tarifa) => tarifa.id_aeronave === aeronavesSeleccionado.id_aeronave
         );
-        setTarifasFiltradas(tarifasFiltradasPorAeronave);
+        setTarifasFiltradasAeronave(tarifasFiltradasPorAeronave);
         }
     }, [aeronavesSeleccionado, tarifas]);  // Vuelve a ejecutar cuando cambian la aeronave o las tarifas
+
+    const [tarifasCombustible, setTarifasCombustible] = useState([]);
+    const [tarifasCombustibleSeleccionado, setTarifasCombustibleSeleccionado] = useState(null);
+    const fetchTarifasCombustible = async () => {
+        try {
+            const data = await obtenerTarifasCombustible();
+            setTarifasCombustible(data.data);
+        } catch (error) {
+            console.error('Error fetching tarifas:', error);
+        }
+    };
+    useEffect(() => {
+        fetchTarifasCombustible();
+    }, []);
 
     // Manejar el cambio de aeronave seleccionada
     const handleAeronaveChange = (e) => {
@@ -177,15 +191,15 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
             </div>
             <div className="form-group">
                 <label className="label-recibo">Tarifa:</label>
-                {tarifas && tarifas.length > 0 ? (
+                {tarifasFiltradasAeronave && tarifasFiltradasAeronave.length > 0 ? (
                 <Dropdown value={tarifasSeleccionado}
                  onChange={(e) => setTarifasSeleccionado(e.value)} 
-                 options={tarifas} 
+                 options={tarifasFiltradasAeronave} 
                  optionLabel="importe"
                  placeholder="Seleciona la tarifa"
                  filter
                  className="w-full md:w-14rem" /> ) : (
-                    <p>Cargando opciones...</p>
+                    <p>No se encuentran tarifas para la aeronave seleccionada.</p>
                 )}
             </div>
             <div className="form-group">
@@ -358,8 +372,8 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     );
     
     const calcularMonto = () => {
-        if (cantidad > 0 && tarifasSeleccionado) {
-            const nuevoMonto = cantidad * tarifasSeleccionado.importe;
+        if (cantidad > 0 && tarifasCombustibleSeleccionado) {
+            const nuevoMonto = cantidad * tarifasCombustibleSeleccionado.importe;
             setMonto(nuevoMonto);  // Actualizamos el monto calculado
         } else {
             setMonto(0);  // Si no hay cantidad o tarifa, el monto es 0
@@ -369,7 +383,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
     // Llamamos a la función de cálculo cada vez que cambia la cantidad o la tarifa
     useEffect(() => {
         calcularMonto();
-    }, [cantidad, tarifasSeleccionado]);
+    }, [cantidad, tarifasCombustibleSeleccionado]);
 
     const renderFormularioCombustible = () => (
         <>    
@@ -387,10 +401,10 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
 
             <div className="form-group">
                 <label className="label-recibo">Tarifa:</label>
-                {tarifas && tarifas.length > 0 ? (
-                <Dropdown value={tarifasSeleccionado}
-                 onChange={(e) => setTarifasSeleccionado(e.value)} 
-                 options={tarifas} 
+                {tarifasCombustible && tarifasCombustible.length > 0 ? (
+                <Dropdown value={tarifasCombustibleSeleccionado}
+                 onChange={(e) => setTarifasCombustibleSeleccionado(e.value)} 
+                 options={tarifasCombustible} 
                  optionLabel="importe"
                  placeholder="Seleciona la tarifa"
                  filter
@@ -496,7 +510,7 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
                 Cantidad: 0,                                    // Valor predeterminado
                 Importe: monto ?? 0,                                        // Valor predeterminado
                 Fecha: fecha,
-                Instruccion: instruccionSeleccionada ?? 0, // Valor predeterminado
+                Instruccion: instruccionSeleccionada ? 1 : 0, // Valor predeterminado
                 IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
                 Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
                 Datos: JSON.stringify(itinerarioData),
@@ -543,7 +557,6 @@ function FormularioGestorRecibos({ idUsuario = 0 }) {
                 return false;
             }
         }
-
         try {
             const result = await generarReciboApi(reciboData);
             console.log('Recibo generado con éxito:', result);
