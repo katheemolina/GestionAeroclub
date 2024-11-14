@@ -70,31 +70,104 @@ export const obtenerRolPorIdUsuario = async (usuarioId) => {
     return response.json();
 };
 
-export const actualizarEstadoAsociado = async (usuarioId, estado) => {
+export async function actualizarRoles(idUsuario, roles) {
     try {
-        // Hacemos la solicitud PUT a la API
-        const response = await fetch(`${API_URL}/modificarEstado/${usuarioId}`, {
-            method: 'PUT',
+        const response = await fetch(`${API_URL}/usuario/actualizarRoles`, {
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                Estado: estado,  // Enviamos el estado (habilitado o deshabilitado)
-            }),
+                IdUsuario: idUsuario,
+                Roles: roles
+            })
         });
 
-        // Si la respuesta no es exitosa, lanzamos un error
         if (!response.ok) {
-            throw new Error('Error al modificar el estado del asociado');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error actualizando roles');
         }
 
-        // Devolvemos la respuesta si la solicitud es exitosa
-        return await response.json();
+        const data = await response.json();
+        return data;
     } catch (error) {
-        console.error('Error al modificar el estado del asociado:', error);
-        throw error;  // Lanza el error para que el componente lo maneje
+        console.error('Error:', error);
+        throw error;
     }
-};
+}
+
+
+
+export async function eliminarRol(idUsuario, idRol) {
+    try {
+        const response = await fetch(`${API_URL}/usuario/eliminarRol`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ IdUsuario: idUsuario, IdRol: idRol })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error eliminando rol');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+export async function habilitarUsuario(idUsuario) {
+    try {
+        const response = await fetch(`${API_URL}/usuario/habilitar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ IdUsuario: idUsuario })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error habilitando usuario');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+export async function deshabilitarUsuario(idUsuario) {
+    try {
+        const response = await fetch(`${API_URL}/usuario/deshabilitar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ IdUsuario: idUsuario })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error deshabilitando usuario');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+
 
 export const actualizarLicencias = async (idUsuario, licencias) => {
     try {
@@ -119,5 +192,6 @@ export const actualizarLicencias = async (idUsuario, licencias) => {
         throw error;  // Lanza el error para que el componente lo maneje
     }
 };
+
 
 

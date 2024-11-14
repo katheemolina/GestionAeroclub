@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
-import { listarAsociados, actualizarEstadoAsociado } from '../../services/usuariosApi';
+import { listarAsociados, habilitarUsuario,deshabilitarUsuario,actualizarRoles ,eliminarRol} from '../../services/usuariosApi';
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
@@ -20,12 +19,10 @@ import PantallaCarga from '../../components/PantallaCarga';
 const GestorAsociados  = () => {
     const navigate = useNavigate();
     const [asociados, setAsociados] = useState([]);
-    const [asociadosDialog, setAsociadosDialog] = useState(false);
-    const [asocicadosData, setAsociadosData] = useState({
-        estado: ''
-    });
-    const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [showEnableConfirmDialog, setShowEnableConfirmDialog] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     // Fetch aeronaves data from the API
     const fetchAsociados = async () => {
@@ -42,25 +39,58 @@ const GestorAsociados  = () => {
         fetchAsociados();
     }, []);
 
-    // Handle adding or updating aeronave
-    const handleSave = async () => {
+      // Habilitar usuario
+      const handleHabilitarUsuario = async () => {
         try {
-            if (isEdit) {
-                await actualizarEstadoAsociado(asocicadosData.id_usuario, asocicadosData);
-            } 
-            setAsociadosDialog(false);
-            fetchAsociados(); // Refresh the list
+            if (selectedUser) {
+                await habilitarUsuario(selectedUser);
+                fetchAsociados(); // Refresh data
+            }
         } catch (error) {
-            console.error('Error saving aeronave:', error);
+            console.error('Error al habilitar usuario:', error);
+        } finally {
+            setShowEnableConfirmDialog(false);
+            setSelectedUser(null);
         }
     };
 
-    // Handle edit
-    const handleEdit = (asociados) => {
-        setAsociadosData(asociados);
-        setIsEdit(true);
-        setAsociadosDialog(true);
+    // Deshabilitar usuario
+    const handleDeshabilitarUsuario = async () => {
+        try {
+            if (selectedUser) {
+                await deshabilitarUsuario(selectedUser);
+                fetchAsociados(); // Refresh data
+            }
+        } catch (error) {
+            console.error('Error al deshabilitar usuario:', error);
+        } finally {
+            setShowConfirmDialog(false);
+            setSelectedUser(null);
+        }
     };
+
+    // Actualizar roles
+    const handleActualizarRoles = async (idUsuario, roles) => {
+        try {
+            await actualizarRoles(idUsuario, roles); // Aquí deberías definir 'roles' acorde a tus datos
+            fetchAsociados(); // Refresh data
+        } catch (error) {
+            console.error('Error al actualizar roles:', error);
+        }
+    };
+
+
+     // Abrir el diálogo de confirmación para habilitar usuario
+     const confirmHabilitarUsuario = (idUsuario) => {
+        setSelectedUser(idUsuario);
+        setShowEnableConfirmDialog(true);
+    };
+
+    // Abrir el diálogo de confirmación para deshabilitar usuario
+    const confirmDeshabilitarUsuario = (idUsuario) => {
+        setSelectedUser(idUsuario);
+        setShowConfirmDialog(true);
+    };    
 
     // Función para manejar la redirección cuando se hace clic en el botón
     const handleGoToDetails = (user) => {
@@ -97,21 +127,21 @@ const GestorAsociados  = () => {
 
                             {/* BOTON HABILTIAR USUARIO */}
                             <Tooltip title="Habilitar usuario">
-                            <IconButton color="primary" aria-label="CheckCircle"  >
+                            <IconButton color="primary" aria-label="habilitar" onClick={() => confirmHabilitarUsuario(rowData.id_usuario)}>
                                 <CheckCircleIcon /> 
                             </IconButton>
                             </Tooltip>
 
                             {/* BOTON DESHABILITAR USUARIO */}
                             <Tooltip title="Deshabilitar usuario">
-                            <IconButton color="primary" aria-label="Block"  >
+                            <IconButton color="primary" aria-label="deshabilitar" onClick={() => confirmDeshabilitarUsuario(rowData.id_usuario)} >
                                 <BlockIcon /> 
                             </IconButton>
                             </Tooltip>
 
                             {/* BOTON CAMBIO DE ROLES */}
                             <Tooltip title="Cambio de roles">
-                            <IconButton color="primary" aria-label="settings" onClick={() => handleEdit(rowData)}>
+                            <IconButton color="primary" aria-label="roles" >
                                 <SettingsIcon /> 
                             </IconButton>
                             </Tooltip>
@@ -123,7 +153,7 @@ const GestorAsociados  = () => {
                             </IconButton>
                             </Tooltip>
                             
-                             {/* BOTON DESHABILITAR USUARIO */}
+                             {/* BOTON VER CUENTA CORRIENTE */}
                              <Tooltip title="Ver cuenta corriente">
                              <IconButton color="primary" aria-label="RequestQuote" >
                                 <RequestQuoteIcon /> 
@@ -134,22 +164,27 @@ const GestorAsociados  = () => {
                         )}
                         />
             </DataTable>
-
-            <Dialog header={isEdit ? 'Actualizar Estado Asociado' : ''} visible={asociadosDialog} onHide={() => setAsociadosDialog(false)}>
-                    <div className="p-field">
-                        <label htmlFor="estado">Estado</label>
-                        <InputText
-                            id="estado"
-                            value={asocicadosData.estado}
-                            onChange={(e) => setAsociadosData({ ...asocicadosData, estado: e.target.value })}
-                            placeholder="Estado"
-                        />
-                    <div className="p-d-flex p-jc-end">
-                        <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAsociadosDialog(false)} />
-                        <Button label="Guardar" icon="pi pi-check" id='btn-guardar' onClick={handleSave} />
-                    </div>
-                </div>
+            
+             {/* Dialogo de confirmación para habilitar */}
+             <Dialog header="Confirmar" visible={showEnableConfirmDialog} style={{ width: '350px' }} modal footer={
+                <>
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setShowEnableConfirmDialog(false)} className="p-button-text" />
+                    <Button label="Confirmar" icon="pi pi-check" onClick={handleHabilitarUsuario} autoFocus />
+                </>
+            } onHide={() => setShowEnableConfirmDialog(false)}>
+                <p>¿Está seguro de que desea habilitar este usuario?</p>
             </Dialog>
+            
+            {/* Dialogo de confirmación para deshabilitar */}
+            <Dialog header="Confirmar" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
+                <>
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} className="p-button-text" />
+                    <Button label="Confirmar" icon="pi pi-check" onClick={handleDeshabilitarUsuario} autoFocus />
+                </>
+            } onHide={() => setShowConfirmDialog(false)}>
+                <p>¿Está seguro de que desea deshabilitar este usuario?</p>
+            </Dialog>
+            
         </div>
     );
 };
