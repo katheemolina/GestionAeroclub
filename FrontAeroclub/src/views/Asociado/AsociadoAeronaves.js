@@ -8,7 +8,6 @@ import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import PantallaCarga from '../../components/PantallaCarga';
-
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
 
