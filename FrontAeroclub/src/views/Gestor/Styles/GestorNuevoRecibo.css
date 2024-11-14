@@ -5,6 +5,15 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+    height: min-content;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.layout{
+    height: 100vh;
+    overflow-y: auto;
 }
 
 h1 {
