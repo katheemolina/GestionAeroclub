@@ -4,7 +4,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
-import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi';
+import { obtenerTarifas, insertarTarifa, actualizarTarifa ,eliminarTarifa} from '../../services/tarifasApi';
 import '../../styles/datatable-style.css';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -77,7 +77,7 @@ const TarifaCrud = () => {
         setTarifaDialog(true);
     };
 
-    /* 
+     
     const handleDelete = async (tarifa) => {
         try {
             await eliminarTarifa(tarifa.id_tarifa); 
@@ -86,7 +86,7 @@ const TarifaCrud = () => {
             console.error('Error al eliminar tarifa:', error);
         }
     };
-    */
+    
 
 
     // Column definitions
@@ -124,7 +124,7 @@ const TarifaCrud = () => {
                         </Tooltip>
                         
                         <Tooltip title="Eliminar">
-                            <IconButton color="secondary" aria-label="delete" /* onClick={() => handleDelete(rowData)} */>
+                            <IconButton color="secondary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
                                 <CloseIcon />
                             </IconButton>
                         </Tooltip>
