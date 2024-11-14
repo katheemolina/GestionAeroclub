@@ -4,13 +4,13 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
-import { obtenerAeronaves, insertarAeronave, actualizarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
+import { obtenerAeronaves, insertarAeronave, actualizarAeronave,eliminarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 import './Styles/GestorAeronaves.css';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
 import { Card } from 'primereact/card';
 import PantallaCarga from '../../components/PantallaCarga';
@@ -89,6 +89,15 @@ const AeronaveCrud = () => {
         setAeronaveDialog(true);
     };
 
+
+    const handleDelete = async (aeronave) => {
+        try {
+            await eliminarAeronave(aeronave.id_aeronave); 
+            fetchAeronaves();
+        } catch (error) {
+            console.error('Error al eliminar aeronave:', error);
+        }
+    };
     // Column definitions
     const consumoTemplate = (rowData) => {
         return <span>{rowData.consumo_por_hora} L/hr</span>;
@@ -143,6 +152,12 @@ const AeronaveCrud = () => {
                         <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
                             <EditIcon />
                         </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Eliminar">
+                            <IconButton color="primary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
+                                <DeleteIcon />
+                            </IconButton>
                         </Tooltip>
                         
                         <Tooltip title="Ver detalles">

@@ -9,7 +9,7 @@ import '../../styles/datatable-style.css';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import './Styles/GestorTarifas.css';
 import PantallaCarga from '../../components/PantallaCarga';
 
@@ -124,8 +124,8 @@ const TarifaCrud = () => {
                         </Tooltip>
                         
                         <Tooltip title="Eliminar">
-                            <IconButton color="secondary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
-                                <CloseIcon />
+                            <IconButton color="primary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
+                                <DeleteIcon />
                             </IconButton>
                         </Tooltip>
                     </div>
