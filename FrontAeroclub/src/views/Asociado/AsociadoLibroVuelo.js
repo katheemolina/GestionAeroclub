@@ -65,15 +65,15 @@ function AsociadoLibroVuelo() {
         scrollHeight="800px"
         >
         <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false} filterType='date' showClearButton={false} ></Column>
-        <Column field="matricula" header="Aeronave" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
-        {/* <Column field="hora_salida" header="Salida" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> */}
-        {/* <Column field="hora_llegada" header="Llegada" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>  */}
-        <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        {/* <Column field="finalidad" header="Finalidad" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> */}
-        <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
-        {/* <Column field="aterrizajes" header="Aterrizajes" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false} showClearButton={false}  ></Column> */}
+        <Column field="matricula" header="Aeronave" sortable filter filterPlaceholder="Buscar por aeronave" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por origen" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por destino" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
+        {/* <Column field="hora_salida" header="Salida" sortable filter filterPlaceholder="Buscar por salida" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> */}
+        {/* <Column field="hora_llegada" header="Llegada" sortable filter filterPlaceholder="Buscar por llegada" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>  */}
+        <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        {/* <Column field="finalidad" header="Finalidad" sortable filter filterPlaceholder="Buscar por finalidad" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> */}
+        <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por instrucción" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
+        {/* <Column field="aterrizajes" header="Aterrizajes" sortable filter filterPlaceholder="Buscar por aterrizajes" filterMatchMode="contains" showFilterMenu={false} showClearButton={false}  ></Column> */}
         <Column header="Acciones"
           body={(rowData) => (
               <div className='acciones'>
@@ -94,21 +94,20 @@ function AsociadoLibroVuelo() {
                 {selectedRowData && (
                 <div>
                     <div className='p-fluid details-dialog'>
-                        <Card> <p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+                        <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
                         <Card><p><strong>Aeronave:</strong> {selectedRowData.matricula}</p></Card>
                         <Card><p><strong>Origen:</strong> {selectedRowData.origen}</p></Card>
-                        <Card> <p><strong>Destino:</strong> {selectedRowData.destino}</p></Card>
+                        <Card><p><strong>Destino:</strong> {selectedRowData.destino}</p></Card>
                         <Card><p><strong>Hora de salida:</strong> {selectedRowData.hora_salida}</p></Card>
                         <Card><p><strong>Hora de llegada:</strong> {selectedRowData.hora_llegada}</p></Card>
                         <Card><p><strong>Tiempo de vuelo:</strong> {selectedRowData.Tiempo}</p></Card>
                         <Card><p><strong>Finalidad:</strong> {selectedRowData.finalidad}</p></Card>
                         <Card><p><strong>Instrucción:</strong> {selectedRowData.instruccion}</p></Card>
                         <Card><p><strong>Cantidad de aterrizajes:</strong> {selectedRowData.aterrizajes}</p></Card>
-                          
                     </div>
                 </div>
                 )}
-            </Dialog>
+        </Dialog>
 
     </div>
   );

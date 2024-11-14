@@ -3,7 +3,12 @@ import { obtenerTodosLosItinerarios } from '../../services/vuelosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useLocation } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 import PantallaCarga from '../../components/PantallaCarga';
+import { Dialog } from 'primereact/dialog';
+import { Card } from 'primereact/card';
 
 function InstructorVuelosPorUsuario({idUsuario = 1}){
     const [data, setData] = useState([]);
@@ -31,6 +36,19 @@ function InstructorVuelosPorUsuario({idUsuario = 1}){
         fetchData();
     }, [idUsuario]);
     
+    // Para manejo de dialog de vista de detalles
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [selectedRowData, setSelectedRowData] = useState(null);
+    
+    const openDialog = (rowData) => {
+        setSelectedRowData(rowData);
+        setDialogVisible(true);
+    };
+    
+    const closeDialog = () => {
+        setDialogVisible(false);
+    };
+    
     if (loading) {
       return <PantallaCarga/>
     }
@@ -56,7 +74,41 @@ function InstructorVuelosPorUsuario({idUsuario = 1}){
         <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por instruccion" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column header="Acciones"
+                body={(rowData) => (
+                    <div className='acciones'>
+
+                    {/* Botón de detalles */}
+                    <Tooltip title="Ver detalles">
+                    <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
+                        <SearchIcon />
+                    </IconButton>
+                    </Tooltip>
+                    
+                    </div>
+                )}
+            />
       </DataTable>
+
+      <Dialog header="Detalles del Vuelo" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
+                {selectedRowData && (
+                <div>
+                    <div className='p-fluid details-dialog'>
+                        <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+                        <Card><p><strong>Aeronave:</strong> {selectedRowData.matricula}</p></Card>
+                        <Card><p><strong>Origen:</strong> {selectedRowData.origen}</p></Card>
+                        <Card><p><strong>Destino:</strong> {selectedRowData.destino}</p></Card>
+                        <Card><p><strong>Hora de salida:</strong> {selectedRowData.hora_salida}</p></Card>
+                        <Card><p><strong>Hora de llegada:</strong> {selectedRowData.hora_llegada}</p></Card>
+                        <Card><p><strong>Tiempo de vuelo:</strong> {selectedRowData.Tiempo}</p></Card>
+                        <Card><p><strong>Finalidad:</strong> {selectedRowData.finalidad}</p></Card>
+                        <Card><p><strong>Instrucción:</strong> {selectedRowData.instruccion}</p></Card>
+                        <Card><p><strong>Cantidad de aterrizajes:</strong> {selectedRowData.aterrizajes}</p></Card>
+                    </div>
+                </div>
+                )}
+        </Dialog>
+
       </div>
     );
 }
