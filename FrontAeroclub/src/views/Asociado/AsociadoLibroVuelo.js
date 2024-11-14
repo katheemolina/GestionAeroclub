@@ -5,6 +5,10 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useUser } from '../../context/UserContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+
         
 
 function AsociadoLibroVuelo() {
@@ -56,14 +60,15 @@ function AsociadoLibroVuelo() {
         >
         <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false} filterType='date' showClearButton={false} ></Column>
         <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
         <Column field="hora_salida" header="Salida" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        <Column field="hora_llegada" header="Llegada" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        <Column field="hora_llegada" header="Llegada" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
         <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
         <Column field="finalidad" header="Finalidad" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
         <Column field="matricula" header="Matricula" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
         <Column field="aterrizajes" header="Aterrizajes" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false} showClearButton={false}  ></Column>
+        
       </DataTable>
     </div>
   );
