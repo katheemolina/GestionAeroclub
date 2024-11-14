@@ -22,6 +22,7 @@ import {
   horasVoladasPorUsuario,
   ultimosVuelosPorUsuario
 } from '../../services/vuelosApi';
+import PantallaCarga from '../../components/PantallaCarga';
 
 
 function GestorAsociadoDashboard() { // Establecer idUsuario para traer su informacion
@@ -92,7 +93,7 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
   : "Fecha no disponible";
 
   if (loading) {
-    return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

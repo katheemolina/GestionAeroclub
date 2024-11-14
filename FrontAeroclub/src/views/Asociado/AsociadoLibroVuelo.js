@@ -4,10 +4,11 @@ import { obtenerLibroDeVueloPorUsuario } from '../../services/vuelosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useUser } from '../../context/UserContext';
-import { ProgressSpinner } from 'primereact/progressspinner';
+
 import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import PantallaCarga from '../../components/PantallaCarga';
 
         
 
@@ -33,15 +34,7 @@ function AsociadoLibroVuelo() {
   }, [usuarioId]);
 
   if (loading) {
-    return <div className="background"> 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <ProgressSpinner 
-        style={{width: '70px', height: '70px'}}
-        strokeWidth="5"
-        strokeColor="red"
-        /> 
-      </div>
-    </div>; 
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

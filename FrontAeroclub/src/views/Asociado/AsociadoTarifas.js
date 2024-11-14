@@ -5,10 +5,11 @@ import { Button } from 'primereact/button';
 import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi'; // Import the API functions
 import '../../styles/datatable-style.css'; //Estilado para la tabla
 import './Styles/GestorTarifas.css'
+import PantallaCarga from '../../components/PantallaCarga';
 
 const AsociadoTarifas = () => {
     const [tarifas, setTarifas] = useState([]);
-
+    const [loading, setLoading] = useState(true);
 
     // Fetch tarifas data from the API
     const fetchTarifas = async () => {
@@ -18,6 +19,7 @@ const AsociadoTarifas = () => {
         } catch (error) {
             console.error('Error fetching tarifas:', error);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -34,6 +36,9 @@ const AsociadoTarifas = () => {
         return <span>${rowData.importe}</span>;
     };
 
+    if (loading) {
+        return <PantallaCarga />
+    }
     return (
         <div className="background">
         <header className="header">

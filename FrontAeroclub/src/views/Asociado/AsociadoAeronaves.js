@@ -7,12 +7,14 @@ import './Styles/GestorAeronaves.css';
 import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import PantallaCarga from '../../components/PantallaCarga';
 
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
 
 const AsociadoAeronaves = () => {
     const [aeronaves, setAeronaves] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // Fetch aeronaves data from the API
     const fetchAeronaves = async () => {
@@ -22,6 +24,7 @@ const AsociadoAeronaves = () => {
         } catch (error) {
             console.error('Error fetching aeronaves:', error);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -50,6 +53,10 @@ const AsociadoAeronaves = () => {
     const closeDialog = () => {
         setDialogVisible(false);
     };
+
+    if (loading) {
+        return <PantallaCarga/>
+    }
 
     return (
         <div className="background">

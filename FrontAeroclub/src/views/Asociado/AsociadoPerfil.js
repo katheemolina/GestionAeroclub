@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import PantallaCarga from '../../components/PantallaCarga';
 
 
 function AsociadoPerfil() {
@@ -154,15 +155,7 @@ function AsociadoPerfil() {
 
 
   if (cargando) {
-    return <div className="background"> 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <ProgressSpinner 
-        style={{width: '70px', height: '70px'}}
-        strokeWidth="5"
-        strokeColor="red"
-        /> 
-      </div>
-    </div>; 
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
 import { useLocation } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css';
+import PantallaCarga from '../../components/PantallaCarga';
 
 //importo servicios
 import {
@@ -21,6 +21,7 @@ import {
   horasVoladasPorUsuario,
   ultimosVuelosPorUsuario
 } from '../../services/vuelosApi';
+
 
 
 function GestorAsociadoCuentaCorriente({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
@@ -93,7 +94,7 @@ function GestorAsociadoCuentaCorriente({ idUsuario = 1 }) { // Establecer idUsua
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   if (loading) {
-    return <div className="background"><div>Cargando...</div></div>; // Muestra un mensaje de carga mientras esperas los datos
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

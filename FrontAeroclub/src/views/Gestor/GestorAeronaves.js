@@ -13,6 +13,7 @@ import './Styles/GestorAeronaves.css';
 
 import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
 import { Card } from 'primereact/card';
+import PantallaCarga from '../../components/PantallaCarga';
 
 
 const AeronaveCrud = () => {
@@ -31,6 +32,7 @@ const AeronaveCrud = () => {
         estado: 'activo',
     });
     const [isEdit, setIsEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Fetch aeronaves data from the API
     const fetchAeronaves = async () => {
@@ -40,6 +42,7 @@ const AeronaveCrud = () => {
         } catch (error) {
             console.error('Error fetching aeronaves:', error);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -109,6 +112,9 @@ const AeronaveCrud = () => {
         setDialogVisible(false);
     };
 
+    if (loading) {
+        return <PantallaCarga />
+    }
     return (
         <div className="background">
             <header className="header">

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "./Styles/AsociadoDashboards.css"
 import { useLocation } from 'react-router-dom';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css';
@@ -17,6 +16,7 @@ import {
   horasVoladasPorUsuario,
   ultimosVuelosPorUsuario
 } from '../../services/vuelosApi';
+import PantallaCarga from '../../components/PantallaCarga';
 
 
 function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
@@ -83,15 +83,7 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   if (loading) {
-    return <div className="background"> 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <ProgressSpinner 
-        style={{width: '70px', height: '70px'}}
-        strokeWidth="5"
-        strokeColor="red"
-        /> 
-      </div>
-    </div>;
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

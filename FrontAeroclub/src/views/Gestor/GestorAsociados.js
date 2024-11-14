@@ -15,6 +15,7 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import Tooltip from '@mui/material/Tooltip';
 import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
+import PantallaCarga from '../../components/PantallaCarga';
 
 const GestorAsociados  = () => {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ const GestorAsociados  = () => {
         estado: ''
     });
     const [isEdit, setIsEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Fetch aeronaves data from the API
     const fetchAsociados = async () => {
@@ -33,6 +35,7 @@ const GestorAsociados  = () => {
         } catch (error) {
             console.error('Error fetching aeronaves:', error);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -65,7 +68,10 @@ const GestorAsociados  = () => {
           state: { user }  // Aquí pasamos el objeto 'user' como estado
         });
       };
-      
+    
+    if (loading) {
+        return <PantallaCarga/>
+    }  
     return (
         <div className="background">
             <header className="header">

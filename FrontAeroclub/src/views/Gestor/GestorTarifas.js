@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import './Styles/GestorTarifas.css';
+import PantallaCarga from '../../components/PantallaCarga';
 
 const TarifaCrud = () => {
     const [tarifas, setTarifas] = useState([]);
@@ -22,6 +23,7 @@ const TarifaCrud = () => {
         importe_por_instruccion: '',
     });
     const [isEdit, setIsEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Fetch tarifas data from the API
     const fetchTarifas = async () => {
@@ -31,6 +33,7 @@ const TarifaCrud = () => {
         } catch (error) {
             console.error('Error fetching tarifas:', error);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -95,6 +98,9 @@ const TarifaCrud = () => {
         return <span>${rowData.importe}</span>;
     };
 
+    if (loading) {
+        return <PantallaCarga/>
+    }
     return (
         <div className="background">
             <header className="header">

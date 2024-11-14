@@ -8,7 +8,7 @@ import FlightIcon from '@mui/icons-material/Flight';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
 import Tooltip from '@mui/material/Tooltip';
 import { useNavigate } from 'react-router-dom';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import PantallaCarga from '../../components/PantallaCarga';
 
 function InstructorAsociados({idUsuario = 0}){
   const navigate = useNavigate();
@@ -44,15 +44,7 @@ function InstructorAsociados({idUsuario = 0}){
     };
 
     if (loading) {
-      return <div className="background"> 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <ProgressSpinner 
-          style={{width: '70px', height: '70px'}}
-          strokeWidth="5"
-          strokeColor="red"
-          /> 
-        </div>
-      </div>;
+      return <PantallaCarga/>
     }
     return (
         <div className="background">
