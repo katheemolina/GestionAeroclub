@@ -115,8 +115,11 @@ const TarifaCrud = () => {
                 <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
-                <Column header="Acciones" body={(rowData) => (
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                <Column 
+                    header="Acciones" 
+                    style={{ width: '1px'}}
+                    body={(rowData) => (
+                    <div style={{ display: 'flex', gap: '8px'}}>
                         <Tooltip title="Editar">
                             <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
                                 <EditIcon />

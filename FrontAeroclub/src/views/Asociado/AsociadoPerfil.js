@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CardComponent from '../../components/CardComponent'; // Asegúrate de importar el componente de tarjeta
+import CardComponent from '../../components/CardComponent'; 
 import "./Styles/AsociadoPerfil.css"
 import { obtenerDatosDelUsuario,actualizarDatosDelUsuario ,obtenerLicenciasPorUsuario, actualizarLicencias} from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
@@ -9,13 +9,10 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { useUser } from '../../context/UserContext';
-
-import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import PantallaCarga from '../../components/PantallaCarga';
-
+import 'react-toastify/dist/ReactToastify.css';
 
 function AsociadoPerfil() {
   const [cargando, setCargando] = useState(true);

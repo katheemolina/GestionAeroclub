@@ -121,7 +121,9 @@ const GestorAsociados  = () => {
                 <Column field="horas_vuelo" header="Horas de vuelo totales" sortable></Column>
                 <Column field="estadoCMA" header="Estado del CMA" sortable></Column>
                 <Column field="saldo" header="Saldo" sortable ></Column>
-                <Column header="Acciones" 
+                <Column 
+                        style={{width: '1px'}}
+                        header="Acciones" 
                         body={(rowData) => (
                             <div className='acciones'>
 

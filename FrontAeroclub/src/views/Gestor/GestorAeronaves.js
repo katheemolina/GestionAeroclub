@@ -3,17 +3,22 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { Dialog } from 'primereact/dialog';
-import { obtenerAeronaves, insertarAeronave, actualizarAeronave,eliminarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
-import '../../styles/datatable-style.css';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import Tooltip from '@mui/material/Tooltip';
-import './Styles/GestorAeronaves.css';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
+import { Dialog } from 'primereact/dialog'
 import { Card } from 'primereact/card';
 import PantallaCarga from '../../components/PantallaCarga';
+import { obtenerAeronaves, insertarAeronave, actualizarAeronave,eliminarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
+import '../../styles/datatable-style.css';
+import './Styles/GestorAeronaves.css';
+//iconos
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search'; 
+import HistoryIcon from '@mui/icons-material/History';
+import Tooltip from '@mui/material/Tooltip';
+
+
+
 
 
 const AeronaveCrud = () => {
@@ -146,6 +151,7 @@ const AeronaveCrud = () => {
                 {/*<Column field="horas_para_inspeccion" header="Horas para inspeccion" ></Column> */}
                 <Column field="estado" header="Estado"></Column>
                 <Column header="Acciones" 
+                    style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
                         <Tooltip title="Editar">
@@ -165,6 +171,13 @@ const AeronaveCrud = () => {
                             <SearchIcon />
                         </IconButton>
                         </Tooltip>
+
+                        <Tooltip title="Historial de servicios">
+                        <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
+                            <HistoryIcon />
+                        </IconButton>
+                        </Tooltip>
+
                     </div>
                 )}></Column>
             </DataTable>
