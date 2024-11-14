@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css'
-import { ProgressSpinner } from 'primereact/progressspinner';
+import PantallaCarga from '../../components/PantallaCarga';
 
 //importo servicios
 import {
@@ -86,15 +86,7 @@ function Dashboard() { // Establecer idUsuario para traer su informacion
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   if (loading) {
-    return <div className="background"> 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <ProgressSpinner 
-        style={{width: '70px', height: '70px'}}
-        strokeWidth="5"
-        strokeColor="red"
-        /> 
-      </div>
-    </div>; 
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

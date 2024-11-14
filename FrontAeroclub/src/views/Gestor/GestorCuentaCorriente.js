@@ -3,7 +3,8 @@ import './Styles/GestorCuentaCorriente.css'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { obtenerCuentaCorrienteAeroclub } from '../../services/movimientosApi';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import PantallaCarga from '../../components/PantallaCarga';
+
 
 function GestorRecibos({idUsuario = 0}){
   const [data, setData] = useState([]);
@@ -30,15 +31,7 @@ function GestorRecibos({idUsuario = 0}){
   };
 
   if (loading) {
-    return <div className="background"> 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <ProgressSpinner 
-        style={{width: '70px', height: '70px'}}
-        strokeWidth="5"
-        strokeColor="red"
-        /> 
-      </div>
-    </div>;
+    return <PantallaCarga/>
   }
   return (
     <div className="background">

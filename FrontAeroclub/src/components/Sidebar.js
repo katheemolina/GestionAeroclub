@@ -24,7 +24,11 @@ function Sidebar() {
     Gestor: [
       { ruta: '/gestor/dashboard', texto: 'Inicio' },
       { ruta: '/gestor/recibos', texto: 'Recibos' },
+<<<<<<< HEAD
       { ruta: '/gestor/vuelos', texto: 'Libros de Vuelo' },
+=======
+      { ruta: '/gestor/vuelos', texto: 'Libro de Vuelo' },
+>>>>>>> 60655ec71216a092713fdda67c5965e0ef7ca5d2
       { ruta: '/gestor/cuenta-corriente', texto: 'Cuenta Corriente Aeroclub' },
       { ruta: '/gestor/asociados', texto: 'Asociados' },
       { ruta: '/gestor/tarifas', texto: 'Tarifas' },

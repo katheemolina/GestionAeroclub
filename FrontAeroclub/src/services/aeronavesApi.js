@@ -57,3 +57,26 @@ export const actualizarAeronave = async (id, Data) => {
         throw error;
     }
 };
+
+export async function eliminarAeronave(idAeronave) {
+    try {
+        const response = await fetch(`${API_URL}/aeronave/eliminar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ IdAeronave: idAeronave })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error eliminando aeronave');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}

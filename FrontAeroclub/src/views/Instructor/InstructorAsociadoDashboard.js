@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
 import { useLocation } from 'react-router-dom';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import '../../styles/datatable-style.css';
 
 //importo servicios
 import {
@@ -15,6 +16,7 @@ import {
   horasVoladasPorUsuario,
   ultimosVuelosPorUsuario
 } from '../../services/vuelosApi';
+import PantallaCarga from '../../components/PantallaCarga';
 
 
 function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
@@ -81,15 +83,7 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   if (loading) {
-    return <div className="background"> 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <ProgressSpinner 
-        style={{width: '70px', height: '70px'}}
-        strokeWidth="5"
-        strokeColor="red"
-        /> 
-      </div>
-    </div>;
+    return <PantallaCarga/>
   }
   return (
     <div className="background">
@@ -117,7 +111,21 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
 
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
-        <TableComponent columns={columns} data={data} />
+        <DataTable 
+          value={data} 
+          // paginator rows={4} 
+          // rowsPerPageOptions={[10, 15, 25, 50]} 
+          removableSort 
+          scrollable
+          scrollHeight="800px"
+          >
+          <Column field="matricula_aeronave" header="Avión" sortable ></Column>
+          <Column field="fecha_vuelo" header="Último vuelo" sortable ></Column>
+          <Column field="tiempo_vuelo" header="Tiempo" sortable ></Column>
+          <Column field="aterrizajes" header="Aterrizajes" sortable></Column>
+          <Column field="Adaptacion" header="Adaptación" sortable></Column>
+        </DataTable>
+
       </section>
 
       <section className="licencias-section">

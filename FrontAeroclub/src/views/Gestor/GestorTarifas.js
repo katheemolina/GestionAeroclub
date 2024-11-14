@@ -4,13 +4,14 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
-import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi';
+import { obtenerTarifas, insertarTarifa, actualizarTarifa ,eliminarTarifa} from '../../services/tarifasApi';
 import '../../styles/datatable-style.css';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import './Styles/GestorTarifas.css';
+import PantallaCarga from '../../components/PantallaCarga';
 
 const TarifaCrud = () => {
     const [tarifas, setTarifas] = useState([]);
@@ -22,6 +23,7 @@ const TarifaCrud = () => {
         importe_por_instruccion: '',
     });
     const [isEdit, setIsEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Fetch tarifas data from the API
     const fetchTarifas = async () => {
@@ -31,6 +33,7 @@ const TarifaCrud = () => {
         } catch (error) {
             console.error('Error fetching tarifas:', error);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -74,7 +77,7 @@ const TarifaCrud = () => {
         setTarifaDialog(true);
     };
 
-    /* 
+     
     const handleDelete = async (tarifa) => {
         try {
             await eliminarTarifa(tarifa.id_tarifa); 
@@ -83,7 +86,7 @@ const TarifaCrud = () => {
             console.error('Error al eliminar tarifa:', error);
         }
     };
-    */
+    
 
 
     // Column definitions
@@ -95,6 +98,9 @@ const TarifaCrud = () => {
         return <span>${rowData.importe}</span>;
     };
 
+    if (loading) {
+        return <PantallaCarga/>
+    }
     return (
         <div className="background">
             <header className="header">
@@ -109,8 +115,11 @@ const TarifaCrud = () => {
                 <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
-                <Column header="Acciones" body={(rowData) => (
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                <Column 
+                    header="Acciones" 
+                    style={{ width: '1px'}}
+                    body={(rowData) => (
+                    <div style={{ display: 'flex', gap: '8px'}}>
                         <Tooltip title="Editar">
                             <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
                                 <EditIcon />
@@ -118,8 +127,8 @@ const TarifaCrud = () => {
                         </Tooltip>
                         
                         <Tooltip title="Eliminar">
-                            <IconButton color="secondary" aria-label="delete" /* onClick={() => handleDelete(rowData)} */>
-                                <CloseIcon />
+                            <IconButton color="primary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
+                                <DeleteIcon />
                             </IconButton>
                         </Tooltip>
                     </div>

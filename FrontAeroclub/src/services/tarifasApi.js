@@ -59,3 +59,26 @@ export const actualizarTarifa = async (id, tarifaData) => {
         throw error;
     }
 };
+
+export async function eliminarTarifa(idTarifa) {
+    try {
+        const response = await fetch(`${API_URL}/tarifa/eliminar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ IdTarifa: idTarifa })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error eliminando tarifa');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}

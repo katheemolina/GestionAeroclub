@@ -190,6 +190,13 @@
     text-align: center;
   }
 
+.p-dialog .p-card{
+    padding: 10px;
+}
+
+.details-dialog .p-card{
+    margin-bottom: 10px;
+}
 
 @media(max-width:750px){
    
@@ -224,3 +231,4 @@
         min-width: 200px;;
     }
 }
+
