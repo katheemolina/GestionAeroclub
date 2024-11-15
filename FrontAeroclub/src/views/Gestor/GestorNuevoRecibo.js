@@ -7,6 +7,11 @@ import { listarAsociados } from '../../services/usuariosApi';
 import { useNavigate } from 'react-router-dom';
 import { generarReciboApi, listarInstructores, obtenerTiposVuelos } from '../../services/generarReciboApi';
 
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import PantallaCarga from '../../components/PantallaCarga';
 
 function FormularioGestorRecibos() {
     const [cantidad, setCantidad] = useState(''); // Cantidad de combustible
@@ -18,6 +23,8 @@ function FormularioGestorRecibos() {
     const [itinerarioData, setItinerarioData] = useState([{ origen: '', destino: '', horaSalida: '', horaLlegada: '',instruccion: false }]);
     const [instruccionSeleccionada, setInstruccionSeleccionada] = useState(false);
     const [instructorSeleccionado, setInstructorSeleccionado] = useState('');
+
+    const [loading, setLoading] = useState(false);
     
     // Traigo datos de tipos de recibos
     const [tipoRecibo] = useState([{ 'value': "Vuelo" }, { 'value': "Combustible" }]);
@@ -315,7 +322,7 @@ function FormularioGestorRecibos() {
     const renderFormularioItinerario = (index) => (
         
         <div className="itinerario-form" key={index}>
-            
+            <ToastContainer />
             <div className="form-group">
                 <label className="label-recibo">Origen:</label>
                 <input
@@ -386,7 +393,8 @@ function FormularioGestorRecibos() {
     }, [cantidad, tarifasCombustibleSeleccionado]);
 
     const renderFormularioCombustible = () => (
-        <>    
+        <>  
+            <ToastContainer />
             <div className="form-group">
                 <label className="label-recibo">Cantidad:</label>
                 <input
@@ -471,7 +479,7 @@ function FormularioGestorRecibos() {
         // Construir el objeto con los datos del formulario
         let reciboData = {};
         if (!['Combustible', 'Vuelo'].includes(tipoReciboSeleccionado)) {
-            alert('El tipo de recibo es inválido');
+            toast.warning('El tipo de recibo es inválido');
             return false;
         }
         if (tipoReciboSeleccionado === 'Combustible')
@@ -492,15 +500,15 @@ function FormularioGestorRecibos() {
                 TipoItinerario: 0
             };
             if (reciboData.IdUsuario === 0) {
-                alert('El usuario es obligatorio');
+                toast.warning('El usuario es obligatorio');
                 return false;
             }
             if (reciboData.Cantidad <= 0 || reciboData.Importe <= 0) {
-                alert('La cantidad y el importe deben ser mayores que 0');
+                toast.warning('La cantidad y el importe deben ser mayores que 0');
                 return false;
             }
             if (!reciboData.Fecha || isNaN(new Date(reciboData.Fecha))) {
-                alert('La fecha es inválida');
+                toast.warning('La fecha es inválida');
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo'){
@@ -521,55 +529,59 @@ function FormularioGestorRecibos() {
             };
             // Validaciones
             if (reciboData.IdUsuario === 0) {
-                alert('El usuario es obligatorio');
+                toast.warning('El usuario es obligatorio');
                 return false;
             }
             if (!reciboData.Fecha || isNaN(new Date(reciboData.Fecha))) {
-                alert('La fecha es inválida');
+                toast.warning('La fecha es inválida');
                 return false;
             }
             if (![0, 1,true,false].includes(reciboData.Instruccion)) {
-                alert('El valor de instrucción debe ser 0 o 1');
+                toast.warning('El valor de instrucción debe ser 0 o 1');
                 return false;
             }
-            if (reciboData.IdInstructor === 0) {
-                alert('El instructor es obligatorio');
+            if (reciboData.IdInstructor === 0 && reciboData.Instruccion) {
+                toast.warning('El instructor es obligatorio');
                 return false;
             }
             if (reciboData.Itinerarios <= 0) {
-                alert('Debe haber al menos un itinerario');
+                toast.warning('Debe haber al menos un itinerario');
                 return false;
             }
+            console.log(JSON.stringify(itinerarioData))
             if (!reciboData.Datos || reciboData.Datos === '[]') {
-                alert('Los datos de itinerarios son obligatorios');
+                toast.warning('Los datos de itinerarios son obligatorios');
                 return false;
             }
             if (reciboData.Aeronave === 0) {
-                alert('La aeronave es obligatoria');
+                toast.warning('La aeronave es obligatoria');
                 return false;
             }
             if (reciboData.Tarifa === 0) {
-                alert('La tarifa es obligatoria');
+                toast.warning('La tarifa es obligatoria');
                 return false;
             }
             if (reciboData.TipoItinerario === 0) {
-                alert('El tipo de itinerario es obligatorio');
+                toast.warning('El tipo de itinerario es obligatorio');
                 return false;
             }
         }
         try {
+            setLoading(true);
             const result = await generarReciboApi(reciboData);
+            setLoading(false);
             console.log('Recibo generado con éxito:', result);
-            // Aquí puedes mostrar un mensaje de éxito al usuario
-            alert(result.message);
-            navigate('/gestor/recibos'); // Redirigir a la lista de recibos
+            toast.success('Recibo generado con éxito');
+            setTimeout(() => navigate('/gestor/recibos'), 2000);
         } catch (error) {
             console.error('Error al generar el recibo:', error);
-            // Aquí puedes manejar el error en el UI, como mostrando un mensaje de error
+            toast.error('Error al generar el recibo')
         }
     };
     
     return (
+        <div className='background'>
+        <ToastContainer />
         <div className="formulario-recibos">
             <h1>Nuevo Recibo</h1>
             <div className="form-group">
@@ -591,6 +603,7 @@ function FormularioGestorRecibos() {
                 <button className="generate-btn" onClick={handleGenerar}>Generar</button>
                 <button className="cancel-btn" onClick={handleCancelar}>Cancelar</button>
             </div>
+        </div>
         </div>
     );
 }

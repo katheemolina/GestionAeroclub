@@ -90,7 +90,7 @@ function GestorVuelos(){
                 <div>
                     <div className='p-fluid details-dialog'>
                         <Card> <p><strong>Fecha:</strong> {selectedRowData.fecha}</p> </Card>
-                        <Card> <p><strong>Aeronave:</strong> {selectedRowData.aeronave}</p> </Card>
+                        <Card> <p><strong>Aeronave:</strong> {selectedRowData.matricula}</p> </Card>
                         <Card> <p><strong>Asociado:</strong> {selectedRowData.usuario}</p> </Card>
                         <Card><p><strong>Origen:</strong> {selectedRowData.origen}</p> </Card>
                         <Card> <p><strong>Destino:</strong> {selectedRowData.destino}</p> </Card>

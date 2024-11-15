@@ -17,12 +17,13 @@ export const obtenerAeronaves = async () => {
 // Función para insertar una nueva aeronave
 export const insertarAeronave = async (Data) => {
     try {
+        console.log(JSON.stringify(Data))
         const response = await fetch(`${API_URL}/aeronaves`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(Data),
+            body: JSON.stringify(Data) 
         });
         
         if (!response.ok) {
