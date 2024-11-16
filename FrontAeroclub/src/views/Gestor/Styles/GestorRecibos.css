@@ -13,22 +13,13 @@
     gap: 20px;
 }
 
-.nuevo-recibo-btn{
-    text-align: center;
-    padding: 10px;
-    font-size: 1em;
-    background-color: #3e8f4f;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.nuevo{
+    display: inline-block;
+    margin-right: 5px;
 }
 
-.nuevo-recibo-btn:hover {
-    background-color: #28a745;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.enviar{
+    height: 40px;
 }
 
 .filtrar-dropdown{

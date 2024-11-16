@@ -139,10 +139,10 @@ function GestorRecibos({ idUsuario = 0 }) {
         />
         <Column
           field="usuario"
-          header="Usuario"
+          header="Asociado"
           sortable
           filter
-          filterPlaceholder="Buscar por usuario"
+          filterPlaceholder="Buscar por asociado"
           filterMatchMode="contains"
           showFilterMenu={false}
           className="columna-ancho-min"

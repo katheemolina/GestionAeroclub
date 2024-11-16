@@ -3,6 +3,8 @@ import '../../styles/datatable-style.css';
 import PantallaCarga from '../../components/PantallaCarga';
 import { useUser } from '../../context/UserContext';
 import { generarCuotasSociales } from '../../services/generarCuotasSociales'; // Asegúrate de importar la función
+import { Card } from 'primereact/card';
+import './Styles/GestorGenerarCuotasSociales.css'
 
 const GestorGenerarCuotasSociales = () => {
     const [loading, setLoading] = useState(false);
@@ -63,10 +65,12 @@ const GestorGenerarCuotasSociales = () => {
 
     return (
         <div className="background">
+            
             <header className="header">
                 <h1>Gestión de Cuotas Sociales</h1>
             </header>
-            <div className="form-container">
+            <div className='contenedor-para-centrar'>
+            <div className="form-container contenedor-generar-cuotas">
                 <label>
                     <strong>Fecha del Movimiento:</strong>
                     <input
@@ -97,13 +101,15 @@ const GestorGenerarCuotasSociales = () => {
                         placeholder="Ejemplo: 1000"
                     />
                 </label>
-                <button className="btn-primary" onClick={handleSubmit}>
+                <button id="btn-generar-cuotas" className="btn-primary" onClick={handleSubmit}>
                     Generar Cuotas
                 </button>
             </div>
             {resultado && <div className="resultado"><p>{resultado}</p></div>}
             {error && <div className="error"><p>{error}</p></div>} {/* Mostrar el mensaje de error */}
+            </div>
         </div>
+        
     );
 };
 
