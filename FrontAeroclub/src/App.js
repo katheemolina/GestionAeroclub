@@ -17,6 +17,7 @@ import GestorAeronaves from './views/Gestor/GestorAeronaves';
 import GestorAsociadoDashboard from './views/Gestor/GestorAsociadoDashboard';
 import GestorAsociadoCuentaCorriente from './views/Gestor/GestorAsociadoCuentaCorriente';
 import GestorNuevoRecibo from './views/Gestor/GestorNuevoRecibo';
+import GestorGenerarCuotasSociales from './views/Gestor/GestorGenerarCuotasSociales';
 
 // Instructores
 import InstructorAsociados from './views/Instructor/InstructorAsociados';
@@ -88,6 +89,7 @@ function App() {
             <Route path="/gestor/asociados" element={<ProtectedRoute component={GestorAsociados} allowedRoles={['gestor']} />} />
             <Route path="/gestor/tarifas" element={<ProtectedRoute component={GestorTarifas} allowedRoles={['gestor']} />} />
             <Route path="/gestor/aeronaves" element={<ProtectedRoute component={GestorAeronaves} allowedRoles={['gestor']} />} />
+            <Route path="/gestor/generarCuotaSocial" element={<ProtectedRoute component={GestorGenerarCuotasSociales} allowedRoles={['gestor']} />} />
               {/* ruta nuevo recibo */}
             <Route path="/gestor/recibos/nuevo" element={<ProtectedRoute component={GestorNuevoRecibo} allowedRoles={['gestor']} />} />
             
