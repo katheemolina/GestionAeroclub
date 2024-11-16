@@ -1,34 +1,95 @@
-import React, { useEffect, useState } from 'react';
-import './Styles/GestorRecibos.css'
-import { obtenerTodosLosRecibos } from '../../services/recibosApi';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import '../../styles/datatable-style.css'; //Estilado para la tabla
-import { Button } from 'primereact/button';
-import { useNavigate } from 'react-router-dom';
-import PantallaCarga from '../../components/PantallaCarga';
+import React, { useEffect, useState } from "react";
+import "./Styles/GestorRecibos.css";
+import { obtenerTodosLosRecibos } from "../../services/recibosApi";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import "../../styles/datatable-style.css"; // Estilado para la tabla
+import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
+import PantallaCarga from "../../components/PantallaCarga";
+import { pagarReciboApi } from "../../services/generarReciboApi";
 
-
-function GestorRecibos({idUsuario = 0}){
+function GestorRecibos({ idUsuario = 0 }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRecibos, setSelectedRecibos] = useState([]);
+  const [selectedUsuario, setSelectedUsuario] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-    try {
-      // Obtener recibos
-      const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
-      setData(recibosResponse);
-    } catch (error) {
-      console.error("Error al obtener datos:", error);
-    }
-    setLoading(false); // Cambia el estado de carga
+      try {
+        const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
+        setData(recibosResponse);
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+      setLoading(false);
     };
 
     fetchData();
   }, [idUsuario]);
-  
+
+  const handleCheckboxChange = (recibo) => {
+    const isAlreadySelected = selectedRecibos.some(
+      (selected) => selected.numero_recibo === recibo.numero_recibo
+    );
+
+    if (isAlreadySelected) {
+      // Deselect if already selected
+      const updatedSelection = selectedRecibos.filter(
+        (selected) => selected.numero_recibo !== recibo.numero_recibo
+      );
+      setSelectedRecibos(updatedSelection);
+
+      // If no more recibos are selected, clear selectedUsuario
+      if (updatedSelection.length === 0) setSelectedUsuario(null);
+    } else {
+      // Ensure same user is selected
+      if (selectedUsuario && selectedUsuario !== recibo.usuario) {
+        alert("No puedes seleccionar recibos de diferentes usuarios.");
+        return;
+      }
+
+      setSelectedRecibos([...selectedRecibos, recibo]);
+      setSelectedUsuario(recibo.usuario);
+    }
+  };
+
+  const handleEnviarSeleccionados = async () => {
+    const idsMovimientos = selectedRecibos.map((recibo) => recibo.id_movimiento).join(",");
+
+    try {
+      const result = await pagarReciboApi(idsMovimientos);
+      alert("Recibos pagados correctamente.");
+      setSelectedRecibos([]);
+      setSelectedUsuario(null);
+
+      // Recargar datos después de la operación
+      const updatedData = await obtenerTodosLosRecibos(idUsuario);
+      setData(updatedData);
+    } catch (error) {
+      alert(`Error al pagar los recibos: ${error.message}`);
+    }
+  };
+
+  const renderCheckbox = (rowData) => {
+    const isDisabled =
+      selectedUsuario && selectedUsuario !== rowData.usuario; // Disable if different user
+    const isChecked = selectedRecibos.some(
+      (selected) => selected.numero_recibo === rowData.numero_recibo
+    );
+
+    return (
+      <input
+        type="checkbox"
+        disabled={isDisabled || rowData.estado !== "Impago"}
+        checked={isChecked}
+        onChange={() => handleCheckboxChange(rowData)}
+      />
+    );
+  };
+
   function reciboAdd(){
     navigate('/gestor/recibos/nuevo', {
       state: {  }  // Aquí pasamos el objeto 'user' como estado
@@ -36,7 +97,7 @@ function GestorRecibos({idUsuario = 0}){
   }
 
   if (loading) {
-    return <PantallaCarga/>
+    return <PantallaCarga />;
   }
   return (
     <div className="background">
@@ -44,23 +105,89 @@ function GestorRecibos({idUsuario = 0}){
         <h1>Recibos</h1>
       </header>
       <Button className="nuevo" label="Agregar Recibo" onClick={reciboAdd} />
-      <DataTable 
-        value={data} 
-        paginator rows={15} 
-        rowsPerPageOptions={[10, 15, 25, 50]} 
-        removableSort 
+      <Button
+        className="enviar"
+        label="Generar Pago de Recibo/os"
+        onClick={handleEnviarSeleccionados}
+        disabled={selectedRecibos.length === 0}
+      />
+      <DataTable
+        value={data}
+        paginator
+        rows={15}
+        rowsPerPageOptions={[10, 15, 25, 50]}
+        removableSort
         filterDisplay="row"
         scrollable
         scrollHeight="800px"
-        >
-        <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false} className="columna-ancho-min" ></Column>
-        <Column field="usuario" header="Usuario" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
-        <Column field="numero_recibo" header="N° Recibo" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
-        <Column field="tipo_recibo" header="Tipo de recibo" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
-        <Column field="estado" header="Estado" sortable filter filterPlaceholder="Buscar por tipo" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
-        <Column field="importe" header="importe" sortable filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} className="columna-ancho-min" ></Column>
+      >
+        <Column
+          body={renderCheckbox}
+          header="Seleccionar"
+          className="columna-ancho-min"
+        />
+        <Column
+          field="fecha"
+          header="Fecha"
+          sortable
+          filter
+          filterPlaceholder="Buscar por fecha"
+          filterMatchMode="contains"
+          dataType="date"
+          showFilterMenu={false}
+          className="columna-ancho-min"
+        />
+        <Column
+          field="usuario"
+          header="Usuario"
+          sortable
+          filter
+          filterPlaceholder="Buscar por usuario"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          className="columna-ancho-min"
+        />
+        <Column
+          field="numero_recibo"
+          header="N° Recibo"
+          sortable
+          filter
+          filterPlaceholder="Buscar por número"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          className="columna-ancho-min"
+        />
+        <Column
+          field="tipo_recibo"
+          header="Tipo de recibo"
+          sortable
+          filter
+          filterPlaceholder="Buscar por tipo"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          className="columna-ancho-min"
+        />
+        <Column
+          field="estado"
+          header="Estado"
+          sortable
+          filter
+          filterPlaceholder="Buscar por tipo"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          className="columna-ancho-min"
+        />
+        <Column
+          field="importe"
+          header="Importe"
+          sortable
+          filter
+          filterPlaceholder="Buscar por importe"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          className="columna-ancho-min"
+        />
       </DataTable>
-      
     </div>
   );
 }
