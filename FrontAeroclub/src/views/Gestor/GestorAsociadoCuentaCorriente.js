@@ -1,146 +1,167 @@
 import React, { useEffect, useState } from 'react';
-import "./Styles/AsociadoDashboards.css"
-import { useLocation } from 'react-router-dom';
+import "./Styles/AsociadoCuentaCorriente.css";
+import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import '../../styles/datatable-style.css';
+import { Button } from 'primereact/button';
 import PantallaCarga from '../../components/PantallaCarga';
+import { useLocation } from 'react-router-dom';
+import { pagarReciboApi } from '../../services/generarReciboApi';
 
-//importo servicios
-import {
-  obtenerDatosDelUsuario,
-  obtenerEstadoCMA,
-  obtenerLicenciasPorUsuario
-} from '../../services/usuariosApi';
-
-import {
-  obtenerSaldoCuentaCorrientePorUsuario
-} from '../../services/movimientosApi';
-
-import {
-  horasVoladasPorUsuario,
-  ultimosVuelosPorUsuario
-} from '../../services/vuelosApi';
-
-
-
-function GestorAsociadoCuentaCorriente({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [saldo, setSaldo] = useState(0);
-  const [horasVoladas, setHorasVoladas] = useState(0);
-  const [cma, setCma] = useState('');
-  const [fechaVencimiento, setFechaVencimiento] = useState('');
+function GestorAsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
-  const [licencias, setLicencias] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMovimientos, setSelectedMovimientos] = useState([]); // Almacena los movimientos seleccionados
 
-  const columns = [
-    { header: 'Avión', accessor: 'matricula_aeronave' },
-    { header: 'Último Vuelo', accessor: 'fecha_vuelo' },
-    { header: 'Adaptación', accessor: 'Adaptacion' }
-  ];
-
-  const location = useLocation();  // Hook para obtener el estado de la navegación
-  const { user } = location.state || {};  // Accedemos al estado pasad
-
-  idUsuario = user;
+  const location = useLocation(); // Hook para obtener el estado de la navegación
+  const { user } = location.state || {}; // Accedemos al estado pasado
+  const usuarioId = user.id_usuario;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener datos del usuario
-        const usuarioResponse = await obtenerDatosDelUsuario(idUsuario);
-        const usuario = usuarioResponse[0]; // Accedemos al primer objeto
-        setNombre(usuario.nombre);
-        setApellido(usuario.apellido);
-        
-        // Obtener saldo
-        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(idUsuario);
-        const saldoData = saldoResponse[0]; // Accedemos al primer objeto
-        setSaldo(saldoData.Saldo);
-        
-        // Obtener horas voladas
-        const horasResponse = await horasVoladasPorUsuario(idUsuario);
-        const horasData = horasResponse[0]; // Accedemos al primer objeto
-        setHorasVoladas(horasData.TotalHoras);
-        
-        // Obtener estado del CMA
-        const cmaResponse = await obtenerEstadoCMA(idUsuario);
-        const cmaData = cmaResponse[0]; // Accedemos al primer objeto
-        setCma(cmaData.estado);
-        setFechaVencimiento(cmaData.fecha_vencimiento_cma);
-        
-        // Obtener últimos vuelos
-        const vuelosResponse = await ultimosVuelosPorUsuario(idUsuario);
-        setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
-
-        // Obtener licencias
-        const licenciasResponse = await obtenerLicenciasPorUsuario(idUsuario);
-        const formattedLicencias = licenciasResponse.map(licencia => (
-          { codigo: licencia.codigos_licencias, descripcion: licencia.descripcion }
-        ));
-        setLicencias(formattedLicencias); // Mapeamos para obtener solo la información necesaria
-
+        const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
+        setData(cuentaCorrienteResponse);
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
-      setLoading(false); // Cambia el estado de carga
+      setLoading(false);
     };
 
     fetchData();
-  }, [idUsuario]);
+  }, [usuarioId]);
 
-  const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
+  // Función para manejar cambios en el checkbox
+  const handleCheckboxChange = (movimiento) => {
+    const isAlreadySelected = selectedMovimientos.some(
+      (selected) => selected.id_movimiento === movimiento.id_movimiento
+    );
+
+    if (isAlreadySelected) {
+      // Deseleccionar
+      const updatedSelection = selectedMovimientos.filter(
+        (selected) => selected.id_movimiento !== movimiento.id_movimiento
+      );
+      setSelectedMovimientos(updatedSelection);
+    } else {
+      // Seleccionar
+      setSelectedMovimientos([...selectedMovimientos, movimiento]);
+    }
+  };
+
+  // Renderizar checkbox en cada fila
+  const renderCheckbox = (rowData) => {
+    const isChecked = selectedMovimientos.some(
+      (selected) => selected.id_movimiento === rowData.id_movimiento
+    );
+
+    const isDisabled = rowData.estado === "Pago"; // Deshabilitar si el estado es "Pago"
+
+    return (
+      <input
+        type="checkbox"
+        disabled={isDisabled}
+        checked={isChecked}
+        onChange={() => handleCheckboxChange(rowData)}
+      />
+    );
+  };
+
+  // Función para procesar los movimientos seleccionados
+  const handleEnviarSeleccionados = async () => {
+    const idsMovimientos = selectedMovimientos.map((movimiento) => movimiento.id_movimiento).join(",");
+  
+    try {
+      // Llamar a la API para procesar los movimientos
+      const result = await pagarReciboApi(idsMovimientos); // Asegúrate de usar el endpoint adecuado
+      alert("Movimientos procesados correctamente.");
+  
+      // Limpiar selección
+      setSelectedMovimientos([]);
+  
+      // Recargar datos después de la operación
+      const updatedData = await obtenerCuentaCorrientePorUsuario(usuarioId);
+      setData(updatedData);
+    } catch (error) {
+      alert(`Error al procesar los movimientos: ${error.message}`);
+    }
+  };
+  
+
+  // Formato de importe como moneda
+  const formatoMoneda = (rowData) => {
+    return `$ ${parseFloat(rowData.importe).toFixed(2)}`;
+  };
 
   if (loading) {
-    return <PantallaCarga/>
+    return <PantallaCarga />;
   }
+
   return (
     <div className="background">
       <header className="header">
-        <h1>{`${nombre} ${apellido}`}</h1>
+        <h1>Cuenta Corriente de {user.usuario}</h1>
       </header>
-
-      <section className="stats-section">
-        <div className="stat-box">
-          <h3>Saldo</h3>
-          <p>${saldo}</p>
-        </div>
-        <div className="stat-box">
-          <h3>Horas Voladas</h3>
-          <p>{horasVoladas}</p>
-        </div>
-    </section>
-
-      <section className="stats-section">
-        <div className={`stat-box ${cmaClass}`}>
-          <h3>CMA</h3>
-          <p>{cma}</p>
-        </div>
-        <div className="stat-box">
-          <h3>CMA - Fecha de vencimiento</h3>
-          <p>{fechaVencimiento}</p>
-        </div>
-      </section>
-
-      <section className="table-section">
-        <h3>Registro de Vuelos</h3>
-        <DataTable value={data}>  
-            <Column field="matricula_aeronave" header="Avión"></Column>
-            <Column field="fecha_vuelo" header="Último vuelo"></Column>
-            <Column field="Adaptacion" header="Adaptación"></Column>
-        </DataTable>
-      </section>
-
-      <section className="licencias-section">
-        <h3>Licencias</h3>
-        <ul>
-          {licencias.map((licencia, index) => (
-            <li key={index}>{`${licencia.codigo} - ${licencia.descripcion}`}</li>
-          ))}
-        </ul>
-      </section>
+      <Button
+        label="Procesar movimientos seleccionados"
+        onClick={handleEnviarSeleccionados}
+        disabled={selectedMovimientos.length === 0}
+        className="procesar-button"
+      />
+      <DataTable
+        value={data}
+        paginator
+        rows={15}
+        rowsPerPageOptions={[10, 15, 25, 50]}
+        removableSort
+        filterDisplay="row"
+        scrollable
+        scrollHeight="800px"
+      >
+        <Column
+          body={renderCheckbox}
+          header="Seleccionar"
+          className="columna-ancho-min"
+        />
+        <Column
+          field="fecha"
+          header="Fecha"
+          sortable
+          filter
+          filterPlaceholder="Buscar por fecha"
+          filterMatchMode="contains"
+          dataType="date"
+          showFilterMenu={false}
+        />
+        <Column
+          field="descripcion_completa"
+          header="Descripción"
+          sortable
+          filter
+          filterPlaceholder="Buscar por descripción"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+        />
+        <Column
+          field="estado"
+          header="Estado"
+          sortable
+          filter
+          filterPlaceholder="Buscar por estado"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+        />
+        <Column
+          field="importe"
+          header="Importe"
+          sortable
+          filter
+          filterPlaceholder="Buscar por importe"
+          filterMatchMode="contains"
+          body={formatoMoneda}
+          showFilterMenu={false}
+        />
+      </DataTable>
     </div>
   );
 }

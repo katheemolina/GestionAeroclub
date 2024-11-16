@@ -99,6 +99,12 @@ const GestorAsociados  = () => {
         });
       };
     
+      const handleGoToCuentaCorriente = (user) => {
+        navigate('/gestor/asociadoCuentaCorriente', {
+          state: { user }  // Aquí pasamos el objeto 'user' como estado
+        });
+      };
+      
     if (loading) {
         return <PantallaCarga/>
     }  
@@ -157,7 +163,7 @@ const GestorAsociados  = () => {
                             
                              {/* BOTON VER CUENTA CORRIENTE */}
                              <Tooltip title="Ver cuenta corriente">
-                             <IconButton color="primary" aria-label="RequestQuote" >
+                             <IconButton color="primary" aria-label="RequestQuote" onClick={() => handleGoToCuentaCorriente(rowData)}>
                                 <RequestQuoteIcon /> 
                             </IconButton>
                             </Tooltip>
