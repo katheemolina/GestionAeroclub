@@ -7,11 +7,18 @@ import { Button } from 'primereact/button';
 import PantallaCarga from '../../components/PantallaCarga';
 import { useLocation } from 'react-router-dom';
 import { pagarReciboApi } from '../../services/generarReciboApi';
+import { Dialog } from 'primereact/dialog';
+import { Card } from 'primereact/card';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 
 function GestorAsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMovimientos, setSelectedMovimientos] = useState([]); // Almacena los movimientos seleccionados
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const location = useLocation(); // Hook para obtener el estado de la navegación
   const { user } = location.state || {}; // Accedemos al estado pasado
@@ -49,6 +56,43 @@ function GestorAsociadoCuentaCorriente() {
     }
   };
 
+  // Función para abrir el diálogo de detalles
+  const openDialog = (rowData) => {
+    setSelectedRowData(rowData);
+    setDialogVisible(true);
+  };
+
+  // Función para cerrar el diálogo
+  const closeDialog = () => {
+    setDialogVisible(false);
+    setSelectedRowData(null);
+  };
+
+  // Función para procesar los movimientos seleccionados
+  const handleEnviarSeleccionados = async () => {
+    const idsMovimientos = selectedMovimientos.map((movimiento) => movimiento.id_movimiento).join(",");
+
+    try {
+      // Llamar a la API para procesar los movimientos
+      const result = await pagarReciboApi(idsMovimientos); // Asegúrate de usar el endpoint adecuado
+      alert("Movimientos procesados correctamente.");
+
+      // Limpiar selección
+      setSelectedMovimientos([]);
+
+      // Recargar datos después de la operación
+      const updatedData = await obtenerCuentaCorrientePorUsuario(usuarioId);
+      setData(updatedData);
+    } catch (error) {
+      alert(`Error al procesar los movimientos: ${error.message}`);
+    }
+  };
+
+  // Formato de importe como moneda
+  const formatoMoneda = (rowData) => {
+    return `$ ${parseFloat(rowData.importe).toFixed(2)}`;
+  };
+
   // Renderizar checkbox en cada fila
   const renderCheckbox = (rowData) => {
     const isChecked = selectedMovimientos.some(
@@ -63,34 +107,9 @@ function GestorAsociadoCuentaCorriente() {
         disabled={isDisabled}
         checked={isChecked}
         onChange={() => handleCheckboxChange(rowData)}
+        style={{ cursor: 'pointer' }}
       />
     );
-  };
-
-  // Función para procesar los movimientos seleccionados
-  const handleEnviarSeleccionados = async () => {
-    const idsMovimientos = selectedMovimientos.map((movimiento) => movimiento.id_movimiento).join(",");
-  
-    try {
-      // Llamar a la API para procesar los movimientos
-      const result = await pagarReciboApi(idsMovimientos); // Asegúrate de usar el endpoint adecuado
-      alert("Movimientos procesados correctamente.");
-  
-      // Limpiar selección
-      setSelectedMovimientos([]);
-  
-      // Recargar datos después de la operación
-      const updatedData = await obtenerCuentaCorrientePorUsuario(usuarioId);
-      setData(updatedData);
-    } catch (error) {
-      alert(`Error al procesar los movimientos: ${error.message}`);
-    }
-  };
-  
-
-  // Formato de importe como moneda
-  const formatoMoneda = (rowData) => {
-    return `$ ${parseFloat(rowData.importe).toFixed(2)}`;
   };
 
   if (loading) {
@@ -161,7 +180,35 @@ function GestorAsociadoCuentaCorriente() {
           body={formatoMoneda}
           showFilterMenu={false}
         />
+        <Column
+          header="Acciones"
+          body={(rowData) => (
+            <div className="acciones">
+              <Tooltip title="Ver detalles">
+                <IconButton
+                  color="primary"
+                  aria-label="view-details"
+                  onClick={() => openDialog(rowData)}
+                >
+                  <SearchIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
+        />
       </DataTable>
+
+      <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '600px' }} onHide={closeDialog}>
+        {selectedRowData && (
+          <div className="p-fluid details-dialog">
+            <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+            <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo_movimiento}</p></Card>
+            <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
+            <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+            <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 }
