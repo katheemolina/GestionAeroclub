@@ -8,6 +8,10 @@ import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import PantallaCarga from "../../components/PantallaCarga";
 import { pagarReciboApi } from "../../services/generarReciboApi";
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Dropdown } from 'primereact/dropdown'; // P
 
 function GestorRecibos({ idUsuario = 0 }) {
   const navigate = useNavigate();
@@ -15,6 +19,7 @@ function GestorRecibos({ idUsuario = 0 }) {
   const [loading, setLoading] = useState(true);
   const [selectedRecibos, setSelectedRecibos] = useState([]);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
+  const [filtroEstado, setFiltroEstado] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +52,7 @@ function GestorRecibos({ idUsuario = 0 }) {
     } else {
       // Ensure same user is selected
       if (selectedUsuario && selectedUsuario !== recibo.usuario) {
-        alert("No puedes seleccionar recibos de diferentes usuarios.");
+        toast.warning("No puedes seleccionar recibos de diferentes usuarios.");
         return;
       }
 
@@ -61,7 +66,7 @@ function GestorRecibos({ idUsuario = 0 }) {
 
     try {
       const result = await pagarReciboApi(idsMovimientos);
-      alert("Recibos pagados correctamente.");
+      toast.success("Recibos pagados correctamente.");
       setSelectedRecibos([]);
       setSelectedUsuario(null);
 
@@ -69,7 +74,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       const updatedData = await obtenerTodosLosRecibos(idUsuario);
       setData(updatedData);
     } catch (error) {
-      alert(`Error al pagar los recibos: ${error.message}`);
+      toast.error(`Error al pagar los recibos: ${error.message}`);
     }
   };
 
@@ -96,11 +101,22 @@ function GestorRecibos({ idUsuario = 0 }) {
     });
   }
 
+  const estados = [
+    { label: 'Pago', value: 'Pago' },
+    { label: 'Impago', value: 'Impago' },
+  ];
+  const onEstadoChange = (e, options) => {
+    setFiltroEstado(e.value);
+    options.filterApplyCallback(e.value); // Aplica el filtro
+  };
+ 
+
   if (loading) {
     return <PantallaCarga />;
   }
   return (
     <div className="background">
+      <ToastContainer />
       <header className="header">
         <h1>Recibos</h1>
       </header>
@@ -133,7 +149,7 @@ function GestorRecibos({ idUsuario = 0 }) {
           filter
           filterPlaceholder="Buscar por fecha"
           filterMatchMode="contains"
-          dataType="date"
+          filterType='date' 
           showFilterMenu={false}
           className="columna-ancho-min"
         />
@@ -168,15 +184,25 @@ function GestorRecibos({ idUsuario = 0 }) {
           className="columna-ancho-min"
         />
         <Column
-          field="estado"
-          header="Estado"
-          sortable
-          filter
-          filterPlaceholder="Buscar por tipo"
-          filterMatchMode="contains"
-          showFilterMenu={false}
-          className="columna-ancho-min"
+      field="estado"
+      header="Estado"
+      sortable
+      filter
+      filterField="estado"
+      showFilterMenu={false}
+      filterElement={(options) => (
+        <Dropdown
+          value={filtroEstado}
+          options={estados}
+          onChange={(e) => onEstadoChange(e, options)}
+          placeholder="Seleccionar estado"
+          className="p-column-filter"
         />
+      )}
+      
+      
+      className="columna-ancho-min"
+    />
         <Column
           field="importe"
           header="Importe"
