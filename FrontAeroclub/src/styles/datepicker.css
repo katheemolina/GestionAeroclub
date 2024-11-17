@@ -1,0 +1,35 @@
+.p-datepicker-prev{
+    padding: 0px;
+    margin: 10px;
+  }
+  
+  .p-datepicker-next{
+    padding: 0px;
+    margin: 10px;
+  }
+  
+  .p-datepicker-month{
+    margin: 10px;
+  }
+  
+  .p-datepicker-calendar thead tbody{
+    width: 100%;
+  }
+  
+  .p-datepicker-calendar td span{
+    width: 100%;
+    border-radius: 5px;
+  }
+  
+  .p-datepicker-calendar-container .p-datepicker-calendar{
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .p-monthpicker-month{
+    padding: 10px;
+  }
+  
+  .p-yearpicker-year{
+    padding:10px
+  }
