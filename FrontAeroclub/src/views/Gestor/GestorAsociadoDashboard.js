@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import CardComponent from '../../components/CardComponent';
-
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "./Styles/AsociadoDashboards.css"
 import { useLocation } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css';
+import Tooltip from '@mui/material/Tooltip';
+import { useNavigate } from 'react-router-dom';
 
 //importo servicios
 import {
@@ -88,6 +91,12 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
 
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
+  const navigate = useNavigate(); // Inicializa el hook de navegación
+
+  const handleBackClick = () => {
+    navigate('/gestor/Asociados'); // Redirige a la ruta deseada
+  };
+
   const fechaNacimientoFormateada = usuario?.fecha_nacimiento
   ? new Date(usuario.fecha_nacimiento).toLocaleDateString()
   : "Fecha no disponible";
@@ -98,8 +107,19 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
   return (
     <div className="background">
       <header className="header">
+      {/* Botón Habilitar Usuario */}
+      <Tooltip title="Ver Asociados">
+        <IconButton 
+          color="primary" 
+          aria-label="Atras" 
+          className="back-button" 
+          onClick={handleBackClick} // Agrega el manejador de clics
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      </Tooltip>
       <h1>{`${usuario?.nombre || ''} ${usuario?.apellido || ''}`}</h1>
-      </header>
+    </header>
 
       <CardComponent
         dni={usuario?.dni || "No disponible"}
