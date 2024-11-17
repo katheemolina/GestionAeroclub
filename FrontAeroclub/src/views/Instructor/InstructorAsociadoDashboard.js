@@ -4,6 +4,11 @@ import { useLocation } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Tooltip from '@mui/material/Tooltip';
+import { useNavigate } from 'react-router-dom';
+import CardComponent from '../../components/CardComponent';
 
 //importo servicios
 import {
@@ -22,6 +27,7 @@ import PantallaCarga from '../../components/PantallaCarga';
 function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuario para traer su informacion
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
+  const [usuario, setUsuario] = useState(null);
   const [horasVoladas, setHorasVoladas] = useState(0);
   const [cma, setCma] = useState('');
   const [fechaVencimiento, setFechaVencimiento] = useState('');
@@ -29,11 +35,7 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
   const [licencias, setLicencias] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const columns = [
-    { header: 'Avión', accessor: 'matricula_aeronave' },
-    { header: 'Último Vuelo', accessor: 'fecha_vuelo' },
-    { header: 'Adaptación', accessor: 'Adaptacion' }
-  ];
+
 
   const location = useLocation();  // Hook para obtener el estado de la navegación
   const { user } = location.state || {};  // Accedemos al estado pasad
@@ -48,6 +50,8 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
         const usuario = usuarioResponse[0]; // Accedemos al primer objeto
         setNombre(usuario.nombre);
         setApellido(usuario.apellido);
+        const usuarioData = usuarioResponse[0]; 
+        setUsuario(usuarioData);
         
         // Obtener horas voladas
         const horasResponse = await horasVoladasPorUsuario(idUsuario);
@@ -80,7 +84,18 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
     fetchData();
   }, [idUsuario]);
 
+  const navigate = useNavigate(); // Inicializa el hook de navegación
+
+  const handleBackClick = () => {
+    navigate('/instructor/Asociados'); // Redirige a la ruta deseada
+  };
+
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
+
+  const fechaNacimientoFormateada = usuario?.fecha_nacimiento
+  ? new Date(usuario.fecha_nacimiento).toLocaleDateString()
+  : "Fecha no disponible";
+
 
   if (loading) {
     return <PantallaCarga/>
@@ -88,8 +103,29 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
   return (
     <div className="background">
       <header className="header">
+        {/* Botón Habilitar Usuario */}
+      <Tooltip title="Ver Asociados">
+        <IconButton 
+          color="primary" 
+          aria-label="Atras" 
+          className="back-button" 
+          onClick={handleBackClick} // Agrega el manejador de clics
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      </Tooltip>
         <h1>{`${nombre} ${apellido}`}</h1>
       </header>
+
+
+      <CardComponent
+        dni={usuario?.dni || "No disponible"}
+        localidad={`📍 ${usuario?.localidad || "No disponible"}`}
+        direccion={usuario?.direccion}
+        telefono={`📞 ${usuario?.telefono || "No disponible"}`}
+        email={`✉️ ${usuario?.email || "No disponible"}`} 
+        fecha_nacimiento={`🎂 ${fechaNacimientoFormateada || "Fecha no disponible"}`}
+      />
 
       <section className="stats-section">
         <div className="stat-box">

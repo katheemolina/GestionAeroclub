@@ -1,7 +1,24 @@
 .header {
   margin-bottom: 20px;
+  position: relative; /* Para posicionar elementos dentro del contenedor */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el título horizontalmente */
+  padding: 10px 20px;
 }
 
+.header h1 {
+  margin: 0;
+  text-align: center; /* Asegura que el texto del título esté centrado */
+}
+
+.header .back-button {
+  position: absolute; /* Permite posicionarlo fuera del flujo normal */
+  left: 10px; /* Ajusta la distancia al borde izquierdo */
+  top: 50%; /* Centra verticalmente */
+  transform: translateY(-50%); /* Ajusta el centrado exacto */
+  padding: 5px;
+}
 /* Sección de estadísticas */
 .stats-section {
   display: flex;
