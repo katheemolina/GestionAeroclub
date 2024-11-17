@@ -9,6 +9,9 @@ import IconButton from '@mui/material/IconButton';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
+
 
 function InstructorVuelosPorUsuario({idUsuario = 1}){
     const [data, setData] = useState([]);
@@ -48,6 +51,13 @@ function InstructorVuelosPorUsuario({idUsuario = 1}){
     const closeDialog = () => {
         setDialogVisible(false);
     };
+
+    
+  const navigate = useNavigate(); // Inicializa el hook de navegación
+
+  const handleBackClick = () => {
+    navigate('/instructor/Asociados'); // Redirige a la ruta deseada
+  };
     
     if (loading) {
       return <PantallaCarga/>
@@ -55,6 +65,17 @@ function InstructorVuelosPorUsuario({idUsuario = 1}){
     return (
         <div className="background">
         <header className="header">
+          {/* Botón Habilitar Usuario */}
+      <Tooltip title="Ver Asociados">
+        <IconButton 
+          color="primary" 
+          aria-label="Atras" 
+          className="back-button" 
+          onClick={handleBackClick} // Agrega el manejador de clics
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      </Tooltip>
           <h1>Vuelos</h1>
         </header>
         <DataTable 
