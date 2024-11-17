@@ -75,12 +75,12 @@ export async function actualizarRoles(idUsuario, roles) {
         const response = await fetch(`${API_URL}/usuario/actualizarRoles`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 IdUsuario: idUsuario,
-                Roles: roles
-            })
+                Roles: JSON.stringify(roles),  // Serializa roles a una cadena JSON
+            }),
         });
 
         if (!response.ok) {
@@ -95,6 +95,7 @@ export async function actualizarRoles(idUsuario, roles) {
         throw error;
     }
 }
+
 
 
 

@@ -15,7 +15,10 @@ function BotonesPorRol() {
     try {
       // Reemplaza con tu llamada a la API para obtener los roles
       const response = await obtenerRolPorIdUsuario(usuarioId); // Suponiendo que esta API devuelve los roles del usuario
-      setRolesDisponibles(response);
+
+      // Filtrar roles activos
+      const rolesActivos = response.filter(rol => rol.estado === 'activo');
+      setRolesDisponibles(rolesActivos);
     } catch (error) {
       console.error('Error obteniendo los roles del asociado', error);
       setRolesDisponibles([]); // Si hay un error, no mostramos roles
@@ -47,7 +50,6 @@ function BotonesPorRol() {
             onClick={() => handleButtonClick(rol.descripcion)}
             className={`opcion-boton ${rol.descripcion === rolActivo ? 'activo' : ''}`} // Compara el rol activado
           >
-            
             {rol.descripcion} {/* Aquí el nombre del rol */}
           </button>
         ))

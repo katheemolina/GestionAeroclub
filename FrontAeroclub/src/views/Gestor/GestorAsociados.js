@@ -3,7 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { listarAsociados, habilitarUsuario,deshabilitarUsuario,actualizarRoles ,eliminarRol} from '../../services/usuariosApi';
+import { listarAsociados, habilitarUsuario,deshabilitarUsuario,actualizarRoles ,eliminarRol, obtenerRolPorIdUsuario} from '../../services/usuariosApi';
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
@@ -15,6 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
 import PantallaCarga from '../../components/PantallaCarga';
+import { Checkbox } from 'primereact/checkbox';
 
 const GestorAsociados  = () => {
     const navigate = useNavigate();
@@ -23,6 +24,9 @@ const GestorAsociados  = () => {
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [showEnableConfirmDialog, setShowEnableConfirmDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [roles, setRoles] = useState([]); // Para almacenar los roles disponibles
+    const [selectedRoles, setSelectedRoles] = useState([]); // Para almacenar los roles seleccionados por el usuario
+    const [showRoleDialog, setShowRoleDialog] = useState(false); // Para controlar la visibilidad del diálogo
 
     // Fetch aeronaves data from the API
     const fetchAsociados = async () => {
@@ -69,16 +73,49 @@ const GestorAsociados  = () => {
         }
     };
 
-    // Actualizar roles
-    const handleActualizarRoles = async (idUsuario, roles) => {
+    // Función para cargar los roles de un usuario específico
+    const fetchRoles = async (userId) => {
         try {
-            await actualizarRoles(idUsuario, roles); // Aquí deberías definir 'roles' acorde a tus datos
-            fetchAsociados(); // Refresh data
+            const data = await obtenerRolPorIdUsuario(userId); // Asumiendo que tienes un servicio para obtener los roles del usuario
+            setRoles(data);
+            setSelectedRoles(data.filter(role => role.estado === 'activo').map(role => role.id_rol)); // Los roles activos se marcarán por defecto
+            setShowRoleDialog(true);
         } catch (error) {
-            console.error('Error al actualizar roles:', error);
+            console.error('Error al obtener los roles:', error);
         }
+        setSelectedUser(userId);
     };
 
+    // Función para manejar el cambio de estado de los checkboxes
+    const handleRoleChange = (event) => {
+        const { value, checked } = event.target;
+        setSelectedRoles((prevRoles) => 
+            checked ? [...prevRoles, value] : prevRoles.filter(role => role !== value)
+        );
+    };
+
+    // Función para enviar la actualización de roles
+    const handleUpdateRoles = async () => {
+        try {
+            // Crear el arreglo de roles actualizado
+            const updatedRoles = roles.map((role) => ({
+                IdRol: role.id_rol,
+                Estado: selectedRoles.includes(role.id_rol) ? 1 : 0 // 1 si está seleccionado, 0 si no
+            }));
+            console.log(selectedUser,updatedRoles);
+            // Llamar a la función que realiza la solicitud HTTP
+            await actualizarRoles(selectedUser, updatedRoles); 
+    
+            // Refrescar la lista de asociados (u otros datos si es necesario)
+            fetchAsociados(); 
+        } catch (error) {
+            console.error('Error al actualizar roles:', error);
+        } finally {
+            // Cerrar el diálogo de roles
+            setShowRoleDialog(false);
+        }
+    };
+    
 
      // Abrir el diálogo de confirmación para habilitar usuario
      const confirmHabilitarUsuario = (idUsuario) => {
@@ -149,7 +186,7 @@ const GestorAsociados  = () => {
 
                             {/* BOTON CAMBIO DE ROLES */}
                             <Tooltip title="Cambio de roles">
-                            <IconButton color="primary" aria-label="roles" >
+                            <IconButton color="primary" aria-label="roles" onClick={() => fetchRoles(rowData.id_usuario)}>
                                 <SettingsIcon /> 
                             </IconButton>
                             </Tooltip>
@@ -193,6 +230,44 @@ const GestorAsociados  = () => {
                 <p>¿Está seguro de que desea deshabilitar este usuario?</p>
             </Dialog>
             
+            {/* Dialogo para el cambio de roles */}
+            <Dialog 
+                header="Cambio de Roles" 
+                visible={showRoleDialog} 
+                style={{ width: '400px' }} 
+                modal 
+                footer={
+                    <>
+                        <Button 
+                            label="Cancelar" 
+                            icon="pi pi-times" 
+                            onClick={() => setShowRoleDialog(false)} 
+                            className="p-button-text" 
+                        />
+                        <Button 
+                            label="Confirmar" 
+                            icon="pi pi-check" 
+                            onClick={handleUpdateRoles} 
+                            autoFocus 
+                        />
+                    </>
+                } 
+                onHide={() => setShowRoleDialog(false)}
+            >
+                <div className="p-d-flex p-flex-column">
+                    {roles.map((role) => (
+                        <div className="p-field-checkbox" key={role.id_rol}>
+                            <Checkbox 
+                                inputId={`role-${role.id_rol}`} 
+                                value={role.id_rol} 
+                                checked={selectedRoles.includes(role.id_rol)} 
+                                onChange={handleRoleChange} 
+                            />
+                            <label htmlFor={`role-${role.id_rol}`}>{role.descripcion}</label> {/* Nombre del rol */}
+                        </div>
+                    ))}
+                </div>
+            </Dialog>
         </div>
     );
 };

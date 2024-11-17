@@ -12,12 +12,23 @@ export const RoleProvider = ({ children }) => {
     const fetchRole = async () => {
       if (usuarioId) {
         try {
-          const role = await obtenerRolPorIdUsuario(usuarioId);
-          setRole(role[0].descripcion);
-          localStorage.setItem('role', role[0].descripcion);
+          const roles = await obtenerRolPorIdUsuario(usuarioId);
+          console.log(roles);
+          // Filtrar roles activos
+          const activeRoles = roles.filter(role => role.estado === 'activo');
+          console.log(activeRoles);
+          // Si hay roles activos, asignamos el primero; si no, se asigna 'asociado'
+          if (activeRoles.length > 0) {
+            setRole(activeRoles[0].descripcion);
+            localStorage.setItem('role', activeRoles[0].descripcion);
+          } else {
+            setRole('asociado'); 
+            localStorage.setItem('role', 'asociado');
+          }
         } catch (error) {
           console.error('Error al obtener el rol del usuario:', error);
           setRole('asociado'); 
+          localStorage.setItem('role', 'asociado');
         }
       }
     };
