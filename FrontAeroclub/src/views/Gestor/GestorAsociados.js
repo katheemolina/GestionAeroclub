@@ -17,6 +17,10 @@ import { useNavigate } from 'react-router-dom';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Checkbox } from 'primereact/checkbox';
 
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const GestorAsociados  = () => {
     const navigate = useNavigate();
     const [asociados, setAsociados] = useState([]);
@@ -34,7 +38,7 @@ const GestorAsociados  = () => {
             const data = await listarAsociados(); // Asumiendo que ya es el array de aeronaves
             setAsociados(data);
         } catch (error) {
-            console.error('Error fetching aeronaves:', error);
+            console.error('Error fetching asociados:', error);
         }
         setLoading(false);
     };
@@ -45,6 +49,7 @@ const GestorAsociados  = () => {
 
       // Habilitar usuario
       const handleHabilitarUsuario = async () => {
+        setLoading(true);
         try {
             if (selectedUser) {
                 await habilitarUsuario(selectedUser);
@@ -56,10 +61,12 @@ const GestorAsociados  = () => {
             setShowEnableConfirmDialog(false);
             setSelectedUser(null);
         }
+        setLoading(false);
     };
 
     // Deshabilitar usuario
     const handleDeshabilitarUsuario = async () => {
+        setLoading(true);
         try {
             if (selectedUser) {
                 await deshabilitarUsuario(selectedUser);
@@ -71,6 +78,7 @@ const GestorAsociados  = () => {
             setShowConfirmDialog(false);
             setSelectedUser(null);
         }
+        setLoading(false);
     };
 
     // Función para cargar los roles de un usuario específico
@@ -147,6 +155,7 @@ const GestorAsociados  = () => {
     }  
     return (
         <div className="background">
+            <ToastContainer></ToastContainer>
             <header className="header">
                 <h1>Asociados</h1>
             </header>
@@ -211,20 +220,20 @@ const GestorAsociados  = () => {
             </DataTable>
             
              {/* Dialogo de confirmación para habilitar */}
-             <Dialog header="Confirmar" visible={showEnableConfirmDialog} style={{ width: '350px' }} modal footer={
+             <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showEnableConfirmDialog} style={{ width: '350px' }} modal footer={
                 <>
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setShowEnableConfirmDialog(false)} className="p-button-text" />
-                    <Button label="Confirmar" icon="pi pi-check" onClick={handleHabilitarUsuario} autoFocus />
+                    <Button label="Cancelar" className="p-button-text gestor-btn-cancelar" icon="pi pi-times" onClick={() => setShowEnableConfirmDialog(false)}/>
+                    <Button label="Confirmar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleHabilitarUsuario} autoFocus />
                 </>
             } onHide={() => setShowEnableConfirmDialog(false)}>
                 <p>¿Está seguro de que desea habilitar este usuario?</p>
             </Dialog>
             
             {/* Dialogo de confirmación para deshabilitar */}
-            <Dialog header="Confirmar" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
+            <Dialog header="Confirmar"  className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
                 <>
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} className="p-button-text" />
-                    <Button label="Confirmar" icon="pi pi-check" onClick={handleDeshabilitarUsuario} autoFocus />
+                    <Button label="Cancelar" className="p-button-text gestor-btn-cancelar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} />
+                    <Button label="Confirmar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleDeshabilitarUsuario} autoFocus />
                 </>
             } onHide={() => setShowConfirmDialog(false)}>
                 <p>¿Está seguro de que desea deshabilitar este usuario?</p>

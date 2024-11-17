@@ -1,3 +1,20 @@
 .acciones{
     display: flex;
 }
+
+.gestor-btn-cancelar{
+    margin-right: 10px;
+}
+
+.gestor-btn-confirmar{
+    background-color: #58BB5C;
+}
+
+.gestor-btn-confirmar:hover{
+    background-color: #419544;
+}
+
+.modal-confirmar-habilitacion .p-dialog-content{
+    padding-top: 10px;
+    padding-bottom: 20px;
+}

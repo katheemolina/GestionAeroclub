@@ -1,6 +1,7 @@
 import React from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
 
+
 const PantallaCarga = () => {
     return (
         <div className="background"> 

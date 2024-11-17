@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import PantallaCarga from '../../components/PantallaCarga';
 import 'react-toastify/dist/ReactToastify.css';
+import '../../styles/datepicker.css'
 
 function AsociadoPerfil() {
   const [cargando, setCargando] = useState(true);
