@@ -168,7 +168,7 @@ function AsociadoPerfil() {
         localidad={usuario.localidad}
         direccion={usuario.direccion}
         telefono={usuario.telefono || "No disponible"}
-        licencias={usuario.codigos_licencias || ["ejemplo"]}
+        licencias={usuario.codigos_licencias || ["No posee licencias"]}
       />
       <form className="edit-form" onSubmit={handleSubmit}>
         <h2>Editar información:</h2>
