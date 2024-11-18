@@ -12,6 +12,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import './Styles/GestorTarifas.css';
 import PantallaCarga from '../../components/PantallaCarga';
+import { Dropdown } from 'primereact/dropdown';
+import { Checkbox } from 'primereact/checkbox';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const TarifaCrud = () => {
     const [tarifas, setTarifas] = useState([]);
@@ -20,10 +26,20 @@ const TarifaCrud = () => {
         fecha_vigencia: '',
         tipo_tarifa: '',
         importe: '',
-        importe_por_instruccion: '',
+        importe_por_instruccion: 0,
+        con_instructor: false,
     });
     const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [selectedTarifa, setSelectedTarifa] = useState(null);
+
+
+    const opcionesTipoTarifa = [
+        { label: 'Vuelo', value: 'Vuelo' },
+        { label: 'Combustible', value: 'Combustible' },
+    ];
 
     // Fetch tarifas data from the API
     const fetchTarifas = async () => {
@@ -45,13 +61,16 @@ const TarifaCrud = () => {
         try {
             if (isEdit) {
                 await actualizarTarifa(tarifaData.id_tarifa, tarifaData);
+                toast.success("Tarifa actualizada correctamente.");
             } else {
                 await insertarTarifa(tarifaData);
+                toast.success("Tarifa insertada correctamente.");
             }
             setTarifaDialog(false);
             fetchTarifas(); // Refresh the list
         } catch (error) {
             console.error('Error saving tarifa:', error);
+            toast.error("Error, vuelva a intentar en otro momento.");
         }
     };
 
@@ -71,23 +90,60 @@ const TarifaCrud = () => {
             fecha_vigencia: formattedDate, // Set the date to today
             tipo_tarifa: '',
             importe: '',
-            importe_por_instruccion: '',
+            importe_por_instruccion: 0,
+            con_instructor: false,
         });
         setIsEdit(false);
         setTarifaDialog(true);
     };
 
-     
-    const handleDelete = async (tarifa) => {
+    const confirmDelete = (tarifa) => {
+        setSelectedTarifa(tarifa);
+        setDeleteDialog(true);
+    };
+    
+    const handleDelete = async () => {
         try {
-            await eliminarTarifa(tarifa.id_tarifa); 
-            fetchTarifas();
+            if (selectedTarifa) {
+                await eliminarTarifa(selectedTarifa.id_tarifa);
+                fetchTarifas(); // Actualiza la lista después de eliminar
+                toast.success("Tarifa eliminada correctamente.");
+            }
+            setDeleteDialog(false); // Cierra el diálogo
+            setSelectedTarifa(null); // Limpia la tarifa seleccionada
         } catch (error) {
             console.error('Error al eliminar tarifa:', error);
+            toast.error("Error al eliminar tarifa.");
         }
     };
     
+    
+    const handleTipoTarifaChange = (tipo_tarifa) => {
+        const updatedData = { ...tarifaData, tipo_tarifa };
+        if (tipo_tarifa === 'Combustible') {
+            updatedData.importe_por_instruccion = 0;
+            updatedData.con_instructor = false;
+        }
+        setTarifaData(updatedData);
+    };
 
+    const handleImporteChange = (importe) => {
+        const updatedData = { ...tarifaData, importe };
+        if (tarifaData.tipo_tarifa === 'Vuelo' && tarifaData.con_instructor) {
+            updatedData.importe_por_instruccion = (importe * 0.15).toFixed(2);
+        }
+        setTarifaData(updatedData);
+    };
+
+    const handleInstructorCheck = (checked) => {
+        const updatedData = { ...tarifaData, con_instructor: checked };
+        if (checked) {
+            updatedData.importe_por_instruccion = (tarifaData.importe * 0.15).toFixed(2);
+        } else {
+            updatedData.importe_por_instruccion = 0;
+        }
+        setTarifaData(updatedData);
+    };
 
     // Column definitions
     const dateBodyTemplate = (rowData) => {
@@ -103,6 +159,7 @@ const TarifaCrud = () => {
     }
     return (
         <div className="background">
+            <ToastContainer />
             <header className="header">
                 <h1>Tarifas</h1>
             </header>
@@ -127,10 +184,11 @@ const TarifaCrud = () => {
                         </Tooltip>
                         
                         <Tooltip title="Eliminar">
-                            <IconButton color="primary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
-                                <DeleteIcon />
+                            <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
+                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
+
                     </div>
                 )}></Column>
             </DataTable>
@@ -148,37 +206,66 @@ const TarifaCrud = () => {
                     </div>
                     <div className="p-field">
                         <label htmlFor="tipo_tarifa">Tipo Tarifa</label>
-                        <InputText
+                        <Dropdown
                             id="tipo_tarifa"
                             value={tarifaData.tipo_tarifa}
-                            onChange={(e) => setTarifaData({ ...tarifaData, tipo_tarifa: e.target.value })}
+                            options={opcionesTipoTarifa}
+                            onChange={(e) => handleTipoTarifaChange(e.value)}
                             placeholder="Tipo de Tarifa"
                         />
                     </div>
                     <div className="p-field">
-                        <label htmlFor="importe">Importe</label>
+                        <label htmlFor="importe">{tarifaData.tipo_tarifa === 'Vuelo' ? 'Importe por hora de vuelo' : 'Importe por litro'}</label>
                         <InputText
                             id="importe"
                             value={tarifaData.importe}
-                            onChange={(e) => setTarifaData({ ...tarifaData, importe: e.target.value })}
+                            onChange={(e) => handleImporteChange(e.target.value)}
                             placeholder="Importe"
                         />
                     </div>
-                    <div className="p-field">
-                        <label htmlFor="importe_por_instruccion">Importe por Instrucción</label>
-                        <InputText
-                            id="importe_por_instruccion"
-                            value={tarifaData.importe_por_instruccion}
-                            onChange={(e) => setTarifaData({ ...tarifaData, importe_por_instruccion: e.target.value })}
-                            placeholder="Importe por Instrucción"
-                        />
-                    </div>
+                    {tarifaData.tipo_tarifa === 'Vuelo' && (
+            <>
+                <div className="p-field">
+                    <Checkbox
+                        inputId="con_instructor"
+                        checked={tarifaData.con_instructor}
+                        onChange={(e) => handleInstructorCheck(e.checked)}
+                    />
+                    <label htmlFor="con_instructor">¿Con Instructor?</label>
+                </div>
+                <div className="p-field">
+                    <label htmlFor="importe_por_instruccion">Importe por Instrucción</label>
+                    <InputText
+                        id="importe_por_instruccion"
+                        value={tarifaData.importe_por_instruccion}
+                        disabled
+                    />
+                </div>
+            </>
+        )}
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setTarifaDialog(false)} />
-                        <Button label="Guardar" icon="pi pi-check" id='btn-guardar' onClick={handleSave} />
+                        <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
                     </div>
                 </div>
             </Dialog>
+
+            <Dialog
+    header="Confirmación"
+    visible={deleteDialog}
+    onHide={() => setDeleteDialog(false)}
+    style={{ width: '400px' }}
+    footer={
+        <div>
+            <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
+            <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
+        </div>
+    }
+>
+    <p>¿Está seguro que desea eliminar esta tarifa?</p>
+</Dialog>
+
+
         </div>
     );
 };
