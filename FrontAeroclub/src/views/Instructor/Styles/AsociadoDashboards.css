@@ -108,4 +108,15 @@
 
 .cma-no-vigente {
   background-color: #b33030;
+
+}
+
+.cma-no-vigente p{
+  color: #ffffff;
+
+}
+
+.cma-no-vigente h3{
+  color: #ffffff;
+
 }

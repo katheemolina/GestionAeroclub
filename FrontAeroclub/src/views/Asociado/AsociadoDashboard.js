@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from "../../components/TableComponent"
 import "./Styles/AsociadoDashboards.css"
 import { Link } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
