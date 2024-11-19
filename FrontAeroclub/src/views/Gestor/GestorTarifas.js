@@ -5,6 +5,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { obtenerTarifas, insertarTarifa, actualizarTarifa ,eliminarTarifa} from '../../services/tarifasApi';
+import { obtenerAeronaves } from '../../services/aeronavesApi'; 
 import '../../styles/datatable-style.css';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -36,6 +37,7 @@ const TarifaCrud = () => {
     const [selectedTarifa, setSelectedTarifa] = useState(null);
 
 
+
     const opcionesTipoTarifa = [
         { label: 'Vuelo', value: 'Vuelo' },
         { label: 'Combustible', value: 'Combustible' },
@@ -56,9 +58,25 @@ const TarifaCrud = () => {
         fetchTarifas();
     }, []);
 
+    // Traigo datos de aeronaves
+    const [aeronaves, setAeronaves] = useState([]);
+    const [aeronavesSeleccionado, setAeronavesSeleccionado] = useState(null);
+    const fetchAeronaves = async () => {
+        try {
+            const data = await obtenerAeronaves();
+            setAeronaves(data);
+        } catch (error) {
+            console.error('Error fetching aeronaves:', error);
+        }
+    };
+    useEffect(() => {
+        fetchAeronaves();
+    }, []);
+
     // Handle adding or updating tarifa
     const handleSave = async () => {
         try {
+            console.log("Datos a guardar:", tarifaData); // Agrega este console.log
             if (isEdit) {
                 await actualizarTarifa(tarifaData.id_tarifa, tarifaData);
                 toast.success("Tarifa actualizada correctamente.");
@@ -92,6 +110,8 @@ const TarifaCrud = () => {
             importe: '',
             importe_por_instruccion: 0,
             con_instructor: false,
+            id_aeronave: null,
+
         });
         setIsEdit(false);
         setTarifaDialog(true);
@@ -255,6 +275,27 @@ const TarifaCrud = () => {
                         disabled
                     />
                 </div>
+                {/* Campos generales del vuelo */}
+            <div className="form-group">
+                <label className="label-recibo">Aeronave:</label>
+                {aeronaves && aeronaves.length > 0 ? (
+                <Dropdown
+                value={aeronavesSeleccionado}
+                onChange={(e) => {
+                    setAeronavesSeleccionado(e.value);
+                    setTarifaData((prev) => ({ ...prev, id_aeronave: e.value.id_aeronave }));
+                }}
+                options={aeronaves}
+                optionLabel="matricula"
+                placeholder="Selecciona la aeronave"
+                filter
+                className="w-full md:w-14rem"
+            />
+            
+             ) : (
+                    <p>Cargando opciones...</p>
+                )}
+            </div>
             </>
         )}
                     <div className="p-d-flex p-jc-end">
