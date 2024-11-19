@@ -62,7 +62,7 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 function App() {
   const { isUserEnabled, isAuthenticated } = useUser(); // Contexto que proporciona la información del usuario
 
-  if (!isUserEnabled) {
+  if (isUserEnabled) {
     // Si el usuario está deshabilitado, renderiza solo este componente
     return (
       <Router>
