@@ -3,7 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { listarAsociados, habilitarUsuario,deshabilitarUsuario,actualizarRoles ,eliminarRol, obtenerRolPorIdUsuario} from '../../services/usuariosApi';
+import { listarAsociados, habilitarUsuario,deshabilitarUsuario,actualizarRoles, obtenerRolPorIdUsuario} from '../../services/usuariosApi';
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Icono de perfil
@@ -34,11 +34,22 @@ const GestorAsociados  = () => {
 
     // Fetch aeronaves data from the API
     const fetchAsociados = async () => {
+        setLoading(true);
         try {
-            const data = await listarAsociados(); // Asumiendo que ya es el array de aeronaves
-            setAsociados(data);
+            const data = await listarAsociados(); // Fetch asociados data
+            const asociadosWithRoles = await Promise.all(
+                data.map(async (asociado) => {
+                    const roles = await obtenerRolPorIdUsuario(asociado.id_usuario);
+                    const activeRoles = roles
+                        .filter((role) => role.estado === 'activo')
+                        .map((role) => role.descripcion)
+                        .join(', '); // Concatenate active role descriptions
+                    return { ...asociado, roles: activeRoles };
+                })
+            );
+            setAsociados(asociadosWithRoles);
         } catch (error) {
-            console.error('Error fetching asociados:', error);
+            console.error('Error fetching asociados or roles:', error);
         }
         setLoading(false);
     };
@@ -170,6 +181,7 @@ const GestorAsociados  = () => {
                 style={{ width: '100%' }} >
                 <Column field="usuario" header="Asociado" sortable ></Column>
                 <Column field="estado" header="Estado" sortable></Column>
+                <Column field="roles" header="Roles Activos" sortable></Column> 
                 <Column field="horas_vuelo" header="Horas de vuelo totales" sortable></Column>
                 <Column field="estadoCMA" header="Estado del CMA" sortable></Column>
                 <Column field="saldo" header="Saldo" sortable ></Column>
