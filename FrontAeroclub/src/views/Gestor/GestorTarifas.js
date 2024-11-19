@@ -18,6 +18,8 @@ import { Checkbox } from 'primereact/checkbox';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MultiSelect } from 'primereact/multiselect';
+
 
 
 const TarifaCrud = () => {
@@ -60,7 +62,7 @@ const TarifaCrud = () => {
 
     // Traigo datos de aeronaves
     const [aeronaves, setAeronaves] = useState([]);
-    const [aeronavesSeleccionado, setAeronavesSeleccionado] = useState(null);
+    const [aeronavesSeleccionado, setAeronavesSeleccionado] = useState([]);
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves();
@@ -276,26 +278,41 @@ const TarifaCrud = () => {
                     />
                 </div>
                 {/* Campos generales del vuelo */}
-            <div className="form-group">
-                <label className="label-recibo">Aeronave:</label>
-                {aeronaves && aeronaves.length > 0 ? (
-                <Dropdown
-                value={aeronavesSeleccionado}
-                onChange={(e) => {
-                    setAeronavesSeleccionado(e.value);
-                    setTarifaData((prev) => ({ ...prev, id_aeronave: e.value.id_aeronave }));
-                }}
-                options={aeronaves}
-                optionLabel="matricula"
-                placeholder="Selecciona la aeronave"
-                filter
-                className="w-full md:w-14rem"
-            />
-            
-             ) : (
-                    <p>Cargando opciones...</p>
-                )}
-            </div>
+                <div className="p-field">
+    <label>Aeronaves:</label>
+    {aeronaves && aeronaves.length > 0 ? (
+        <MultiSelect
+        id="aeronaves"
+        value={aeronavesSeleccionado}
+        options={aeronaves}
+        onChange={(e) => {
+            // Extraer solo los id_aeronave seleccionados
+            const idsAeronavesSeleccionadas = e.value.map(aeronave => aeronave.id_aeronave);
+    
+            // Actualizar el estado con las aeronaves seleccionadas
+            setAeronavesSeleccionado(e.value);
+    
+            // Guardar los id_aeronave seleccionados como una cadena separada por comas
+            setTarifaData({ 
+                ...tarifaData, 
+                id_aeronave: idsAeronavesSeleccionadas.join(',') 
+            });
+        }}
+        optionLabel="matricula"  // Mostrar matricula, pero guardar id_aeronave
+        placeholder="Seleccione Aeronaves"
+        display="chip"
+        filter
+        showClear
+        filterBy="matricula"
+        maxSelectedLabels={5}
+    />
+    
+    
+    ) : (
+        <p>No hay aeronaves disponibles.</p>
+    )}
+</div>
+
             </>
         )}
                     <div className="p-d-flex p-jc-end">
