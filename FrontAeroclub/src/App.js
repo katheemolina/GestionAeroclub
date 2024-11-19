@@ -49,10 +49,7 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 
 
 
-  if (!isAuthenticated) {
-    // Si no está autenticado, redirige al login
-    return <Navigate to="/InicioSesion" replace />;
-  }
+  
 
 
   return allowedRoles.includes(role.toLowerCase()) & isAuthenticated ? (
@@ -63,7 +60,7 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 }
 
 function App() {
-  const { isUserEnabled } = useUser(); // Contexto que proporciona la información del usuario
+  const { isUserEnabled, isAuthenticated } = useUser(); // Contexto que proporciona la información del usuario
 
   if (!isUserEnabled) {
     // Si el usuario está deshabilitado, renderiza solo este componente
@@ -76,6 +73,17 @@ function App() {
     );
   }
 
+  if (!isAuthenticated) {
+    
+    // Si no está autenticado, redirige al login
+    return (
+      <Router>
+        <Routes>
+          <Route path="*" element={<Inicio />} />
+        </Routes>
+      </Router>
+    );
+  }
 
   return (
 
@@ -84,9 +92,7 @@ function App() {
     <Router>
       {/* <Navbar /> */}
 
-      <Routes>
-        <Route path="/InicioSesion" element={<Inicio />} />
-      </Routes>
+      
 
 
       <div className="app-container">

@@ -20,3 +20,21 @@ export const verificarOCrearUsuario = async (usuarioData) => {
         throw error;
     }
 };
+
+export const obtenerEstadoDelUsuario = async (usuarioData) => {
+    try {
+        const response = await fetch(`${API_URL}/obtenerEstadoUsuario/${usuarioData}`, {
+            method: 'GET',
+            
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al obtener el estado del usuario');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

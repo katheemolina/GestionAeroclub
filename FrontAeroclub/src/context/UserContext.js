@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { obtenerIdUsuarioDesdeMail } from '../services/usuariosApi';
+import { obtenerEstadoDelUsuario } from '../services/ingresoApi';
 
 // Crear el contexto
 export const UserContext = createContext();
@@ -9,8 +10,9 @@ export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
-    const [isUserEnabled, setIsUserEnabled] = useState(true); // Esto deberia ser false por defecto, cambiar cuando el endpoint este listo
+    const [isUserEnabled, setIsUserEnabled] = useState(false); // Esto deberia ser false por defecto, cambiar cuando el endpoint este listo
     const isAuthenticated = !!user;
+    
     
     
     useEffect(() => {
@@ -19,17 +21,31 @@ export function UserProvider({ children }) {
                 try {
                     const idUsuario = await obtenerIdUsuarioDesdeMail(user);
                     setUsuarioId(idUsuario.id_usuario); // Guarda el ID en el contexto
-                    setIsUserEnabled(idUsuario.habilitado);
-                    
                 } catch (error) {
                     console.error('Error al obtener el ID de Usuario:', error);
-                    
                 }
             }
         };
-
+    
         fetchUserId();
-    }, [user, setUsuarioId]);
+    }, [user]);
+    
+    useEffect(() => {
+        const fetchUserIsEnabled = async () => {
+            if (user && usuarioId) { 
+                try {
+                    const isEnabled = await obtenerEstadoDelUsuario(usuarioId);
+                    console.log(isEnabled);
+                    setIsUserEnabled(isEnabled.data.estado === "Habilitado");
+                } catch (error) {
+                    console.error('Earror al obtener el estado del Usuario:', error);
+                }
+            }
+        };
+    
+        fetchUserIsEnabled();
+    }, [user, usuarioId]); //  usuarioId como dependencia
+    
 
     useEffect(() => {
         if (user) {
