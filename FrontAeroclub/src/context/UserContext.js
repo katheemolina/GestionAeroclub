@@ -9,7 +9,9 @@ export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
+    const [isUserEnabled, setIsUserEnabled] = useState(true); // Esto deberia ser false por defecto, cambiar cuando el endpoint este listo
     const isAuthenticated = !!user;
+    
     
     useEffect(() => {
         const fetchUserId = async () => {
@@ -17,8 +19,11 @@ export function UserProvider({ children }) {
                 try {
                     const idUsuario = await obtenerIdUsuarioDesdeMail(user);
                     setUsuarioId(idUsuario.id_usuario); // Guarda el ID en el contexto
+                    setIsUserEnabled(idUsuario.habilitado);
+                    
                 } catch (error) {
                     console.error('Error al obtener el ID de Usuario:', error);
+                    
                 }
             }
         };
@@ -35,7 +40,7 @@ export function UserProvider({ children }) {
     }, [user]);
 
     return (
-        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId, isAuthenticated}}>
+        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId, isAuthenticated, isUserEnabled}}>
             {children}
         </UserContext.Provider>
     );
