@@ -5,6 +5,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { obtenerTarifas, insertarTarifa, actualizarTarifa ,eliminarTarifa} from '../../services/tarifasApi';
+import { obtenerAeronaves } from '../../services/aeronavesApi'; 
 import '../../styles/datatable-style.css';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +18,8 @@ import { Checkbox } from 'primereact/checkbox';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MultiSelect } from 'primereact/multiselect';
+
 
 
 const TarifaCrud = () => {
@@ -34,6 +37,7 @@ const TarifaCrud = () => {
 
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [selectedTarifa, setSelectedTarifa] = useState(null);
+
 
 
     const opcionesTipoTarifa = [
@@ -56,9 +60,25 @@ const TarifaCrud = () => {
         fetchTarifas();
     }, []);
 
+    // Traigo datos de aeronaves
+    const [aeronaves, setAeronaves] = useState([]);
+    const [aeronavesSeleccionado, setAeronavesSeleccionado] = useState([]);
+    const fetchAeronaves = async () => {
+        try {
+            const data = await obtenerAeronaves();
+            setAeronaves(data);
+        } catch (error) {
+            console.error('Error fetching aeronaves:', error);
+        }
+    };
+    useEffect(() => {
+        fetchAeronaves();
+    }, []);
+
     // Handle adding or updating tarifa
     const handleSave = async () => {
         try {
+            console.log("Datos a guardar:", tarifaData); // Agrega este console.log
             if (isEdit) {
                 await actualizarTarifa(tarifaData.id_tarifa, tarifaData);
                 toast.success("Tarifa actualizada correctamente.");
@@ -92,6 +112,8 @@ const TarifaCrud = () => {
             importe: '',
             importe_por_instruccion: 0,
             con_instructor: false,
+            id_aeronave: null,
+
         });
         setIsEdit(false);
         setTarifaDialog(true);
@@ -154,6 +176,18 @@ const TarifaCrud = () => {
         return <span>${rowData.importe}</span>;
     };
 
+    const importeInstruccionBodyTemplate = (rowData) => {
+        // Convertimos el importe_por_instruccion a número y comparamos
+        const importePorInstruccion = parseFloat(rowData.importe_por_instruccion);
+        
+        // Verificamos si el tipo de tarifa es "Combustible" o si el importe es 0
+        if (rowData && (rowData.tipo_tarifa.toLowerCase() === 'combustible' || importePorInstruccion === 0)) {
+            return "No aplica";
+        }
+        // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
+        return <span>{rowData?.importe_por_instruccion || ''}</span>;
+    };
+
     if (loading) {
         return <PantallaCarga/>
     }
@@ -172,6 +206,8 @@ const TarifaCrud = () => {
                 <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
+                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate}></Column>
+                <Column field="id_aeronave" header="Aeronave"></Column>
                 <Column 
                     header="Acciones" 
                     style={{ width: '1px'}}
@@ -241,6 +277,42 @@ const TarifaCrud = () => {
                         disabled
                     />
                 </div>
+                {/* Campos generales del vuelo */}
+                <div className="p-field">
+    <label>Aeronaves:</label>
+    {aeronaves && aeronaves.length > 0 ? (
+        <MultiSelect
+        id="aeronaves"
+        value={aeronavesSeleccionado}
+        options={aeronaves}
+        onChange={(e) => {
+            // Extraer solo los id_aeronave seleccionados
+            const idsAeronavesSeleccionadas = e.value.map(aeronave => aeronave.id_aeronave);
+    
+            // Actualizar el estado con las aeronaves seleccionadas
+            setAeronavesSeleccionado(e.value);
+    
+            // Guardar los id_aeronave seleccionados como una cadena separada por comas
+            setTarifaData({ 
+                ...tarifaData, 
+                id_aeronave: idsAeronavesSeleccionadas.join(',') 
+            });
+        }}
+        optionLabel="matricula"  // Mostrar matricula, pero guardar id_aeronave
+        placeholder="Seleccione Aeronaves"
+        display="chip"
+        filter
+        showClear
+        filterBy="matricula"
+        maxSelectedLabels={5}
+    />
+    
+    
+    ) : (
+        <p>No hay aeronaves disponibles.</p>
+    )}
+</div>
+
             </>
         )}
                     <div className="p-d-flex p-jc-end">

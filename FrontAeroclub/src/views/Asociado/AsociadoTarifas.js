@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { obtenerTarifas, insertarTarifa, actualizarTarifa } from '../../services/tarifasApi'; // Import the API functions
-import '../../styles/datatable-style.css'; //Estilado para la tabla
-import './Styles/GestorTarifas.css'
+import { obtenerTarifas } from '../../services/tarifasApi'; // Import the API functions
+import '../../styles/datatable-style.css'; // Estilado para la tabla
+import './Styles/GestorTarifas.css';
 import PantallaCarga from '../../components/PantallaCarga';
 
 const AsociadoTarifas = () => {
@@ -26,7 +25,6 @@ const AsociadoTarifas = () => {
         fetchTarifas();
     }, []);
 
-
     // Column definitions
     const dateBodyTemplate = (rowData) => {
         return <span>{rowData.fecha_vigencia}</span>;
@@ -36,22 +34,39 @@ const AsociadoTarifas = () => {
         return <span>${rowData.importe}</span>;
     };
 
+    const importeInstruccionBodyTemplate = (rowData) => {
+        // Convertimos el importe_por_instruccion a número y comparamos
+        const importePorInstruccion = parseFloat(rowData.importe_por_instruccion);
+        
+        // Verificamos si el tipo de tarifa es "Combustible" o si el importe es 0
+        if (rowData && (rowData.tipo_tarifa.toLowerCase() === 'combustible' || importePorInstruccion === 0)) {
+            return "No aplica";
+        }
+        // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
+        return <span>{rowData?.importe_por_instruccion || ''}</span>;
+    };
+
     if (loading) {
-        return <PantallaCarga />
+        return <PantallaCarga />;
     }
+
     return (
         <div className="background">
-        <header className="header">
-        <h1>Tarifas</h1>
-        </header>
+            <header className="header">
+                <h1>Tarifas</h1>
+            </header>
             <DataTable 
-              value={tarifas} 
-              paginator rows={10} 
-              rowsPerPageOptions={[5, 10, 25]} 
-              style={{ width: '100%' }} >
+                value={tarifas} 
+                paginator 
+                rows={10} 
+                rowsPerPageOptions={[5, 10, 25]} 
+                style={{ width: '100%' }} >
                 <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
+                {/* Aplicamos la función de personalización en la columna de Importe por Instrucción */}
+                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate}></Column>
+                <Column field="id_aeronave" header="Aeronave"></Column>
             </DataTable>
         </div>
     );
