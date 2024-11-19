@@ -64,14 +64,25 @@ function FormularioGestorRecibos() {
     
     useEffect(() => {
         if (aeronavesSeleccionado) {
-        // Filtra las tarifas que corresponden a la aeronave seleccionada
-        const tarifasFiltradasPorAeronave = tarifas.filter(
-            (tarifa) => tarifa.id_aeronave === aeronavesSeleccionado.id_aeronave
-        );
-        setTarifasFiltradasAeronave(tarifasFiltradasPorAeronave);
+            const tarifasFiltradasPorAeronave = tarifas.filter((tarifa) => {
+                // Si no hay aeronaves asociadas a esta tarifa, saltamos
+                if (!tarifa.Aeronaves) return false;
+    
+                // Convierte el campo Aeronaves (que puede ser null, un único valor o varios) en un array de números
+                const idsAeronaves = tarifa.Aeronaves
+                    .split(',')
+                    .map(id => parseInt(id.trim(), 10)) // Convertimos a números
+                    .filter(id => !isNaN(id)); // Filtramos valores NaN
+    
+                // Verifica si el ID de la aeronave seleccionada está en el array de IDs
+                return idsAeronaves.includes(aeronavesSeleccionado.id_aeronave);
+            });
+            setTarifasFiltradasAeronave(tarifasFiltradasPorAeronave);
+        } else {
+            setTarifasFiltradasAeronave([]); // Si no hay aeronave seleccionada, limpiamos el estado
         }
-    }, [aeronavesSeleccionado, tarifas]);  // Vuelve a ejecutar cuando cambian la aeronave o las tarifas
-
+    }, [aeronavesSeleccionado, tarifas]);
+    
     const [tarifasCombustible, setTarifasCombustible] = useState([]);
     const [tarifasCombustibleSeleccionado, setTarifasCombustibleSeleccionado] = useState(null);
     const fetchTarifasCombustible = async () => {
