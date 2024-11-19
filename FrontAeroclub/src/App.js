@@ -47,12 +47,7 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
   const { role } = useRole();
   const { user, isAuthenticated, isUserEnabled  } = useUser();
 
-
-
-  
-
-
-  return allowedRoles.includes(role.toLowerCase()) & isAuthenticated ? (
+return allowedRoles.includes(role.toLowerCase()) & isAuthenticated ? (
     <Component {...rest} />
   ) : (
     <Navigate to="/Bienvenido" replace />
@@ -62,7 +57,7 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 function App() {
   const { isUserEnabled, isAuthenticated } = useUser(); // Contexto que proporciona la información del usuario
 
-  if (isUserEnabled) {
+  if (!isUserEnabled) {
     // Si el usuario está deshabilitado, renderiza solo este componente
     return (
       <Router>
