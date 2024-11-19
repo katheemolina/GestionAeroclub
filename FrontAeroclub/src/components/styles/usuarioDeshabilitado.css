@@ -1,0 +1,57 @@
+/* para q root ocupe toda la pantalla */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+
+.usuario-deshabilitado {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  height: 100%; 
+  background-color: #f7f9fc; 
+}
+
+
+.disabled-container {
+  text-align: center;
+  padding: 20px;
+  background: white; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  max-width: 900px; 
+  width: 90%; 
+}
+
+/* Estilos del título */
+.disabled-title {
+  color: #e74c3c;
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+/* Mensaje de error */
+.disabled-message {
+  color: #555;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+/* Botón de contacto */
+.disabled-button {
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  display: inline-block;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.disabled-button:hover {
+  background-color: #2980b9;
+}

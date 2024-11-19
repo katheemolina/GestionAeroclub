@@ -22,6 +22,9 @@ import GestorGenerarCuotasSociales from './views/Gestor/GestorGenerarCuotasSocia
 // Instructores
 import InstructorAsociados from './views/Instructor/InstructorAsociados';
 
+// User deshabilitado
+import UsuarioDeshabilitado from './components/UsuarioDeshabilitado';
+
 import { useRole } from './context/RoleContext';
 import { useUser } from './context/UserContext';
 import './styles/Index.css';
@@ -42,12 +45,14 @@ import AsociadoAeronaves from './views/Asociado/AsociadoAeronaves';
 
 function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
   const { role } = useRole();
-  const { user, isAuthenticated } = useUser();
+  const { user, isAuthenticated, isUserEnabled  } = useUser();
+
+
 
   if (!isAuthenticated) {
     // Si no está autenticado, redirige al login
     return <Navigate to="/InicioSesion" replace />;
-}
+  }
 
 
   return allowedRoles.includes(role.toLowerCase()) & isAuthenticated ? (
@@ -58,28 +63,47 @@ function ProtectedRoute({ component: Component, allowedRoles, ...rest }) {
 }
 
 function App() {
+  const { isUserEnabled } = useUser(); // Contexto que proporciona la información del usuario
+
+  if (!isUserEnabled) {
+    // Si el usuario está deshabilitado, renderiza solo este componente
+    return (
+      <Router>
+        <Routes>
+          <Route path="*" element={<UsuarioDeshabilitado />} />
+        </Routes>
+      </Router>
+    );
+  }
+
+
   return (
+
+
+
     <Router>
       {/* <Navbar /> */}
 
       <Routes>
-      <Route path="/InicioSesion" element={<Inicio />} />
+        <Route path="/InicioSesion" element={<Inicio />} />
       </Routes>
+
 
       <div className="app-container">
         <Sidebar />
         {/* Rutas según el rol */}
         <div className="layout">
           <Routes>
-          {/* Rutas para Asociado */}
+
+            {/* Rutas para Asociado */}
             <Route path="/asociado/dashboard" element={<ProtectedRoute component={AsociadoDashboard} allowedRoles={['asociado']} />} />
             <Route path="/asociado/cuenta-corriente" element={<ProtectedRoute component={AsociadoCuentaCorriente} allowedRoles={['asociado']} />} />
             <Route path="/asociado/libro-vuelo" element={<ProtectedRoute component={AsociadoLibroVuelo} allowedRoles={['asociado']} />} />
             <Route path="/asociado/perfil" element={<ProtectedRoute component={AsociadoPerfil} allowedRoles={['asociado']} />} />
             <Route path="/asociado/aeronaves" element={<ProtectedRoute component={AsociadoAeronaves} allowedRoles={['asociado']} />} />
             <Route path="/asociado/tarifas" element={<ProtectedRoute component={AsociadoTarifas} allowedRoles={['asociado']} />} />
-            
-          {/* Rutas para Gestor */}
+
+            {/* Rutas para Gestor */}
             <Route path="/gestor/dashboard" element={<ProtectedRoute component={GestorDashboard} allowedRoles={['gestor']} />} />
             <Route path="/gestor/dashboardAsociado" element={<ProtectedRoute component={GestorAsociadoDashboard} allowedRoles={['gestor']} />} />
             <Route path="/gestor/asociadoCuentaCorriente" element={<ProtectedRoute component={GestorAsociadoCuentaCorriente} allowedRoles={['gestor']} />} />
@@ -90,10 +114,10 @@ function App() {
             <Route path="/gestor/tarifas" element={<ProtectedRoute component={GestorTarifas} allowedRoles={['gestor']} />} />
             <Route path="/gestor/aeronaves" element={<ProtectedRoute component={GestorAeronaves} allowedRoles={['gestor']} />} />
             <Route path="/gestor/generarCuotaSocial" element={<ProtectedRoute component={GestorGenerarCuotasSociales} allowedRoles={['gestor']} />} />
-              {/* ruta nuevo recibo */}
+            {/* ruta nuevo recibo */}
             <Route path="/gestor/recibos/nuevo" element={<ProtectedRoute component={GestorNuevoRecibo} allowedRoles={['gestor']} />} />
-            
-          {/* Rutas para Instructor */}
+
+            {/* Rutas para Instructor */}
             <Route path="/instructor/dashboard" element={<ProtectedRoute component={AsociadoDashboard} allowedRoles={['instructor']} />} />
             <Route path="/instructor/dashboardAsociado" element={<ProtectedRoute component={InstructorAsociadoDashboard} allowedRoles={['instructor']} />} />
             <Route path="/instructor/perfil" element={<ProtectedRoute component={AsociadoPerfil} allowedRoles={['instructor']} />} />
@@ -104,7 +128,6 @@ function App() {
             <Route path="/instructor/aeronaves" element={<ProtectedRoute component={AsociadoAeronaves} allowedRoles={['instructor']} />} />
             <Route path="/instructor/tarifas" element={<ProtectedRoute component={AsociadoTarifas} allowedRoles={['instructor']} />} />
 
-          
             <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
           </Routes>
         </div>
