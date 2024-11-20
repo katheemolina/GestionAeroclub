@@ -112,7 +112,7 @@ const TarifaCrud = () => {
             importe: '',
             importe_por_instruccion: 0,
             con_instructor: false,
-            id_aeronave: null,
+            aeronaves: null,
 
         });
         setIsEdit(false);
@@ -185,8 +185,10 @@ const TarifaCrud = () => {
             return "No aplica";
         }
         // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
-        return <span>{rowData?.importe_por_instruccion || ''}</span>;
+        return <span>${rowData?.importe_por_instruccion || ''}</span>;
     };
+    
+    
 
     if (loading) {
         return <PantallaCarga/>
@@ -207,17 +209,14 @@ const TarifaCrud = () => {
                 <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
                 <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate}></Column>
-                <Column field="id_aeronave" header="Aeronave"></Column>
+                <Column field="AeronavesMatri" header="Aeronaves" ></Column>
+
                 <Column 
                     header="Acciones" 
                     style={{ width: '1px'}}
                     body={(rowData) => (
                     <div style={{ display: 'flex', gap: '8px'}}>
-                        <Tooltip title="Editar">
-                            <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                                <EditIcon />
-                            </IconButton>
-                        </Tooltip>
+
                         
                         <Tooltip title="Eliminar">
                             <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
@@ -295,7 +294,7 @@ const TarifaCrud = () => {
             // Guardar los id_aeronave seleccionados como una cadena separada por comas
             setTarifaData({ 
                 ...tarifaData, 
-                id_aeronave: idsAeronavesSeleccionadas.join(',') 
+                aeronaves: idsAeronavesSeleccionadas.join(',') 
             });
         }}
         optionLabel="matricula"  // Mostrar matricula, pero guardar id_aeronave
@@ -323,19 +322,18 @@ const TarifaCrud = () => {
             </Dialog>
 
             <Dialog
-    header="Confirmación"
-    visible={deleteDialog}
-    onHide={() => setDeleteDialog(false)}
-    style={{ width: '400px' }}
-    footer={
-        <div>
-            <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
-            <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
-        </div>
-    }
->
-    <p>¿Está seguro que desea eliminar esta tarifa?</p>
-</Dialog>
+                header="Confirmación"
+                visible={deleteDialog}
+                onHide={() => setDeleteDialog(false)}
+                style={{ width: '400px' }}
+                footer={
+                    <div>
+                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
+                        <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
+                    </div>
+                }>
+                <p>¿Está seguro que desea eliminar esta tarifa?</p>
+            </Dialog>
 
 
         </div>
