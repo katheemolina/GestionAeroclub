@@ -273,7 +273,7 @@ const TarifaCrud = () => {
                     <InputText
                         id="importe_por_instruccion"
                         value={tarifaData.importe_por_instruccion}
-                        disabled
+                        
                     />
                 </div>
                 {/* Campos generales del vuelo */}
