@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { obtenerAeronaves} from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
+import { Dialog } from 'primereact/dialog'
+import { Card } from 'primereact/card';
+import PantallaCarga from '../../components/PantallaCarga';
+import { obtenerAeronaves} from '../../services/aeronavesApi'; 
 import '../../styles/datatable-style.css';
 import './Styles/GestorAeronaves.css';
-import SearchIcon from '@mui/icons-material/Search'; //icono de detalles
-import Tooltip from '@mui/material/Tooltip';
+//iconos
 import IconButton from '@mui/material/IconButton';
-import PantallaCarga from '../../components/PantallaCarga';
-import { Dialog } from 'primereact/dialog';
-import { Card } from 'primereact/card';
+import SearchIcon from '@mui/icons-material/Search'; 
+import Tooltip from '@mui/material/Tooltip';
 
-const AsociadoAeronaves = () => {
+
+
+const AeronaveCrud = () => {
     const [aeronaves, setAeronaves] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    
 
     // Fetch aeronaves data from the API
     const fetchAeronaves = async () => {
         try {
-            const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
+            const data = await obtenerAeronaves(); 
             setAeronaves(data);
         } catch (error) {
             console.error('Error fetching aeronaves:', error);
@@ -31,15 +36,7 @@ const AsociadoAeronaves = () => {
     }, []);
 
     
-    // Column definitions
-    const consumoTemplate = (rowData) => {
-        return <span>{rowData.consumo_por_hora} L/hr</span>;
-    };
-
-    const dateTemplate = (rowData) => {
-        return <span>{rowData.fecha_adquisicion}</span>;
-    };
-
+    
     // Para manejo de dialog de vista de detalles
     const [dialogVisible, setDialogVisible] = useState(false);
     const [selectedRowData, setSelectedRowData] = useState(null);
@@ -53,10 +50,15 @@ const AsociadoAeronaves = () => {
         setDialogVisible(false);
     };
 
-    if (loading) {
-        return <PantallaCarga/>
-    }
+    const formatFecha = (fecha) => {
+        if (!fecha) return ''; // Manejar valores nulos o vacíos
+        const date = new Date(fecha); // Asegúrate de que sea un objeto Date
+        return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
+      };
 
+    if (loading) {
+        return <PantallaCarga />
+    }
     return (
         <div className="background">
             <header className="header">
@@ -67,68 +69,78 @@ const AsociadoAeronaves = () => {
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                {/* <Column field="marca" header="Marca"></Column> */}
-                <Column field="modelo" header="Modelo"></Column>
-                <Column field="matricula" header="Matrícula"></Column>
-                {/* <Column field="potencia" header="Potencia (HP)"></Column> */}
-                <Column field="clase" header="Clase"></Column>
-                {/* <Column field="fecha_adquisicion" header="Fecha Adquisición" body={dateTemplate}></Column> */}
-                {/* <Column field="consumo_por_hora" header="Consumo por Hora" body={consumoTemplate}></Column> */}
-                {/* <Column field="horas_historicas_voladas" header="Horas de vuelo" ></Column>
-                <Column field="horas_para_inspeccion" header="Horas para inspeccion" ></Column> */}
-                <Column field="estado" header="Estado"></Column>
-                <Column header="Acciones"
+                <Column 
+                    header="Aeronave" 
                     body={(rowData) => (
-                        <div className='acciones'>
-
-                        {/* Botón de detalles */}
+                        <>
+                            <strong>{rowData.marca}</strong>  {rowData.modelo}
+                        </>
+                    )}
+                />
+                <Column field="matricula" header="Matrícula"></Column>
+                <Column
+                field="intervalo_para_inspeccion"
+                header="Inspección"
+                body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs.`}
+                />
+                <Column
+                field="ultimo_servicio"
+                header="Último servicio"
+                body={(rowData) => formatFecha(rowData.ultimo_servicio)}
+                ></Column>
+                <Column field="numero_poliza" header="Nro. Póliza" ></Column>
+                <Column
+                    field="vencimiento_poliza"
+                    header="Vto. Póliza"
+                    body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
+                    ></Column>
+                <Column field="estado" header="Estado"></Column>
+                <Column header="Acciones" 
+                    style={{width: '1px'}}
+                    body={(rowData) => (
+                    <div className='acciones'>
+                        
                         <Tooltip title="Ver detalles">
                         <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
                             <SearchIcon />
                         </IconButton>
                         </Tooltip>
-                        
-                        </div>
-                    )}
-                />
+
+
+                    </div>
+                )}></Column>
             </DataTable>
+
+
 
             <Dialog header="Detalles de la Aeronave" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
                 {selectedRowData && (
                 <div>
                     <div className='p-fluid details-dialog'>
+                        
                         <Card>
-                            <p><strong>Marca:</strong> </p>
-                            <p>{selectedRowData.marca}</p>
-                        </Card>
-                        <Card>
+                            <p><strong>Marca:</strong> {selectedRowData.marca}</p>
                             <p><strong>Modelo:</strong> {selectedRowData.modelo}</p>
-                        </Card>
-                        <Card>
                             <p><strong>Matrícula:</strong> {selectedRowData.matricula}</p>
                         </Card>
                         <Card> 
-                            <p><strong>Potencia en HP:</strong> {selectedRowData.potencia}</p>
-                        </Card>
-
-                        <Card> 
+                            <p><strong>Potencia:</strong> {selectedRowData.potencia} HP</p> 
+                            <p><strong>Motor:</strong> {selectedRowData.motor} </p> 
+                            <p><strong>Consumo:</strong> {selectedRowData.consumo_por_hora} L/hs</p>
                             <p><strong>Fecha de adquisición:</strong> {selectedRowData.fecha_adquisicion}</p>
-                        </Card>
-                        
-                        <Card> 
-                            <p><strong>Consumo por hora:</strong> {selectedRowData.consumo_por_hora}</p>
-                        </Card>
+                            <p><strong>Horas de vuelo historicas:</strong> {selectedRowData.horas_historicas}</p>
 
-                        <Card> 
-                            <p><strong>Horas de vuelo:</strong> {selectedRowData.horas_historicas_voladas}</p>
                         </Card>
                         
                         <Card> 
-                            <p><strong>Horas para inspección:</strong> {selectedRowData.horas_para_inspeccion}</p>
+                            <p><strong>Intervalo para inspección:</strong> {selectedRowData.intervalo_para_inspeccion}</p>
+                            <p><strong>Último service:</strong> {selectedRowData.ultimo_servicio}</p>
                         </Card>
                         
                         <Card> 
-                            <p><strong>Clase:</strong> {selectedRowData.clase}</p>
+                            <p><strong>Aseguradora:</strong> {selectedRowData.aseguradora}</p>
+                            <p><strong>Número póliza:</strong> {selectedRowData.numero_poliza}</p>
+                            <p><strong>Vencimiento póliza:</strong> {selectedRowData.vencimiento_poliza}</p>
                         </Card>
                         
                         <Card> 
@@ -143,4 +155,4 @@ const AsociadoAeronaves = () => {
     );
 };
 
-export default AsociadoAeronaves;
+export default AeronaveCrud;
