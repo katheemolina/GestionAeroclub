@@ -14,10 +14,12 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search'; 
-import HistoryIcon from '@mui/icons-material/History';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import Tooltip from '@mui/material/Tooltip';
-
-
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import UpdateIcon from '@mui/icons-material/Update'; 
+import SettingsIcon from '@mui/icons-material/Settings'; 
 
 
 
@@ -32,12 +34,22 @@ const AeronaveCrud = () => {
         clase: '',
         fecha_adquisicion: '',
         consumo_por_hora: '',
-        horas_para_inspeccion: '',
-        horas_historicas_voladas: '',
+        horas_historicas: '',
+        intervalo_inspeccion: '',
+        ultimo_servicio: '',
+        horas_vuelo_aeronave: '',
+        horas_vuelo_motor: '',
         estado: 'activo',
+
     });
     const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [aeronaveToDelete, setAeronaveToDelete] = useState(null);
+
+
+    
 
     // Fetch aeronaves data from the API
     const fetchAeronaves = async () => {
@@ -59,13 +71,16 @@ const AeronaveCrud = () => {
         try {
             if (isEdit) {
                 await actualizarAeronave(aeronaveData.id_aeronave, aeronaveData);
+                toast.success("Aeronave actualizada correctamente.");
             } else {
                 await insertarAeronave(aeronaveData);
+                toast.success("Aeronave insertada correctamente.");
             }
             setAeronaveDialog(false);
             fetchAeronaves(); // Refresh the list
         } catch (error) {
             console.error('Error saving aeronave:', error);
+            toast.error("Error, todos los campos son obligatorios.");
         }
     };
 
@@ -86,32 +101,37 @@ const AeronaveCrud = () => {
             clase: '',
             fecha_adquisicion: '',
             consumo_por_hora: '',
-            horas_para_inspeccion: '',
-            horas_historicas_voladas: '',
+            intervalo_inspeccion: '',
+            horas_historicas: '',
+            ultimo_servicio: '',
+            horas_vuelo_aeronave: '',
+            horas_vuelo_motor: '',
             estado: 'activo',
         });
         setIsEdit(false);
         setAeronaveDialog(true);
     };
 
+    const confirmDelete = (aeronave) => {
+        setAeronaveToDelete(aeronave);
+        setDeleteDialog(true);
+    };
 
-    const handleDelete = async (aeronave) => {
+    const handleDelete = async () => {
         try {
-            await eliminarAeronave(aeronave.id_aeronave); 
-            fetchAeronaves();
+            if (aeronaveToDelete) {
+                await eliminarAeronave(aeronaveToDelete.id_aeronave);
+                fetchAeronaves();
+                toast.success("Aeronave eliminada correctamente.");
+            }
+            setDeleteDialog(false);
         } catch (error) {
             console.error('Error al eliminar aeronave:', error);
+            toast.error("Error al eliminar aeronave.");
         }
     };
-    // Column definitions
-    const consumoTemplate = (rowData) => {
-        return <span>{rowData.consumo_por_hora} L/hr</span>;
-    };
-
-    const dateTemplate = (rowData) => {
-        return <span>{rowData.fecha_adquisicion}</span>;
-    };
-
+    
+    
     
     // Para manejo de dialog de vista de detalles
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -126,11 +146,18 @@ const AeronaveCrud = () => {
         setDialogVisible(false);
     };
 
+    const formatFecha = (fecha) => {
+        if (!fecha) return ''; // Manejar valores nulos o vacíos
+        const date = new Date(fecha); // Asegúrate de que sea un objeto Date
+        return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
+      };
+
     if (loading) {
         return <PantallaCarga />
     }
     return (
         <div className="background">
+            <ToastContainer />
             <header className="header">
                 <h1>Aeronaves</h1>
             </header>
@@ -140,30 +167,59 @@ const AeronaveCrud = () => {
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                {/* <Column field="marca" header="Marca"></Column> */}
-                <Column field="modelo" header="Modelo"></Column>
+                <Column 
+                    header="Aeronave" 
+                    body={(rowData) => (
+                        <>
+                            <strong>{rowData.marca}</strong>  {rowData.modelo}
+                        </>
+                    )}
+                />
                 <Column field="matricula" header="Matrícula"></Column>
-                {/* <Column field="potencia" header="Potencia (HP)"></Column> */}
-                <Column field="clase" header="Clase"></Column>
-                {/* <Column field="fecha_adquisicion" header="Fecha Adquisición" body={dateTemplate}></Column> */}
-                {/* <Column field="consumo_por_hora" header="Consumo por Hora" body={consumoTemplate}></Column> */}
-                {/* <Column field="horas_historicas_voladas" header="Horas de vuelo" ></Column>*/}
-                {/*<Column field="horas_para_inspeccion" header="Horas para inspeccion" ></Column> */}
+                <Column
+                field="intervalo_para_inspeccion"
+                header="Intervalo de inspección"
+                body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs.`}
+                />
+                <Column
+                field="ultimo_servicio"
+                header="Último servicio"
+                body={(rowData) => formatFecha(rowData.ultimo_servicio)}
+                ></Column>
+                <Column field="numero_poliza" header="Nro. Póliza" ></Column>
+                <Column
+                    field="vencimiento_poliza"
+                    header="Vto. Póliza"
+                    body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
+                    ></Column>
                 <Column field="estado" header="Estado"></Column>
                 <Column header="Acciones" 
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
-                        <Tooltip title="Editar">
+                        <Tooltip title="Editar estado de la aeronave">
                         <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
                             <EditIcon />
                         </IconButton>
                         </Tooltip>
 
-                        <Tooltip title="Eliminar">
-                            <IconButton color="primary" aria-label="delete"  onClick={() => handleDelete(rowData)} >
-                                <DeleteIcon />
-                            </IconButton>
+                        <Tooltip title="Actualizar poliza">
+                        <IconButton color="primary" aria-label="update">
+                            <UpdateIcon />
+                        </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Actualizar servicios">
+                        <IconButton color="primary" aria-label="Settings">
+                            <SettingsIcon />
+                        </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Eliminar aeronave">
+                        <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
+                            <DeleteIcon />
+                        </IconButton>
+
                         </Tooltip>
                         
                         <Tooltip title="Ver detalles">
@@ -174,7 +230,7 @@ const AeronaveCrud = () => {
 
                         <Tooltip title="Historial de servicios">
                         <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
-                            <HistoryIcon />
+                            <ManageSearchIcon />
                         </IconButton>
                         </Tooltip>
 
@@ -200,6 +256,17 @@ const AeronaveCrud = () => {
                             value={aeronaveData.modelo}
                             onChange={(e) => setAeronaveData({ ...aeronaveData, modelo: e.target.value })}
                             placeholder="Modelo"
+                        />
+                    </div>
+
+                    <div className="p-field">
+                        <label htmlFor="motor">Motor</label>
+                        <InputText
+                            id="motor"
+                            value={aeronaveData.motor}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, motor: e.target.value })}
+                            placeholder="Motor"
+                            maxLength={250}
                         />
                     </div>
                     <div className="p-field">
@@ -252,93 +319,142 @@ const AeronaveCrud = () => {
                             placeholder="Consumo por Hora"
                         />
                     </div>
+                
                     <div className="p-field">
-                        <label htmlFor="horas_para_inspeccion">Horas para inspección</label>
-                        <div style={{ display: 'flex', gap: '5px' }}>
-                            <InputText
-                                id="horas"
-                                type="number"
-                                value={aeronaveData.horas}
-                                onChange={(e) => setAeronaveData({ ...aeronaveData, horas: e.target.value })}
-                                placeholder="Horas"
-                                min="0"
-                            />
-                            <InputText
-                                id="minutos"
-                                type="number"
-                                value={aeronaveData.minutos}
-                                onChange={(e) => setAeronaveData({ ...aeronaveData, minutos: e.target.value })}
-                                placeholder="Minutos"
-                                min="0"
-                                max="59"
-                            />
-                        </div>
+                        <label htmlFor="horas_historicas">Horas Históricas</label>
+                        <InputText
+                            id="horas_historicas"
+                            type="number"
+                            min={0}
+                            value={aeronaveData.horas_historicas}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_historicas: e.target.value })}
+                            placeholder="Horas Históricas"
+                        />
                     </div>
                     <div className="p-field">
-                        <label htmlFor="horas_historicas_voladas">Horas de vuelo históricas</label>
-                        <div style={{ display: 'flex', gap: '5px' }}>
-                            <InputText
-                                id="horas_historicas"
-                                type="number"
-                                value={aeronaveData.horas_historicas || ''}
-                                onChange={(e) => setAeronaveData({ ...aeronaveData, horas_historicas: e.target.value })}
-                                placeholder="Horas"
-                                min="0"
-                            />
-                            <InputText
-                                id="minutos_historicos"
-                                type="number"
-                                value={aeronaveData.minutos_historicos || ''}
-                                onChange={(e) => setAeronaveData({ ...aeronaveData, minutos_historicos: e.target.value })}
-                                placeholder="Minutos"
-                                min="0"
-                                max="59"
-                            />
-                        </div>
+                        <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
+                        <InputText
+                            id="intervalo_inspeccion"
+                            type="number"
+                            min={0}
+                            value={aeronaveData.intervalo_inspeccion}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, intervalo_inspeccion: e.target.value })}
+                            placeholder="Horas para inspección"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="ultimo_servicio">Último Servicio</label>
+                        <InputText
+                            id="ultimo_servicio"
+                            type="date"
+                            value={aeronaveData.ultimo_servicio}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, ultimo_servicio: e.target.value })}
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="horas_vuelo_aeronave">Horas de Vuelo de Aeronave</label>
+                        <InputText
+                            id="horas_vuelo_aeronave"
+                            type="number"
+                            min={0}
+                            value={aeronaveData.horas_vuelo_aeronave}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_vuelo_aeronave: e.target.value })}
+                            placeholder="Horas de Vuelo"
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="horas_vuelo_motor">Horas de Vuelo de Motor</label>
+                        <InputText
+                            id="horas_vuelo_motor"
+                            type="number"
+                            min={0}
+                            value={aeronaveData.horas_vuelo_motor}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, horas_vuelo_motor: e.target.value })}
+                            placeholder="Horas de Motor"
+                        />
+                    </div>
+
+                    <div className="p-field">
+                    <label htmlFor="aseguradora">Aseguradora</label>
+                    <InputText
+                        id="aseguradora"
+                        value={aeronaveData.aseguradora}
+                        onChange={(e) => setAeronaveData({ ...aeronaveData, aseguradora: e.target.value })}
+                        placeholder="Aseguradora"
+                        maxLength={250}
+                    />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="numero_poliza">Número de Póliza</label>
+                        <InputText
+                            id="numero_poliza"
+                            value={aeronaveData.numero_poliza}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, numero_poliza: e.target.value })}
+                            placeholder="Número de Póliza"
+                            maxLength={250}
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="vencimiento_poliza">Vencimiento de Póliza</label>
+                        <InputText
+                            id="vencimiento_poliza"
+                            type="date"
+                            value={aeronaveData.vencimiento_poliza}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, vencimiento_poliza: e.target.value })}
+                        />
                     </div>
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAeronaveDialog(false)} />
                         <Button label="Guardar" icon="pi pi-check" id="btn-guardar" onClick={handleSave} />
                     </div>
+
                 </div>
             </Dialog>
+
+            <Dialog
+                header="Confirmación"
+                visible={deleteDialog}
+                onHide={() => setDeleteDialog(false)}
+                style={{ width: '400px' }}
+                footer={
+                    <div>
+                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
+                        <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
+                    </div>
+                }
+            >
+                <p>¿Está seguro que desea eliminar la aeronave <strong>{aeronaveToDelete?.matricula}</strong>?</p>
+            </Dialog>
+
 
             <Dialog header="Detalles de la Aeronave" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
                 {selectedRowData && (
                 <div>
                     <div className='p-fluid details-dialog'>
+                        
                         <Card>
-                            <p><strong>Marca:</strong> </p>
-                            <p>{selectedRowData.marca}</p>
-                        </Card>
-                        <Card>
+                            <p><strong>Marca:</strong> {selectedRowData.marca}</p>
                             <p><strong>Modelo:</strong> {selectedRowData.modelo}</p>
-                        </Card>
-                        <Card>
                             <p><strong>Matrícula:</strong> {selectedRowData.matricula}</p>
                         </Card>
                         <Card> 
-                            <p><strong>Potencia en HP:</strong> {selectedRowData.potencia}</p>
-                        </Card>
-
-                        <Card> 
+                            <p><strong>Potencia:</strong> {selectedRowData.potencia} HP</p> 
+                            <p><strong>Motor:</strong> {selectedRowData.motor} </p> 
+                            <p><strong>Consumo:</strong> {selectedRowData.consumo_por_hora} L/hs</p>
                             <p><strong>Fecha de adquisición:</strong> {selectedRowData.fecha_adquisicion}</p>
-                        </Card>
-                        
-                        <Card> 
-                            <p><strong>Consumo por hora:</strong> {selectedRowData.consumo_por_hora}</p>
-                        </Card>
+                            <p><strong>Horas de vuelo historicas:</strong> {selectedRowData.horas_historicas}</p>
 
-                        <Card> 
-                            <p><strong>Horas de vuelo:</strong> {selectedRowData.horas_historicas_voladas}</p>
                         </Card>
                         
                         <Card> 
-                            <p><strong>Horas para inspección:</strong> {selectedRowData.horas_para_inspeccion}</p>
+                            <p><strong>Intervalo para inspección:</strong> {selectedRowData.intervalo_para_inspeccion}</p>
+                            <p><strong>Último service:</strong> {selectedRowData.ultimo_servicio}</p>
                         </Card>
                         
                         <Card> 
-                            <p><strong>Clase:</strong> {selectedRowData.clase}</p>
+                            <p><strong>Aseguradora:</strong> {selectedRowData.aseguradora}</p>
+                            <p><strong>Número póliza:</strong> {selectedRowData.numero_poliza}</p>
+                            <p><strong>Vencimiento póliza:</strong> {selectedRowData.vencimiento_poliza}</p>
                         </Card>
                         
                         <Card> 
