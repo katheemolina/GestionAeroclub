@@ -43,7 +43,7 @@ const AsociadoTarifas = () => {
             return "No aplica";
         }
         // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
-        return <span>{rowData?.importe_por_instruccion || ''}</span>;
+        return <span>${rowData?.importe_por_instruccion || ''}</span>;
     };
 
     if (loading) {
@@ -61,12 +61,12 @@ const AsociadoTarifas = () => {
                 rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
-                <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
-                <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
+                <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate} sortable></Column>
+                <Column field="tipo_tarifa" header="Tipo Tarifa" sortable></Column>
+                <Column field="importe" header="Importe" body={amountBodyTemplate} sortable></Column>
                 {/* Aplicamos la función de personalización en la columna de Importe por Instrucción */}
-                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate}></Column>
-                <Column field="id_aeronave" header="Aeronave"></Column>
+                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate} sortable></Column>
+                <Column field="AeronavesMatri" header="Aeronaves" sortable></Column>
             </DataTable>
         </div>
     );
