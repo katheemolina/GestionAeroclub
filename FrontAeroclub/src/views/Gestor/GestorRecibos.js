@@ -12,11 +12,13 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Dropdown } from 'primereact/dropdown'; // P
+import { Dialog } from 'primereact/dialog';
 
 function GestorRecibos({ idUsuario = 0 }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedRecibos, setSelectedRecibos] = useState([]);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
   const [filtroEstado, setFiltroEstado] = useState(null);
@@ -125,7 +127,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       <Button
         className="enviar"
         label="Generar Pago de Recibo/os"
-        onClick={handleEnviarSeleccionados}
+        onClick={() => setShowConfirmDialog(true)} /*handleEnviarSeleccionados*/ 
         disabled={selectedRecibos.length === 0}
       />
       <DataTable
@@ -215,7 +217,27 @@ function GestorRecibos({ idUsuario = 0 }) {
           className="columna-ancho-min"
         />
       </DataTable>
+
+      <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
+                <>
+                    <Button label="Cancelar" 
+                      className="p-button-text gestor-btn-cancelar" 
+                      icon="pi pi-times" 
+                      onClick={() => setShowConfirmDialog(false)}/>
+                    <Button label="Confirmar" 
+                      className="gestor-btn-confirmar" 
+                        icon="pi pi-check"
+                        onClick={() => {
+                          handleEnviarSeleccionados();
+                          setShowConfirmDialog(false);
+                        }} autoFocus />
+                </>
+            } onHide={() => setShowConfirmDialog(false)}>
+                <p>¿Está seguro de que desea generar el pago de estos recibos?</p>
+      </Dialog>
+    
     </div>
+    
   );
 }
 
