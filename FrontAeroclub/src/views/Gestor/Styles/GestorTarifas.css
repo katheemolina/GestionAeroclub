@@ -49,3 +49,57 @@
 .dialog-buttons .p-button-primary:hover {
     background-color: #388E3C;
 }
+
+
+.p-multiselect{
+    margin: 10px 0px;
+    padding: 10px;
+}
+
+.p-multiselect-panel{
+    padding: 5px;
+}
+
+.p-multiselect-header{
+    gap: 10px;
+    padding: 10px;
+}
+
+.p-multiselect-item{
+    padding: 10px;
+    gap: 10px;
+}
+
+.p-multiselect-filter-icon{
+    transform: translate(-50%, -50%);
+}
+
+.p-multiselect-close{
+    padding: 0px;
+}
+
+.p-multiselect-token{
+    padding: 7px;
+    gap: 7px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+.p-multiselect-label{
+    gap: 10px;
+}
+
+.p-multiselect-clear-icon{
+    transform: translate(-50%, -50%);
+    color: rgba(169, 70, 70, 1);    
+}
+
+#field-tarifa-con-instructor{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#field-tarifa-con-instructor label{
+    margin: 0;
+}

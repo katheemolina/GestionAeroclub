@@ -228,7 +228,18 @@ const TarifaCrud = () => {
                 )}></Column>
             </DataTable>
 
-            <Dialog header={isEdit ? 'Actualizar Tarifa' : 'Agregar Tarifa'} visible={tarifaDialog} onHide={() => setTarifaDialog(false)}>
+            <Dialog 
+                    header={isEdit ? 'Actualizar Tarifa' : 'Agregar Tarifa'} 
+                    visible={tarifaDialog} 
+                    onHide={() => setTarifaDialog(false)}
+                    footer= {
+                    <> 
+                        <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary gestor-btn-cancelar" onClick={() => setTarifaDialog(false)} />
+                        <Button label="Guardar" icon="pi pi-check" className="gestor-btn-confirmar" onClick={handleSave} /> 
+                    </>
+                    }
+            >
+                        
                 <div className="p-fluid">
                     <div className="p-field">
                         <label htmlFor="fecha_vigencia">Fecha Vigencia</label>
@@ -259,65 +270,60 @@ const TarifaCrud = () => {
                         />
                     </div>
                     {tarifaData.tipo_tarifa === 'Vuelo' && (
-            <>
-                <div className="p-field">
-                    <Checkbox
-                        inputId="con_instructor"
-                        checked={tarifaData.con_instructor}
-                        onChange={(e) => handleInstructorCheck(e.checked)}
-                    />
-                    <label htmlFor="con_instructor">¿Con Instructor?</label>
-                </div>
-                <div className="p-field">
-                    <label htmlFor="importe_por_instruccion">Importe por Instrucción</label>
-                    <InputText
-                        id="importe_por_instruccion"
-                        value={tarifaData.importe_por_instruccion}
-                        
-                    />
-                </div>
-                {/* Campos generales del vuelo */}
-                <div className="p-field">
-    <label>Aeronaves:</label>
-    {aeronaves && aeronaves.length > 0 ? (
-        <MultiSelect
-        id="aeronaves"
-        value={aeronavesSeleccionado}
-        options={aeronaves}
-        onChange={(e) => {
-            // Extraer solo los id_aeronave seleccionados
-            const idsAeronavesSeleccionadas = e.value.map(aeronave => aeronave.id_aeronave);
-    
-            // Actualizar el estado con las aeronaves seleccionadas
-            setAeronavesSeleccionado(e.value);
-    
-            // Guardar los id_aeronave seleccionados como una cadena separada por comas
-            setTarifaData({ 
-                ...tarifaData, 
-                aeronaves: idsAeronavesSeleccionadas.join(',') 
-            });
-        }}
-        optionLabel="matricula"  // Mostrar matricula, pero guardar id_aeronave
-        placeholder="Seleccione Aeronaves"
-        display="chip"
-        filter
-        showClear
-        filterBy="matricula"
-        maxSelectedLabels={5}
-    />
-    
-    
-    ) : (
-        <p>No hay aeronaves disponibles.</p>
-    )}
-</div>
+                        <>
+                            <div className="p-field" id='field-tarifa-con-instructor'>
+                                <Checkbox
+                                    inputId="con_instructor"
+                                    checked={tarifaData.con_instructor}
+                                    onChange={(e) => handleInstructorCheck(e.checked)}
+                                />
+                                <label htmlFor="con_instructor">¿Con Instructor?</label>
+                            </div>
+                            <div className="p-field">
+                                <label htmlFor="importe_por_instruccion">Importe por Instrucción</label>
+                                <InputText
+                                    id="importe_por_instruccion"
+                                    value={tarifaData.importe_por_instruccion}
+                                    
+                                />
+                            </div>
+                            {/* Campos generales del vuelo */}
+                            <div className="p-field">
+                                <label>Aeronaves:</label>
+                                    {aeronaves && aeronaves.length > 0 ? (
+                                    <MultiSelect
+                                        id="aeronaves"
+                                        value={aeronavesSeleccionado}
+                                        options={aeronaves}
+                                        onChange={(e) => {
+                                            // Extraer solo los id_aeronave seleccionados
+                                            const idsAeronavesSeleccionadas = e.value.map(aeronave => aeronave.id_aeronave);
+                                    
+                                            // Actualizar el estado con las aeronaves seleccionadas
+                                            setAeronavesSeleccionado(e.value);
+                                    
+                                            // Guardar los id_aeronave seleccionados como una cadena separada por comas
+                                            setTarifaData({ 
+                                                ...tarifaData, 
+                                                aeronaves: idsAeronavesSeleccionadas.join(',') 
+                                            });
+                                        }}
+                                        optionLabel="matricula"  // Mostrar matricula, pero guardar id_aeronave
+                                        placeholder="Seleccione Aeronaves"
+                                        display="chip"
+                                        filter
+                                        showClear
+                                        filterBy="matricula"
+                                        maxSelectedLabels={5}
+                                    />
+                                        ) : (
+                                            <p>No hay aeronaves disponibles.</p>
+                                        )}
+                            </div>
 
-            </>
-        )}
-                    <div className="p-d-flex p-jc-end">
-                        <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setTarifaDialog(false)} />
-                        <Button label="Guardar" icon="pi pi-check" onClick={handleSave} />
-                    </div>
+                        </>
+                    )}
+                    
                 </div>
             </Dialog>
 
