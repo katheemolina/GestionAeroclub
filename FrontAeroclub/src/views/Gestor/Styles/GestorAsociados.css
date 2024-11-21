@@ -18,3 +18,16 @@
     padding-top: 10px;
     padding-bottom: 20px;
 }
+
+.gestor-contenedor-checkbox-roles{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0px;
+}
+
+.gestor-contenedor-checkbox-roles .p-field-checkbox{
+   display: flex;
+   gap: 10px;
+   align-items: center;
+}

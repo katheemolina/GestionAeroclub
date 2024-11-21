@@ -263,19 +263,20 @@ const GestorAsociados  = () => {
                             label="Cancelar" 
                             icon="pi pi-times" 
                             onClick={() => setShowRoleDialog(false)} 
-                            className="p-button-text" 
+                            className="p-button-text gestor-btn-cancelar" 
                         />
                         <Button 
                             label="Confirmar" 
                             icon="pi pi-check" 
                             onClick={handleUpdateRoles} 
                             autoFocus 
+                            className="gestor-btn-confirmar"
                         />
                     </>
                 } 
                 onHide={() => setShowRoleDialog(false)}
             >
-                <div className="p-d-flex p-flex-column">
+                <div className="p-d-flex p-flex-column gestor-contenedor-checkbox-roles">
                     {roles.map((role) => (
                         <div className="p-field-checkbox" key={role.id_rol}>
                             <Checkbox 
