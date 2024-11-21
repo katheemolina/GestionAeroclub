@@ -1,3 +1,4 @@
+import Boton from "./Button";
 import "./styles/usuarioDeshabilitado.css"
 import react from 'react';
 export default function UsuarioDeshabilitado() {
@@ -13,6 +14,11 @@ export default function UsuarioDeshabilitado() {
         <a href="mailto:admin@example.com" className="disabled-button">
           Contactar Administrador
         </a>
+        <Boton
+             estilos={`disabled-button `}
+             texto={'Salir'}
+             logout={true}
+           />
       </div>
     </div>
   );

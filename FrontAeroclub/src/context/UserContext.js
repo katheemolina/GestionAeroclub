@@ -10,7 +10,7 @@ export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
-    const [isUserEnabled, setIsUserEnabled] = useState(null); // Esto deberia ser false por defecto, cambiar cuando el endpoint este listo
+    const [isUserEnabled, setIsUserEnabled] = useState(true); 
     const isAuthenticated = !!user;
     
     
@@ -36,7 +36,7 @@ export function UserProvider({ children }) {
                 try {
                     const isEnabled = await obtenerEstadoDelUsuario(usuarioId);
                     console.log(isEnabled.data);
-                    setIsUserEnabled(isEnabled.data.estado === "Habilitado" ? true : false);
+                    setIsUserEnabled(isEnabled.data.estado?.toLowerCase() === "habilitado" ? true : false);
                 } catch (error) {
                     console.error('Earror al obtener el estado del Usuario:', error);
                 }
