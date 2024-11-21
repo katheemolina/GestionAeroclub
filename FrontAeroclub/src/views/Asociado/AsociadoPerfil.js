@@ -120,16 +120,42 @@ function AsociadoPerfil() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await actualizarDatosDelUsuario(usuarioId, formData);
-      toast.success("Datos actualizados correctamente");
-    } catch (error) {
-      console.error("Error al actualizar datos:", error);
-      toast.error("Error al actualizar datos");
-    }
-  };
+
+const validarFormulario = () => {
+  const camposFaltantes = [];
+
+  if (!formData.Telefono) camposFaltantes.push("Teléfono");
+  if (!formData.Dni) camposFaltantes.push("DNI");
+  if (!formData.Localidad) camposFaltantes.push("Localidad");
+  if (!formData.Direccion) camposFaltantes.push("Dirección");
+  if (!formData.FechaNacimiento) camposFaltantes.push("Fecha de Nacimiento");
+  if (!formData.FechaVencCMA) camposFaltantes.push("Fecha de Vencimiento CMA");
+  if (!formData.CantHorasVuelo) camposFaltantes.push("Cantidad de Horas de Vuelo");
+  if (!formData.CantAterrizajes) camposFaltantes.push("Cantidad de Aterrizajes");
+
+  if (camposFaltantes.length > 0) {
+    toast.warning(`Completa los siguientes campos: ${camposFaltantes.join(", ")}`);
+    return false;
+  }
+  return true;
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Validar formulario
+  if (!validarFormulario()) return;
+
+  try {
+    await actualizarDatosDelUsuario(usuarioId, formData);
+    toast.success("Datos actualizados correctamente");
+  } catch (error) {
+    console.error("Error al actualizar datos:", error);
+    toast.error("Error al actualizar datos");
+  }
+};
+
+
 
   const formatFecha = (rowData) => {
     // Extrae solo la fecha de 'fecha_vencimiento' (sin hora)
