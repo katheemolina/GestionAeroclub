@@ -80,4 +80,77 @@ export async function eliminarAeronave(idAeronave) {
         console.error('Error:', error);
         throw error;
     }
-}
+};
+
+export const cambiarEstadoAeronave = async (idAeronave) => {
+    try {
+        const response = await fetch(`${API_URL}/aeronaves/estado`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id_aeronave: idAeronave }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${await response.text()}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al cambiar el estado de la aeronave:', error);
+        throw error.message;
+    }
+};
+
+export const cambiarDatosPoliza = async (idAeronave, aseguradora, numeroPoliza, vencimientoPoliza) => {
+    try {
+        const response = await fetch(`${API_URL}/aeronaves/poliza`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_aeronave: idAeronave,
+                aseguradora,
+                numero_poliza: numeroPoliza,
+                vencimiento_poliza: vencimientoPoliza,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${await response.text()}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al actualizar los datos de la póliza:', error);
+        throw error.message;
+    }
+};
+
+// Servicio para actualizar el intervalo de inspección
+export const actualizarIntervaloInspeccion = async (idAeronave, intervaloInspeccion) => {
+    try {
+        const response = await fetch(`${API_URL}/aeronaves/inspeccion`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_aeronave: idAeronave,
+                intervalo_inspeccion: intervaloInspeccion,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${await response.text()}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al actualizar el intervalo de inspección:', error);
+        throw error.message;
+    }
+};
+
