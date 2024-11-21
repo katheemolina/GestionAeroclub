@@ -11,7 +11,7 @@
     font-size: 16px;
     background-color: #b0b0b0; /* Color de fondo gris claro */
     color: #333333; /* Texto en gris oscuro */
-    width: 45%;
+    width: 30%;
     border: 2px solid #999999; /* Borde gris medio */
     padding: 0.7rem 1rem;
     border-radius: 5px;
@@ -35,3 +35,9 @@
 .menu-opciones .opcion-boton:not(:last-child) {
     margin-right: 0.5rem; /* Espacio entre los botones */
 }
+
+@media (max-width: 1800px){
+    .opcion-boton{
+        padding: 0.7rem 0.1rem;
+    }
+} 
