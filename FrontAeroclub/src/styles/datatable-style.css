@@ -21,8 +21,12 @@
     border-bottom: 1px solid #ccc;
 }
 
+.p-datatable-tbody tr:hover td {
+    background-color: #dcdcdc !important; /* Change to any color you prefer */
+}
+
 .p-datatable-tbody tr:nth-child(odd) td {
-    background-color: #e8e8e8; /* Change to the color you prefer */
+    background-color: #f0f0f0; /* Change to the color you prefer */
 }
 
 .p-paginator{
