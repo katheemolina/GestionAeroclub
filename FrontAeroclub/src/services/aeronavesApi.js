@@ -84,12 +84,11 @@ export async function eliminarAeronave(idAeronave) {
 
 export const cambiarEstadoAeronave = async (idAeronave) => {
     try {
-        const response = await fetch(`${API_URL}/aeronaves/estado`, {
+        const response = await fetch(`${API_URL}/aeronaves/${idAeronave}/cambiarEstado`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id_aeronave: idAeronave }),
         });
 
         if (!response.ok) {
@@ -105,7 +104,7 @@ export const cambiarEstadoAeronave = async (idAeronave) => {
 
 export const cambiarDatosPoliza = async (idAeronave, aseguradora, numeroPoliza, vencimientoPoliza) => {
     try {
-        const response = await fetch(`${API_URL}/aeronaves/poliza`, {
+        const response = await fetch(`${API_URL}/aeronaves/cambioPoliza`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -132,7 +131,7 @@ export const cambiarDatosPoliza = async (idAeronave, aseguradora, numeroPoliza, 
 // Servicio para actualizar el intervalo de inspección
 export const actualizarIntervaloInspeccion = async (idAeronave, intervaloInspeccion) => {
     try {
-        const response = await fetch(`${API_URL}/aeronaves/inspeccion`, {
+        const response = await fetch(`${API_URL}/aeronaves/actualizarIntervaloInspeccion`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

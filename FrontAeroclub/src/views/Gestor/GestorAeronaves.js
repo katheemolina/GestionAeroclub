@@ -6,7 +6,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog'
 import { Card } from 'primereact/card';
 import PantallaCarga from '../../components/PantallaCarga';
-import { obtenerAeronaves, insertarAeronave, actualizarAeronave,eliminarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
+import { obtenerAeronaves, insertarAeronave, actualizarAeronave,eliminarAeronave,cambiarEstadoAeronave,cambiarDatosPoliza,actualizarIntervaloInspeccion } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
 import '../../styles/datatable-style.css';
 import './Styles/GestorAeronaves.css';
 //iconos
@@ -47,6 +47,14 @@ const AeronaveCrud = () => {
 
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [aeronaveToDelete, setAeronaveToDelete] = useState(null);
+
+    const [estadoDialog, setEstadoDialog] = useState(false);
+    const [polizaDialog, setPolizaDialog] = useState(false);
+    const [intervaloDialog, setIntervaloDialog] = useState(false);
+
+    const [selectedAeronave, setSelectedAeronave] = useState(null);
+    const [nuevaPoliza, setNuevaPoliza] = useState({ numero_poliza: '', vencimiento_poliza: '' });
+    const [nuevoIntervalo, setNuevoIntervalo] = useState({ fecha: '' });
 
 
     
@@ -146,6 +154,82 @@ const AeronaveCrud = () => {
         setDialogVisible(false);
     };
 
+
+    // Funciones para manejar los diálogos
+const openEstadoDialog = (aeronave) => {
+    setSelectedAeronave(aeronave);
+    setEstadoDialog(true);
+};
+
+const openPolizaDialog = (aeronave) => {
+    setSelectedAeronave(aeronave);
+    setPolizaDialog(true);
+};
+
+const openIntervaloDialog = (aeronave) => {
+    setSelectedAeronave(aeronave);
+    setIntervaloDialog(true);
+};
+
+// Funciones para los servicios
+const handleCambiarEstado = async () => {
+    try {
+        if (selectedAeronave) {
+            await cambiarEstadoAeronave(selectedAeronave.id_aeronave);
+            fetchAeronaves();
+            toast.success("Aeronave eliminada correctamente.");
+        }
+        setEstadoDialog(false);
+        console.log(selectedAeronave.id_aeronave)
+    } catch (error) {
+        console.error('Error al cambiar estado:', error);
+        toast.error('Error al cambiar el estado.');
+    }
+};
+
+const handleActualizarPoliza = async () => {
+    try {
+        if (selectedAeronave) {
+            const { id_aeronave } = selectedAeronave; // Extraer el ID de la aeronave
+            const { aseguradora, numero_poliza, vencimiento_poliza } = nuevaPoliza; // Datos de la póliza
+            
+            // Llamar al servicio con los parámetros correctos
+            await cambiarDatosPoliza(id_aeronave, aseguradora, numero_poliza, vencimiento_poliza);
+            
+            fetchAeronaves(); // Actualizar la lista de aeronaves
+            toast.success('Póliza actualizada correctamente.');
+        }
+        setPolizaDialog(false); // Cerrar el diálogo
+    } catch (error) {
+        console.error('Error al actualizar póliza:', error);
+        toast.error('Error al actualizar la póliza.');
+    }
+};
+
+
+const handleActualizarIntervalo = async () => {
+    try {
+        if (selectedAeronave) {
+            const { id_aeronave } = selectedAeronave; // Extraer el ID de la aeronave
+            const intervalo_inspeccion = nuevoIntervalo.intervalo_inspeccion; // Obtener el intervalo desde el estado
+            
+            // Llamar al servicio con los datos correctos
+            await actualizarIntervaloInspeccion(id_aeronave, intervalo_inspeccion);
+            
+            toast.success('Intervalo de inspección actualizado correctamente.');
+            setIntervaloDialog(false); // Cerrar el diálogo
+            fetchAeronaves(); // Refrescar datos
+        } else {
+            throw new Error('No se seleccionó ninguna aeronave.');
+        }
+    } catch (error) {
+        console.error('Error al actualizar intervalo:', error);
+        toast.error('Error al actualizar el intervalo.');
+    }
+};
+
+
+
     const formatFecha = (fecha) => {
         if (!fecha) return ''; // Manejar valores nulos o vacíos
         const date = new Date(fecha); // Asegúrate de que sea un objeto Date
@@ -198,21 +282,19 @@ const AeronaveCrud = () => {
                     body={(rowData) => (
                     <div className='acciones'>
                         <Tooltip title="Editar estado de la aeronave">
-                        <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(rowData)}>
-                            <EditIcon />
-                        </IconButton>
+                            <IconButton color="primary" onClick={() => openEstadoDialog(rowData)}>
+                                <EditIcon />
+                            </IconButton>
                         </Tooltip>
-
-                        <Tooltip title="Actualizar poliza">
-                        <IconButton color="primary" aria-label="update">
-                            <UpdateIcon />
-                        </IconButton>
+                        <Tooltip title="Actualizar póliza">
+                            <IconButton color="primary" onClick={() => openPolizaDialog(rowData)}>
+                                <UpdateIcon />
+                            </IconButton>
                         </Tooltip>
-
-                        <Tooltip title="Actualizar servicios">
-                        <IconButton color="primary" aria-label="Settings">
-                            <SettingsIcon />
-                        </IconButton>
+                        <Tooltip title="Actualizar intervalo de inspección">
+                            <IconButton color="primary" onClick={() => openIntervaloDialog(rowData)}>
+                                <SettingsIcon />
+                            </IconButton>
                         </Tooltip>
 
                         <Tooltip title="Eliminar aeronave">
@@ -425,6 +507,75 @@ const AeronaveCrud = () => {
             >
                 <p>¿Está seguro que desea eliminar la aeronave <strong>{aeronaveToDelete?.matricula}</strong>?</p>
             </Dialog>
+
+            <Dialog
+                header="Confirmación"
+                visible={estadoDialog}
+                onHide={() => setEstadoDialog(false)}
+                style={{ width: '400px' }}
+                footer={
+                    <div>
+                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setEstadoDialog(false)} className="p-button-text" />
+                        <Button label="Confirmar" icon="pi pi-check" onClick={handleCambiarEstado} className="p-button-danger" />
+                    </div>
+                } > <p>¿Está seguro de que desea cambiar el estado de esta aeronave?</p>
+            </Dialog>
+
+           
+
+            <Dialog visible={polizaDialog} onHide={() => setPolizaDialog(false)} header="Actualizar Póliza">
+            <div>
+                <label htmlFor="aseguradora">Aseguradora</label>
+                    <InputText
+                        id="aseguradora"
+                        value={nuevaPoliza.aseguradora}
+                        onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, aseguradora: e.target.value })}
+                        placeholder="Aseguradora"
+                        maxLength={250}
+                    />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="numero_poliza">Número de Póliza</label>
+                        <InputText
+                            id="numero_poliza"
+                            value={nuevaPoliza.numero_poliza}
+                            onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, numero_poliza: e.target.value })}
+                            placeholder="Número de Póliza"
+                            maxLength={250}
+                        />
+                    </div>
+                    <div className="p-field">
+                        <label htmlFor="vencimiento_poliza">Vencimiento de Póliza</label>
+                        <InputText
+                            id="vencimiento_poliza"
+                            type="date"
+                            value={nuevaPoliza.vencimiento_poliza}
+                            onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, vencimiento_poliza: e.target.value })}
+                        />
+                    </div>
+                
+    
+                <Button label="Actualizar" onClick={handleActualizarPoliza} />
+            </Dialog>
+
+            <Dialog visible={intervaloDialog} onHide={() => setIntervaloDialog(false)} header="Actualizar Intervalo de Inspección">
+
+                <div className="p-field">
+                        <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
+                        <InputText
+                            id="intervalo_inspeccion"
+                            type="number"
+                            min={0}
+                            value={nuevoIntervalo.intervalo_inspeccion}
+                            onChange={(e) => setNuevoIntervalo({ ...nuevoIntervalo, intervalo_inspeccion: e.target.value })}
+                            placeholder="Horas para inspección"
+                        />
+                    </div>
+                <Button label="Actualizar" onClick={handleActualizarIntervalo} />
+            </Dialog>
+
+
+
 
 
             <Dialog header="Detalles de la Aeronave" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
