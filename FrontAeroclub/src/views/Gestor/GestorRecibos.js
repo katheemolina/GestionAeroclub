@@ -398,7 +398,7 @@ function GestorRecibos({ idUsuario = 0 }) {
                         }} autoFocus />
                 </>
             } onHide={() => setShowConfirmDialog(false)}>
-                <p>¿Está seguro de que desea generar el pago de estos recibos?</p>
+                <p>¿Está seguro de que desea generar el pago de la/los recibos seleccionados?</p>
       </Dialog>
     
     </div>

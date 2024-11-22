@@ -4,12 +4,19 @@ import PantallaCarga from '../../components/PantallaCarga';
 import { useUser } from '../../context/UserContext';
 import { generarCuotasSociales } from '../../services/generarCuotasSociales'; // Asegúrate de importar la función
 import { Card } from 'primereact/card';
+import { Dialog } from 'primereact/dialog';
+import { Button } from "primereact/button";
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Styles/GestorGenerarCuotasSociales.css'
+
 
 const GestorGenerarCuotasSociales = () => {
     const [loading, setLoading] = useState(false);
     const [mes, setMes] = useState('');
     const [importe, setImporte] = useState('');
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [fechaMovimiento, setFechaMovimiento] = useState(''); // Nueva variable para la fecha del movimiento
     const [resultado, setResultado] = useState(null);
     const [error, setError] = useState('');  // Nuevo estado para manejar el error
@@ -33,7 +40,7 @@ const GestorGenerarCuotasSociales = () => {
 
     const handleSubmit = async () => {
         if (!mes || !importe || !fechaMovimiento) {  // Verificamos que todos los campos estén completos
-            alert('Por favor, complete todos los campos.');
+            toast.warning('Por favor, complete todos los campos.');
             return;
         }
 
@@ -65,7 +72,7 @@ const GestorGenerarCuotasSociales = () => {
 
     return (
         <div className="background">
-            
+            <ToastContainer/>
             <header className="header">
                 <h1>Gestión de Cuotas Sociales</h1>
             </header>
@@ -101,13 +108,31 @@ const GestorGenerarCuotasSociales = () => {
                         placeholder="Ejemplo: 1000"
                     />
                 </label>
-                <button id="btn-generar-cuotas" className="btn-primary" onClick={handleSubmit}>
+                <button id="btn-generar-cuotas" className="btn-primary" onClick={() => setShowConfirmDialog(true)}>
                     Generar Cuotas
                 </button>
             </div>
             {resultado && <div className="resultado"><p>{resultado}</p></div>}
             {error && <div className="error"><p>{error}</p></div>} {/* Mostrar el mensaje de error */}
             </div>
+
+            <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
+                <>
+                    <Button label="Cancelar" 
+                      className="p-button-text gestor-btn-cancelar" 
+                      icon="pi pi-times" 
+                      onClick={() => setShowConfirmDialog(false)}/>
+                    <Button label="Confirmar" 
+                      className="gestor-btn-confirmar" 
+                        icon="pi pi-check"
+                        onClick={() => {
+                          handleSubmit();
+                          setShowConfirmDialog(false);
+                        }} autoFocus />
+                </>
+            } onHide={() => setShowConfirmDialog(false)}>
+                <p>¿Está seguro de que desea generar las cuotas sociales?</p>
+            </Dialog>
         </div>
         
     );

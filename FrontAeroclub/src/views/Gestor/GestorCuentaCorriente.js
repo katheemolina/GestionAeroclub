@@ -25,6 +25,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       } catch (error) {
         console.error('Error al obtener datos:', error);
       }
+      console.log(data);
       setLoading(false);
     };
 

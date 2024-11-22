@@ -7,12 +7,13 @@
 
 /* Estilos básicos para el contenedor principal del sidebar */
 .sidebar-container {
-    min-width: 400px; /* Ancho mínimo del sidebar */
-    width: 20%; /* Ancho fijo del sidebar */
+    width: 20%;
+    min-width: 300px;
     background-color: #E4E4E4; /* Color de fondo del sidebar */
     box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4); /* Sombra alrededor del sidebar */
     font-family: 'Arial', sans-serif; /* Tipografía */
     transition: transform 0.3s ease-in-out; /* Transición suave al expandir o contraer */
+    overflow-y: auto;
 }
 
 /* Estilos de la cabecera del sidebar */
