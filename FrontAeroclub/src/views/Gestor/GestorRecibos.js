@@ -418,7 +418,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       className="columna-ancho-min"
     />
         <Column
-          field="importe"
+          field="importe_total"
           header="Importe"
           sortable
           filter
