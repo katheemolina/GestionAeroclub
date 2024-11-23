@@ -46,6 +46,17 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     setSelectedRowData(null);
   };
 
+  // Formatear fecha a DD/MM/AAAA
+  const formatearFecha = (fecha) => {
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(fecha).toLocaleDateString('es-ES', opciones);
+  };
+
+  // Plantilla para mostrar la fecha 
+  const plantillaFecha = (rowData) => {
+    return formatearFecha(rowData.fecha);
+  };
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -77,6 +88,8 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           dataType="date"
           showFilterMenu={false}
           style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          filterType='date'
+          body={plantillaFecha}
         />
         <Column
           field="descripcion_completa"

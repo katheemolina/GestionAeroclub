@@ -26,8 +26,16 @@ const AsociadoTarifas = () => {
     }, []);
 
     // Column definitions
+    
+
     const dateBodyTemplate = (rowData) => {
-        return <span>{rowData.fecha_vigencia}</span>;
+        if (!rowData.fecha_vigencia) return ''; // Para manejar valores nulos o indefinidos
+    
+        
+        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const fechaFormateada = new Date(rowData.fecha_vigencia).toLocaleDateString('es-ES', opciones); // Formatear la fecha a DD/MM/AAAA
+    
+        return <span>{fechaFormateada}</span>;
     };
 
     const amountBodyTemplate = (rowData) => {
@@ -45,6 +53,7 @@ const AsociadoTarifas = () => {
         // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
         return <span>${rowData?.importe_por_instruccion || ''}</span>;
     };
+
 
     if (loading) {
         return <PantallaCarga />;

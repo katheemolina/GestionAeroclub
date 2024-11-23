@@ -43,14 +43,24 @@ function AsociadoLibroVuelo() {
   // Para manejo del diálogo
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
-  
+
   const openDialog = (rowData) => {
     setSelectedRowData(rowData);
     setDialogVisible(true);
   };
-  
+
   const closeDialog = () => {
     setDialogVisible(false);
+  };
+
+  const formatearFecha = (fecha) => {
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(fecha).toLocaleDateString('es-ES', opciones);
+  };
+
+  // Plantilla para mostrar la fecha 
+  const plantillaFecha = (rowData) => {
+    return formatearFecha(rowData.fecha);
   };
 
   if (loading) {
@@ -74,7 +84,20 @@ function AsociadoLibroVuelo() {
         scrollHeight="800px"
         filterDisplay="row"
       >
-        <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false} filterType='date' showClearButton={false} ></Column>
+      <Column
+        field="fecha" 
+        header="Fecha" 
+        sortable 
+        filter 
+        filterPlaceholder="Buscar por fecha" 
+        filterMatchMode="contains" 
+        dataType="date" 
+        showFilterMenu={false} 
+        filterType='date' 
+        showClearButton={false} 
+        body={plantillaFecha}
+        >
+        </Column>
         <Column
           field="matricula"
           header="Aeronave"
@@ -91,9 +114,9 @@ function AsociadoLibroVuelo() {
             />
           }
         />
-        <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por origen" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
-        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por destino" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column> 
-        <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} ></Column>
+        <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por origen" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} ></Column>
+        <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por destino" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} ></Column>
+        <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} ></Column>
         <Column
           field="instruccion"
           header="Instrucción"

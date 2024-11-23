@@ -48,6 +48,18 @@ function AsociadoCuentaCorriente() {
 
   const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
 
+    // Formatear fecha a DD/MM/AAAA
+    const formatearFecha = (fecha) => {
+      const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      return new Date(fecha).toLocaleDateString('es-ES', opciones);
+    };
+  
+    // Plantilla para mostrar la fecha 
+    const plantillaFecha = (rowData) => {
+      return formatearFecha(rowData.fecha);
+    };
+  
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -61,7 +73,19 @@ function AsociadoCuentaCorriente() {
       </div>
 
       <DataTable value={data} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
-        <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha" filterMatchMode="contains" dataType="date" showFilterMenu={false} />
+      <Column 
+  field="fecha" 
+  header="Fecha" 
+  sortable 
+  filter 
+  filterPlaceholder="Buscar por fecha" 
+  filterMatchMode="contains" 
+  dataType="date" 
+  showFilterMenu={false} 
+  filterType='date' 
+  body={plantillaFecha} // Aplica la plantilla personalizada para mostrar el formato deseado
+/>
+
         <Column 
           field="tipo_movimiento" 
           header="Tipo de Movimiento" 
@@ -74,6 +98,7 @@ function AsociadoCuentaCorriente() {
               onChange={(e) => setTipoFiltro(e.value)} 
               placeholder="Filtrar por tipo" 
               showClear 
+              
             />
           } 
           showFilterMenu={false} 
