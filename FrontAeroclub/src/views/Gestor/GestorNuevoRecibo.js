@@ -559,7 +559,7 @@ function FormularioGestorRecibos() {
                 toast.warning('Debe haber al menos un itinerario');
                 return false;
             }
-            console.log(JSON.stringify(itinerarioData))
+            
             if (!reciboData.Datos || reciboData.Datos === '[]') {
                 toast.warning('Los datos de itinerarios son obligatorios');
                 return false;
