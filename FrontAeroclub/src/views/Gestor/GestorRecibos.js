@@ -268,9 +268,18 @@ function GestorRecibos({ idUsuario = 0 }) {
   
     img.src = logo; // Cambia esto por la ruta de tu logo
   };
+
+  // Formatear fecha a DD/MM/AAAA
+  const formatearFecha = (fecha) => {
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(fecha).toLocaleDateString('es-ES', opciones);
+  };
+
+  // Plantilla para mostrar la fecha 
+  const plantillaFecha = (rowData) => {
+    return formatearFecha(rowData.fecha);
+  };
   
-
-
 
 
   if (loading) {
@@ -314,6 +323,7 @@ function GestorRecibos({ idUsuario = 0 }) {
           filterType='date' 
           showFilterMenu={false}
           className="columna-ancho-min"
+          body={plantillaFecha}
         />
         <Column
           field="usuario"

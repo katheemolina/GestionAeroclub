@@ -84,32 +84,31 @@ function AsociadoPerfil() {
   };
 
 
-
-
+  const fetchData = async () => {
+    try {
+      const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
+      setUsuario(usuarioResponse[0]);
+      setFormData({
+        Telefono: usuarioResponse[0].telefono || '',
+        Dni: usuarioResponse[0].dni || '',
+        Localidad: usuarioResponse[0].localidad || '',
+        Direccion: usuarioResponse[0].direccion || '',
+        FechaNacimiento: usuarioResponse[0].fecha_nacimiento?.split(" ")[0] || '',
+        FechaVencCMA: usuarioResponse[0].fecha_vencimiento_CMA?.split(" ")[0] || '',
+        Licencias: JSON.stringify(usuarioResponse[0].codigos_licencias) || '',
+        CantHorasVuelo: parseFloat(usuarioResponse[0].cantidad_horas_vuelo) || '',
+        CantAterrizajes: usuarioResponse[0].cantidad_aterrizajes || ''
+      });
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
+    }
+    setCargando(false);
+  };
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
-        setUsuario(usuarioResponse[0]);
-        console.log(usuarioResponse);
-        setFormData({
-          Telefono: usuarioResponse[0].telefono || '',
-          Dni: usuarioResponse[0].dni || '',
-          Localidad: usuarioResponse[0].localidad || '',
-          Direccion: usuarioResponse[0].direccion || '',
-          FechaNacimiento: usuarioResponse[0].fecha_nacimiento?.split(" ")[0] || '',
-          FechaVencCMA: usuarioResponse[0].fecha_vencimiento_CMA?.split(" ")[0] || '',
-          Licencias: JSON.stringify(usuarioResponse[0].codigos_licencias) || '',
-          CantHorasVuelo: parseFloat(usuarioResponse[0].cantidad_horas_vuelo) || '',
-          CantAterrizajes: usuarioResponse[0].cantidad_aterrizajes || ''
-        });
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      }
-      setCargando(false);
-    };
     fetchData();
   }, [usuarioId]);
+  
 
 
   const handleChange = (e) => {
@@ -143,17 +142,20 @@ const validarFormulario = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // Validar formulario
   if (!validarFormulario()) return;
 
   try {
     await actualizarDatosDelUsuario(usuarioId, formData);
     toast.success("Datos actualizados correctamente");
+
+    // Vuelve a cargar los datos del usuario sin recargar la página
+    await fetchData();
   } catch (error) {
     console.error("Error al actualizar datos:", error);
     toast.error("Error al actualizar datos");
   }
 };
+
 
 
 

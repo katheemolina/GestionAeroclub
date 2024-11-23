@@ -45,6 +45,17 @@ function GestorVuelos(){
         setDialogVisible(false);
     };
 
+    // Formatear fecha a DD/MM/AAAA
+    const formatearFecha = (fecha) => {
+        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Date(fecha).toLocaleDateString('es-ES', opciones);
+      };
+    
+      // Plantilla para mostrar la fecha 
+      const plantillaFecha = (rowData) => {
+        return formatearFecha(rowData.fecha);
+      };
+
     if (loading) {
         return <PantallaCarga/>
     }
@@ -62,7 +73,7 @@ function GestorVuelos(){
             scrollable
             scrollHeight="800px"
             >
-            <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" showFilterMenu={false}  ></Column>
+            <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" filterType='date' showFilterMenu={false} body={plantillaFecha}  ></Column>
             <Column field="aeronave" header="Aeronave" sortable filter filterPlaceholder="Busar por aeronave" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="usuario" header="Asociado" sortable filter filterPlaceholder="Buscar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
