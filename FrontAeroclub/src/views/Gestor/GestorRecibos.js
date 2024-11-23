@@ -18,6 +18,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import jsPDF from "jspdf";
 import logo from '../../icon-aeroclub.png'; // Ajusta la ruta según tu estructura
+import { useUser } from "../../context/UserContext";
 
 
 function GestorRecibos({ idUsuario = 0 }) {
@@ -69,12 +70,12 @@ function GestorRecibos({ idUsuario = 0 }) {
       setSelectedUsuario(recibo.usuario);
     }
   };
-
+  const idUsuarioEvento = useUser();
   const handleEnviarSeleccionados = async () => {
     const idsMovimientos = selectedRecibos.map((recibo) => recibo.id_movimiento).join(",");
 
     try {
-      const result = await pagarReciboApi(idsMovimientos);
+      const result = await pagarReciboApi(idsMovimientos, idUsuarioEvento.usuarioId);
       toast.success("Recibos pagados correctamente.");
       setSelectedRecibos([]);
       setSelectedUsuario(null);

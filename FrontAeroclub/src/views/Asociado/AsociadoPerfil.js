@@ -158,13 +158,13 @@ const handleSubmit = async (e) => {
 
 
   const formatFecha = (rowData) => {
-    // Extrae solo la fecha de 'fecha_vencimiento' (sin hora)
-    const fecha = new Date(rowData.fecha_vencimiento).toLocaleDateString();
+    // Extrae solo la fecha de 'fecha_vigencia' (sin hora)
+    const fecha = new Date(rowData.fecha_vigencia).toLocaleDateString();
     return fecha;
   };
 
   const calcularEstadoLicencia = (rowData) => {
-    const fechaVencimiento = new Date(rowData.fecha_vencimiento);
+    const fechaVencimiento = new Date(rowData.fecha_vigencia);
     const hoy = new Date();
     const diferenciaDias = Math.floor((fechaVencimiento - hoy) / (1000 * 60 * 60 * 24));
 
@@ -298,7 +298,7 @@ const handleSubmit = async (e) => {
           style={{ width: '100%' }} >
           <Column field="codigos_licencias" header="Codigos de licencias"></Column>
           <Column field="descripcion" header="Descripcion"></Column>
-          <Column field="fecha_vencimiento" header="Fecha de vencimiento" body={formatFecha} /> 
+          <Column field="fecha_vigencia" header="Fecha de inicio de vigencia" body={formatFecha} /> 
           <Column header="Estado" body={calcularEstadoLicencia} />
         </DataTable>
         <Button label="Actualizar licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
@@ -323,7 +323,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div className="p-field">
-            <label htmlFor="fechaVencimiento">Fecha de Vencimiento</label>
+            <label htmlFor="fechaVencimiento">Fecha de Inicio de Vigencia</label>
             <Calendar
               id="fechaVencimiento"
               value={fechaVencimiento}

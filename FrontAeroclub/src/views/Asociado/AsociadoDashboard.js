@@ -37,50 +37,52 @@ function Dashboard() { // Establecer idUsuario para traer su informacion
   const { usuarioId } = useUser();
   
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Obtener datos del usuario
-        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
-        const usuario = usuarioResponse[0]; // Accedemos al primer objeto
-        setNombre(usuario.nombre);
-        setApellido(usuario.apellido);
-        
-        // Obtener saldo
-        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
-        const saldoData = saldoResponse[0]; // Accedemos al primer objeto
-        setSaldo(saldoData.Saldo);
-        
-        // Obtener horas voladas
-        const horasResponse = await horasVoladasPorUsuario(usuarioId);
-        const horasData = horasResponse[0]; // Accedemos al primer objeto
-        setHorasVoladas(horasData.TotalHoras);
-        
-        // Obtener estado del CMA
-        const cmaResponse = await obtenerEstadoCMA(usuarioId);
-        const cmaData = cmaResponse[0]; // Accedemos al primer objeto
-        setCma(cmaData.estado);
-        setFechaVencimiento(cmaData.fecha_vencimiento_cma);
-        
-        // Obtener últimos vuelos
-        const vuelosResponse = await ultimosVuelosPorUsuario(usuarioId);
-        setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
+      const fetchData = async () => {
+          try {
+              // Obtener datos del usuario
+              const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
+              const usuario = (usuarioResponse && usuarioResponse.length > 0) ? usuarioResponse[0] : {};
+              setNombre(usuario.nombre || "");
+              setApellido(usuario.apellido || "");
+              
+              // Obtener saldo
+              const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
+              const saldoData = (saldoResponse && saldoResponse.length > 0) ? saldoResponse[0] : {};
+              setSaldo(saldoData.Saldo || 0);
+              
+              // Obtener horas voladas
+              const horasResponse = await horasVoladasPorUsuario(usuarioId);
+              const horasData = (horasResponse && horasResponse.length > 0) ? horasResponse[0] : {};
+              setHorasVoladas(horasData.TotalHoras || 0);
+              
+              // Obtener estado del CMA
+              const cmaResponse = await obtenerEstadoCMA(usuarioId);
+              const cmaData = (cmaResponse && cmaResponse.length > 0) ? cmaResponse[0] : {};
+              setCma(cmaData.estado || "Desconocido");
+              setFechaVencimiento(cmaData.fecha_vencimiento_cma || "");
+              
+              // Obtener últimos vuelos
+              const vuelosResponse = await ultimosVuelosPorUsuario(usuarioId);
+              setData(vuelosResponse && vuelosResponse.length > 0 ? vuelosResponse : []);
+              
+              // Obtener licencias
+              const licenciasResponse = await obtenerLicenciasPorUsuario(usuarioId);
+              const formattedLicencias = licenciasResponse && licenciasResponse.length > 0
+                  ? licenciasResponse.map(licencia => ({
+                      codigo: licencia.codigos_licencias || "",
+                      descripcion: licencia.descripcion || ""
+                  }))
+                  : [];
+              setLicencias(formattedLicencias);
 
-        // Obtener licencias
-        const licenciasResponse = await obtenerLicenciasPorUsuario(usuarioId);
-        const formattedLicencias = licenciasResponse.map(licencia => (
-          { codigo: licencia.codigos_licencias, descripcion: licencia.descripcion }
-        ));
-        setLicencias(formattedLicencias); // Mapeamos para obtener solo la información necesaria
+          } catch (error) {
+              console.error("Error al obtener datos:", error);
+          }
+          setLoading(false); // Cambia el estado de carga
+      };
 
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      }
-      setLoading(false); // Cambia el estado de carga
-    };
-
-    fetchData();
+      fetchData();
   }, [usuarioId]);
-
 
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
