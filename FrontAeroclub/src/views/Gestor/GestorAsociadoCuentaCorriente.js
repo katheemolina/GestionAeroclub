@@ -12,6 +12,7 @@ import { Card } from 'primereact/card';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import { useUser } from '../../context/UserContext';
 
 function GestorAsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
@@ -68,13 +69,13 @@ function GestorAsociadoCuentaCorriente() {
     setSelectedRowData(null);
   };
 
+  const idUsuarioEvento = useUser();
   // Función para procesar los movimientos seleccionados
   const handleEnviarSeleccionados = async () => {
     const idsMovimientos = selectedMovimientos.map((movimiento) => movimiento.id_movimiento).join(",");
-
     try {
       // Llamar a la API para procesar los movimientos
-      const result = await pagarReciboApi(idsMovimientos); // Asegúrate de usar el endpoint adecuado
+      const result = await pagarReciboApi(idsMovimientos, idUsuarioEvento.usuarioId); // Asegúrate de usar el endpoint adecuado
       alert("Movimientos procesados correctamente.");
 
       // Limpiar selección

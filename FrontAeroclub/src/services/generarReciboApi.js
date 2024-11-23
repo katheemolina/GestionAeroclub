@@ -21,7 +21,7 @@ export const listarInstructores = async () => {
 export const generarReciboApi = async (reciboData) => {
     try {
         const response = await fetch(`${API_URL}/generarRecibo`, {
-            method: 'PUT',  // Usamos PUT porque así lo tienes configurado en el backend
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -44,15 +44,17 @@ export const generarReciboApi = async (reciboData) => {
     }
 };
 
-export const pagarReciboApi = async (idRecibos) => {
+export const pagarReciboApi = async (idRecibos, IdUsuarioEvento) => {
     try {
-        console.log(idRecibos);
+        console.log(IdUsuarioEvento);
         const response = await fetch(`${API_URL}/pagarRecibo`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ids_movimientos: idRecibos }),
+            body: JSON.stringify({  ids_movimientos: idRecibos,
+                                    IdUsuarioEvento: IdUsuarioEvento
+             }),
           });
 
         // Si la respuesta no es exitosa, lanzamos un error

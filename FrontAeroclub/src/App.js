@@ -38,6 +38,7 @@ import InstructorAsociadoDashboard from './views/Instructor/InstructorAsociadoDa
 import InstructorVuelosPorUsuario from './views/Instructor/InstructorVuelosPorUsuario';
 import AsociadoTarifas from './views/Asociado/AsociadoTarifas';
 import AsociadoAeronaves from './views/Asociado/AsociadoAeronaves';
+import GestorAeronavesServicios from './views/Gestor/GestorAeronavesServicios';
 
 
 
@@ -86,10 +87,6 @@ function App() {
 
     <Router>
       {/* <Navbar /> */}
-
-      
-
-
       <div className="app-container">
         <Sidebar />
         {/* Rutas según el rol */}
@@ -114,6 +111,7 @@ function App() {
             <Route path="/gestor/asociados" element={<ProtectedRoute component={GestorAsociados} allowedRoles={['gestor']} />} />
             <Route path="/gestor/tarifas" element={<ProtectedRoute component={GestorTarifas} allowedRoles={['gestor']} />} />
             <Route path="/gestor/aeronaves" element={<ProtectedRoute component={GestorAeronaves} allowedRoles={['gestor']} />} />
+            <Route path="/gestor/aeronavesServicios" element={<ProtectedRoute component={GestorAeronavesServicios} allowedRoles={['gestor']} />} />
             <Route path="/gestor/generarCuotaSocial" element={<ProtectedRoute component={GestorGenerarCuotasSociales} allowedRoles={['gestor']} />} />
             {/* ruta nuevo recibo */}
             <Route path="/gestor/recibos/nuevo" element={<ProtectedRoute component={GestorNuevoRecibo} allowedRoles={['gestor']} />} />

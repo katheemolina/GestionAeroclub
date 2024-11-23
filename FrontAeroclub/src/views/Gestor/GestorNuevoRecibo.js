@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import PantallaCarga from '../../components/PantallaCarga';
+import { useUser } from '../../context/UserContext';
 
 function FormularioGestorRecibos() {
     const [cantidad, setCantidad] = useState(''); // Cantidad de combustible
@@ -485,7 +486,7 @@ function FormularioGestorRecibos() {
     const handleCancelar = () => {
         navigate('/gestor/recibos');
     };
-
+    const idUsuarioEvento = useUser();
     const handleGenerar = async () => {    
         // Construir el objeto con los datos del formulario
         let reciboData = {};
@@ -508,7 +509,8 @@ function FormularioGestorRecibos() {
                 Observaciones: observaciones ?? '',
                 Aeronave: 0,  // Valor predeterminado
                 Tarifa: 0,
-                TipoItinerario: 0
+                TipoItinerario: 0,
+                IdUsuarioEvento: idUsuarioEvento.usuarioId
             };
             if (reciboData.IdUsuario === 0) {
                 toast.warning('El usuario es obligatorio');
@@ -526,7 +528,7 @@ function FormularioGestorRecibos() {
             reciboData = {
                 IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
                 TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
-                Cantidad: 0,                                    // Valor predeterminado
+                Cantidad: 1.00,                                    // Valor predeterminado
                 Importe: monto ?? 0,                                        // Valor predeterminado
                 Fecha: fecha,
                 Instruccion: instruccionSeleccionada ? 1 : 0, // Valor predeterminado
@@ -536,8 +538,10 @@ function FormularioGestorRecibos() {
                 Observaciones: observaciones,
                 Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0,  // Valor predeterminado
                 Tarifa: tarifasSeleccionado?.id_tarifa ?? 0,
-                TipoItinerario: tiposVueloSeleccionado?.id_tipo_itinerario ?? 0
+                TipoItinerario: tiposVueloSeleccionado?.id_tipo_itinerario ?? 0,
+                IdUsuarioEvento: idUsuarioEvento.usuarioId
             };
+            console.log(reciboData);
             // Validaciones
             if (reciboData.IdUsuario === 0) {
                 toast.warning('El usuario es obligatorio');
@@ -559,7 +563,7 @@ function FormularioGestorRecibos() {
                 toast.warning('Debe haber al menos un itinerario');
                 return false;
             }
-            console.log(JSON.stringify(itinerarioData))
+            
             if (!reciboData.Datos || reciboData.Datos === '[]') {
                 toast.warning('Los datos de itinerarios son obligatorios');
                 return false;
