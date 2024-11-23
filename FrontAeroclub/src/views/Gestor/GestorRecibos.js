@@ -121,8 +121,12 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
 
+
+
   const handlePreviewAndPrint = (rowData) => {
     console.log("Datos del recibo para generar PDF:", rowData);
+    
+    // Datos del recibo
     const reciboData = {
       recibo: rowData.tipo_recibo || "-",
       asociado: rowData.asociado || "-",
@@ -133,17 +137,20 @@ function GestorRecibos({ idUsuario = 0 }) {
       tarifa: rowData.importe_tarifa || "-",
       fechaViegenciaTarifa: rowData.fecha_vigencia_tarifa || "-",
       instructor: rowData.instructor || "-",
-      instruccionImporte: rowData.importe_por_instructor|| "-",
-      //importe: rowData.importe_total || "-",
-      importe: rowData.importe || "-",
+      importeTotal: rowData.importe_total || "-",
+      importePorInstruccion: rowData.importe_por_instruccion|| "-",
+
     };
   
+    // Parsear itinerarios
     const itinerarios = JSON.parse(rowData.datos_itinerarios || "[]");
   
+    // Crear el documento PDF
     const doc = new jsPDF();
   
     const img = new Image();
     img.onload = () => {
+      // Añadir cabecera con logo y datos de la empresa
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
       doc.text("Aero Club Lincoln", 52, 20, { align: "center" });
@@ -152,6 +159,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.text("Fundado el 22 de Mayo de 1945", 52, 34, { align: "center" });
       doc.addImage(img, "PNG", 110, 10, 80, 30);
   
+      // Añadir datos del recibo
       doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
       doc.text(`Asociado: ${reciboData.asociado}`, 20, 50);
@@ -163,7 +171,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setLineWidth(0.3);
       doc.line(10, 66, 200, 66);
   
-      // Encabezado de Itinerarios
+      // Encabezado de itinerarios
       doc.setFont("helvetica", "bold");
       doc.text("Itinerarios", 10, 74);
       doc.setFontSize(10);
@@ -219,39 +227,73 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.text(`${reciboData.observaciones}`, 20, yStart, { maxWidth: 180 });
       yStart += 6;
       doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaViegenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
-
+  
       // Detalles de instrucción (condicional)
-      if (reciboData.instructor !== "-") {
+      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
         yStart += 6; // Espaciado solo si existe un instructor
         doc.text(`Vuelo con instrucción (Instructor: ${reciboData.instructor})`, 20, yStart, { maxWidth: 180 });
       }
-
+  
       // Nueva línea divisoria
       yStart += 10;
       doc.setLineWidth(0.3);
       doc.line(10, yStart, 200, yStart);
+  
+      // Calcular la duración total
+      const duracionTotal = itinerarios.reduce((suma, itinerario) => {
+        const duracion = parseFloat(itinerario.duracion) || 0; // Convertir a número flotante, si no es válido usa 0
+        return suma + duracion;
+      }, 0);
 
-      // Cuadro de importes
+      // Calcular importe y importe de instrucción
+      const tarifa = parseFloat(reciboData.tarifa) || 0; // Convertir tarifa a número flotante
+      //const importePorInstruccion = parseFloat(reciboData.importePorInstruccion) || 0; // Usar la propiedad correcta del objeto reciboData
+
+      // Importe total (sin instrucción)
+      const importe = tarifa * duracionTotal; 
+
+      // Importe por instrucción (si aplica)
+      const instruccionImporte = reciboData.importePorInstruccion * duracionTotal; // Multiplicar por la duración total
+
+      // Cuadro de importes en el PDF
       yStart += 10;
       doc.setFont("helvetica", "bold");
       doc.text("Importe:", 10, yStart);
       doc.setFont("helvetica", "normal");
-      doc.text(`$${reciboData.importe}`, 50, yStart);
+      doc.text(`$${importe.toFixed(2)}`, 50, yStart); // Mostrar importe con 2 decimales
 
-      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
+      
         yStart += 6;
         doc.setFont("helvetica", "bold");
         doc.text("Instrucción:", 10, yStart);
         doc.setFont("helvetica", "normal");
-        doc.text(`$${reciboData.instruccionImporte}`, 50, yStart);
-      }
+        doc.text(`$${instruccionImporte.toFixed(2)}`, 50, yStart); // Mostrar importe por instrucción con 2 decimales
 
+      // Cuadro de duración total en el PDF
+      yStart += 10;
+      doc.setFont("helvetica", "bold");
+      doc.text("Duración total:", 10, yStart);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${duracionTotal.toFixed(1)}`, 50, yStart); // Mostrará la duración total con un decimal
+  
+      // Calcular el total de aterrizajes
+      const totalAterrizajes = itinerarios.reduce((suma, itinerario) => {
+        const aterrizajes = parseInt(itinerario.aterrizajes, 10) || 0; // Convertir a número entero, si no es válido usa 0
+        return suma + aterrizajes;
+      }, 0);
+
+      // Cuadro de total de aterrizajes
+      yStart += 10;
+      doc.setFont("helvetica", "bold");
+      doc.text("Total de aterrizajes:", 10, yStart);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${totalAterrizajes}`, 50, yStart); // Muestra el total de aterrizajes
+  
       yStart += 6;
       doc.setFont("helvetica", "bold");
       doc.text("Total a pagar:", 10, yStart);
       doc.setFont("helvetica", "normal");
-      doc.text(`$${reciboData.importe}`, 50, yStart);
-
+      doc.text(`$${reciboData.importeTotal}`, 50, yStart);
   
       // Crear la previsualización
       const pdfOutput = doc.output("bloburl");
