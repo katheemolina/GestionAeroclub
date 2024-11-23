@@ -123,27 +123,26 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
 
-
   const handlePreviewAndPrint = (rowData) => {
     console.log("Datos del recibo para generar PDF:", rowData);
-    
+  
     // Datos del recibo
     const reciboData = {
-      recibo: rowData.tipo_recibo || "-",
-      asociado: rowData.asociado || "-",
+      recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
+      asociado: rowData.usuario || "-",
       aeronave: rowData.matricula || "-",
       reciboNo: rowData.numero_recibo || "-",
       fecha: rowData.fecha || new Date().toLocaleDateString(),
       observaciones: rowData.observaciones || "Sin observaciones",
       tarifa: rowData.importe_tarifa || "-",
-      fechaViegenciaTarifa: rowData.fecha_vigencia_tarifa || "-",
+      fechaVigenciaTarifa: rowData.fecha_vigencia_tarifa || "-",
       instructor: rowData.instructor || "-",
+      importePorInstruccion: rowData.importe_por_instruccion || "-",
       importeTotal: rowData.importe_total || "-",
-      importePorInstruccion: rowData.importe_por_instruccion|| "-",
-
+      cantidadCombustible: rowData.cantidad || "-",
     };
   
-    // Parsear itinerarios
+    // Parsear itinerarios (solo para recibos de vuelo)
     const itinerarios = JSON.parse(rowData.datos_itinerarios || "[]");
   
     // Crear el documento PDF
@@ -151,7 +150,7 @@ function GestorRecibos({ idUsuario = 0 }) {
   
     const img = new Image();
     img.onload = () => {
-      // Añadir cabecera con logo y datos de la empresa
+      // Cabecera general
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
       doc.text("Aero Club Lincoln", 52, 20, { align: "center" });
@@ -159,12 +158,15 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.text("Lincoln - Buenos Aires", 52, 28, { align: "center" });
       doc.text("Fundado el 22 de Mayo de 1945", 52, 34, { align: "center" });
       doc.addImage(img, "PNG", 110, 10, 80, 30);
-  
-      // Añadir datos del recibo
+
+      // Datos básicos (asociado, recibo, fecha)
       doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
       doc.text(`Asociado: ${reciboData.asociado}`, 20, 50);
-      doc.text(`Aeronave: ${reciboData.aeronave}`, 20, 58);
+      // Mostrar "Aeronave" solo si el tipo de recibo es "Vuelo"
+      if (reciboData.recibo === "vuelo") {
+        doc.text(`Aeronave: ${reciboData.aeronave}`, 20, 58);
+      }
       doc.setFont("helvetica", "bold");
       doc.text(`Recibo Nº: ${reciboData.reciboNo}`, 120, 50);
       doc.setFont("helvetica", "normal");
@@ -172,54 +174,46 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setLineWidth(0.3);
       doc.line(10, 66, 200, 66);
   
-      // Encabezado de itinerarios
-      doc.setFont("helvetica", "bold");
-      doc.text("Itinerarios", 10, 74);
-      doc.setFontSize(10);
-  
-      // Encabezados de la tabla
-      const tableHeaders = ["Hora Salida", "Hora Llegada", "Origen", "Destino", "Duración", "Aterrizajes"];
-      let xStart = 10;
-      let yStart = 80;
-      let colWidths = [30, 30, 40, 40, 30, 30]; // Ancho de cada columna
-  
-      tableHeaders.forEach((header, index) => {
+      // Lógica para recibo de "Vuelo"
+      if (reciboData.recibo === "vuelo") {
+        // Encabezado de itinerarios
         doc.setFont("helvetica", "bold");
-        doc.text(header, xStart, yStart);
-        xStart += colWidths[index];
-      });
+        doc.text("Itinerarios", 10, 74);
+        doc.setFontSize(10);
   
-      // Renderizar los itinerarios
-      yStart += 6; // Saltar al siguiente renglón después del encabezado
-      itinerarios.forEach((itinerario, rowIndex) => {
-        const {
-          hora_salida = "-",
-          hora_llegada = "-",
-          origen = "-",
-          destino = "-",
-          duracion = "-",
-          aterrizajes = "-",
-        } = itinerario;
+        // Tabla de itinerarios
+        const tableHeaders = ["Hora Salida", "Hora Llegada", "Origen", "Destino", "Duración", "Aterrizajes"];
+        let xStart = 10;
+        let yStart = 80;
+        const colWidths = [30, 30, 40, 40, 30, 30];
   
-        // Alternar el fondo para las filas
-        if (rowIndex % 2 === 0) {
-          doc.setFillColor(230, 230, 230); // Gris claro
-          doc.rect(10, yStart - 4, 190, 8, "F"); // Fondo de la fila
-        }
-  
-        // Escribir los datos
-        xStart = 10;
-        const rowData = [hora_salida, hora_llegada, origen, destino, duracion, aterrizajes];
-        rowData.forEach((data, colIndex) => {
-          doc.setFont("helvetica", "normal");
-          doc.text(`${data}`, xStart, yStart);
-          xStart += colWidths[colIndex];
+        tableHeaders.forEach((header, index) => {
+          doc.setFont("helvetica", "bold");
+          doc.text(header, xStart, yStart);
+          xStart += colWidths[index];
         });
   
-        yStart += 10; // Avanzar al siguiente renglón
-      });
+        yStart += 6;
+        itinerarios.forEach((itinerario, rowIndex) => {
+          const { hora_salida = "-", hora_llegada = "-", origen = "-", destino = "-", duracion = "-", aterrizajes = "-" } = itinerario;
   
-      // Observaciones
+          if (rowIndex % 2 === 0) {
+            doc.setFillColor(230, 230, 230);
+            doc.rect(10, yStart - 4, 190, 8, "F");
+          }
+  
+          xStart = 10;
+          const rowData = [hora_salida, hora_llegada, origen, destino, duracion, aterrizajes];
+          rowData.forEach((data, colIndex) => {
+            doc.setFont("helvetica", "normal");
+            doc.text(`${data}`, xStart, yStart);
+            xStart += colWidths[colIndex];
+          });
+  
+          yStart += 10;
+        });
+  
+         // Observaciones
       yStart += 10;
       doc.setFont("helvetica", "bold");
       doc.text("Observaciones:", 10, yStart);
@@ -256,45 +250,116 @@ function GestorRecibos({ idUsuario = 0 }) {
       // Importe por instrucción (si aplica)
       const instruccionImporte = reciboData.importePorInstruccion * duracionTotal; // Multiplicar por la duración total
 
-      // Cuadro de importes en el PDF
-      yStart += 10;
-      doc.setFont("helvetica", "bold");
-      doc.text("Importe:", 10, yStart);
-      doc.setFont("helvetica", "normal");
-      doc.text(`$${importe.toFixed(2)}`, 50, yStart); // Mostrar importe con 2 decimales
-
-      
-        yStart += 6;
-        doc.setFont("helvetica", "bold");
-        doc.text("Instrucción:", 10, yStart);
-        doc.setFont("helvetica", "normal");
-        doc.text(`$${instruccionImporte.toFixed(2)}`, 50, yStart); // Mostrar importe por instrucción con 2 decimales
-
-      // Cuadro de duración total en el PDF
-      yStart += 10;
-      doc.setFont("helvetica", "bold");
-      doc.text("Duración total:", 10, yStart);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${duracionTotal.toFixed(1)}`, 50, yStart); // Mostrará la duración total con un decimal
-  
       // Calcular el total de aterrizajes
       const totalAterrizajes = itinerarios.reduce((suma, itinerario) => {
         const aterrizajes = parseInt(itinerario.aterrizajes, 10) || 0; // Convertir a número entero, si no es válido usa 0
         return suma + aterrizajes;
       }, 0);
 
-      // Cuadro de total de aterrizajes
+      // Cuadro de importes en el PDF
+      yStart += 10;
+
+      // Importe e Instrucción (uno debajo del otro, a la izquierda)
+      doc.setFont("helvetica", "bold");
+      doc.text("Importe:", 10, yStart);
+      doc.setFont("helvetica", "normal");
+      doc.text(`$${importe.toFixed(2)}`, 35, yStart); // Valor del importe
+
+      yStart += 6; // Espaciado para la siguiente línea
+      doc.setFont("helvetica", "bold");
+      doc.text("Instrucción:", 10, yStart);
+      doc.setFont("helvetica", "normal");
+      doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
+
+      // Duración total y Aterrizajes (alineados a la derecha)
+      yStart -= 6; // Reposicionar para que estén a la misma altura que "Importe"
+      doc.setFont("helvetica", "bold");
+      doc.text("Duración total:", 120, yStart);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${duracionTotal.toFixed(1)}`, 155, yStart, { align: "right" }); // Valor de duración total
+
+      yStart += 6; // Espaciado para la siguiente línea
+      doc.setFont("helvetica", "bold");
+      doc.text("Aterrizajes:", 120, yStart);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${totalAterrizajes}`, 155, yStart, { align: "right" }); // Valor de aterrizajes
+
+      // Línea divisoria
+      yStart += 10;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+
+      // Total a pagar (centrado y destacado al final)
       yStart += 10;
       doc.setFont("helvetica", "bold");
-      doc.text("Total de aterrizajes:", 10, yStart);
+      doc.setFontSize(14); // Tamaño más grande para destacar
+      doc.text("Total a pagar:", 105, yStart, { align: "center" });
       doc.setFont("helvetica", "normal");
-      doc.text(`${totalAterrizajes}`, 50, yStart); // Muestra el total de aterrizajes
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 105, yStart + 8, { align: "center" });
+
+
   
-      yStart += 6;
-      doc.setFont("helvetica", "bold");
-      doc.text("Total a pagar:", 10, yStart);
+    } else if (reciboData.recibo === "combustible") {
+      let yStart = 74;
+    
+      // Detalle del recibo
       doc.setFont("helvetica", "normal");
-      doc.text(`$${reciboData.importeTotal}`, 50, yStart);
+      doc.setFontSize(12);
+    
+      // Insumo
+      doc.text("Insumo:", 20, yStart);
+      doc.setFont("helvetica", "bold");
+      doc.text("Combustible 100LL", 80, yStart);
+    
+      yStart += 10;
+    
+      // Cantidad de combustible
+      doc.setFont("helvetica", "normal");
+      doc.text("Cantidad de Combustible:", 20, yStart);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${reciboData.cantidadCombustible} litros`, 80, yStart);
+    
+      yStart += 10;
+    
+      // Cálculo de tarifa por litro
+      const tarifaPorLitro = (parseFloat(reciboData.importeTotal) / parseFloat(reciboData.cantidadCombustible)).toFixed(2);
+      doc.setFont("helvetica", "normal");
+      doc.text("Tarifa por litro:", 20, yStart);
+      doc.setFont("helvetica", "bold");
+      doc.text(`$${tarifaPorLitro}`, 80, yStart);
+    
+      yStart += 10;
+    
+      // Observaciones
+      doc.setFont("helvetica", "bold");
+      doc.text("Observaciones:", 20, yStart);
+    
+      yStart += 6;
+    
+      doc.setFont("helvetica", "normal");
+      doc.text(`${reciboData.observaciones}`, 20, yStart, { maxWidth: 180 });
+
+      // Línea divisoria
+      yStart += 10;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+    
+      yStart += 8;
+      
+      // Total a pagar
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("Total a pagar:", 80, yStart);
+      doc.setFontSize(16);
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 125, yStart);
+
+      // Línea divisoria
+      yStart += 4;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+
+    }
+    
   
       // Crear la previsualización
       const pdfOutput = doc.output("bloburl");
@@ -310,6 +375,8 @@ function GestorRecibos({ idUsuario = 0 }) {
   
     img.src = logo; // Cambia esto por la ruta de tu logo
   };
+  
+
 
   // Formatear fecha a DD/MM/AAAA
   const formatearFecha = (fecha) => {
