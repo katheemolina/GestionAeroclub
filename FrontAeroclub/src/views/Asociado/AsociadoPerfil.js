@@ -288,7 +288,7 @@ const handleSubmit = async (e) => {
           </label>
         </div>
         <div className="button-container">
-          <button type="submit">Guardar Cambios</button>
+          <button className="guardar" type="submit">Guardar Cambios</button>
         </div>
       </form>
 
@@ -302,7 +302,7 @@ const handleSubmit = async (e) => {
           <Column field="fecha_vigencia" header="Fecha de inicio de vigencia" body={formatFecha} /> 
           <Column header="Estado" body={calcularEstadoLicencia} />
         </DataTable>
-        <Button label="Actualizar licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
+        <Button className="actualizar" label="Actualizar licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
       
       </section>
       
@@ -314,7 +314,7 @@ const handleSubmit = async (e) => {
       >
         <div className="p-fluid">
           <div className="p-field">
-            <label htmlFor="tipoLicencia">Tipo de Licencia</label>
+            <label htmlFor="tipoLicencia">Tipo de licencia</label>
             <Dropdown
               id="tipoLicencia"
               value={selectedLicencia}
@@ -324,7 +324,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div className="p-field">
-            <label htmlFor="fechaVencimiento">Fecha de Inicio de Vigencia</label>
+            <label htmlFor="fechaVencimiento">Fecha de inicio de vigencia</label>
             <Calendar
               id="fechaVencimiento"
               value={fechaVencimiento}
@@ -334,7 +334,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div className="button-container">
-            <Button label="Actualizar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
+            <Button className="actualizar" label="Actualizar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
             <Button label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary" />
           </div>
         </div>

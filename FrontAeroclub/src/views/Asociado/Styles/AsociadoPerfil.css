@@ -49,6 +49,33 @@ button:hover {
   background-color: rgba(169, 70, 70, 1);
 }
 
+
+
+/* Estilo para el botón "Guardar Cambios" */
+.guardar, .actualizar {
+  background-color: #28a745; /* Fondo verde */
+  color: white; /* Color del texto */
+  border: 1px solid #28a745; /* Borde del mismo verde */
+  padding: 10px 20px; /* Relleno en el botón */
+  border-radius: 5px; /* Bordes redondeados */
+  font-size: 16px; /* Tamaño de la fuente */
+  cursor: pointer; /* Cambiar el cursor cuando pase por encima */
+  transition: background-color 0.3s, border-color 0.3s; /* Animación suave */
+}
+
+/* Efecto hover cuando el usuario pasa el ratón por encima */
+.guardar:hover, .actualizar:hover {
+  background-color: #218838; /* Verde más oscuro */
+  border-color: #218838; /* Borde más oscuro */
+}
+
+/* Efecto focus cuando el botón es seleccionado */
+.guardar:focus, .actualizar:focus {
+  outline: none; /* Eliminar el contorno predeterminado */
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.5); /* Sombra verde */
+}
+
+
 .licencias-section{
   margin-top: 10px;
 }
@@ -57,38 +84,39 @@ button:hover {
   margin-top: 10px;
 }
 
-.p-datepicker-prev{
-  padding: 0px;
-  margin: 10px;
+
+/* Botones de navegación del calendario */
+.p-datepicker-prev,
+.p-datepicker-next {
+  margin: 10px; /* Espaciado consistente */
 }
 
-.p-datepicker-next{
-  padding: 0px;
-  margin: 10px;
+/* Tabla del calendario */
+.p-datepicker-calendar td span {
+  border-radius: 5px; /* Bordes redondeados para los días */
 }
 
-.p-datepicker-month{
-  margin: 10px;
+/* Contenedor del calendario */
+.p-datepicker-calendar-container .p-datepicker-calendar {
+  margin: 20px 0 10px; /* Espaciado superior e inferior */
 }
 
-.p-datepicker-calendar thead tbody{
-  width: 100%;
+/* Selector de mes y año */
+.p-monthpicker-month,
+.p-yearpicker-year {
+  padding: 10px; /* Espaciado interno uniforme */
 }
 
-.p-datepicker-calendar td span{
-  width: 100%;
-  border-radius: 5px;
+/* Botón de activación del calendario (ícono del calendario) */
+.p-calendar .p-datepicker-trigger {
+  background: transparent !important; /* Fondo transparente */
+  border: none !important;
+  padding: 0 !important; /* Sin relleno */
+  color: black;
+  
 }
 
-.p-datepicker-calendar-container .p-datepicker-calendar{
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.p-monthpicker-month{
-  padding: 10px;
-}
-
-.p-yearpicker-year{
-  padding:10px
+/* Campo de entrada del calendario */
+.p-calendar .p-inputtext {
+  border-radius: 5px; 
 }
