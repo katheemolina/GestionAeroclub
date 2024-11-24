@@ -69,7 +69,6 @@ const GestorGenerarCuotasSociales = () => {
     if (loading) {
         return <PantallaCarga />;
     }
-
     return (
         <div className="background">
             <ToastContainer/>
