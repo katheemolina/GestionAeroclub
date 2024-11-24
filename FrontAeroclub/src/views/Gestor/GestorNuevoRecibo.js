@@ -644,7 +644,7 @@ function FormularioGestorRecibos() {
     
     return (
         <div className="background">
-            <ToastContainer />
+            
             <div className="formulario-recibos">
                 <h1>Nuevo Recibo</h1>
                 <div className="form-group">
