@@ -121,8 +121,6 @@ function GestorRecibos({ idUsuario = 0 }) {
   };
 
 
-
-
   const handlePreviewAndPrint = (rowData) => {
     console.log("Datos del recibo para generar PDF:", rowData);
   
@@ -382,8 +380,6 @@ function GestorRecibos({ idUsuario = 0 }) {
     img.src = logo; // Cambia esto por la ruta de tu logo
   };
   
-
-
   // Formatear fecha a DD/MM/AAAA
   const formatearFecha = (fecha) => {
     const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -501,6 +497,7 @@ function GestorRecibos({ idUsuario = 0 }) {
           filterMatchMode="contains"
           showFilterMenu={false}
           className="columna-ancho-min"
+          body={(rowData) => `$ ${rowData.importe_total}`}
         />
 
         <Column

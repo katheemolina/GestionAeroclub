@@ -25,7 +25,6 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       } catch (error) {
         console.error('Error al obtener datos:', error);
       }
-      console.log(data);
       setLoading(false);
     };
 
@@ -135,7 +134,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           <div>
             <div className="p-fluid details-dialog">
               <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
-              <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo_movimiento}</p></Card>
+              <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo}</p></Card>
               <Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>
               <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
               <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
