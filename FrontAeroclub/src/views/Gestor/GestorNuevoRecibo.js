@@ -579,7 +579,7 @@ function FormularioGestorRecibos() {
             reciboData = {
                 IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
                 TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
-                Cantidad: 1.00,                                    // Valor predeterminado
+                Cantidad: calcularDuracionTotal() ?? 0,                                    // Valor predeterminado
                 Importe: monto ?? 0,                                        // Valor predeterminado
                 Fecha: fechaConHora,
                 Instruccion: instruccionSeleccionada ? 1 : 0, // Valor predeterminado
