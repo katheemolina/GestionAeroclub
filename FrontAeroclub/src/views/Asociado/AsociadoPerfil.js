@@ -256,7 +256,6 @@ const handleSubmit = async (e) => {
           </label>
           <label>
             Fecha Vencimiento CMA:
-            {console.log(formData)}
             <input
               type="date"
               name="FechaVencCMA"

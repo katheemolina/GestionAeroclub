@@ -13,10 +13,8 @@ export const RoleProvider = ({ children }) => {
       if (usuarioId) {
         try {
           const roles = await obtenerRolPorIdUsuario(usuarioId);
-          console.log(roles);
           // Filtrar roles activos
           const activeRoles = roles.filter(role => role.estado === 'activo');
-          console.log(activeRoles);
           // Si hay roles activos, asignamos el primero; si no, se asigna 'asociado'
           if (activeRoles.length > 0) {
             setRole(activeRoles[0].descripcion);

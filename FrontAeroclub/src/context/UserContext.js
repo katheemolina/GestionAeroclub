@@ -35,7 +35,6 @@ export function UserProvider({ children }) {
             if (user && usuarioId) { 
                 try {
                     const isEnabled = await obtenerEstadoDelUsuario(usuarioId);
-                    console.log(isEnabled.data);
                     setIsUserEnabled(isEnabled.data.estado?.toLowerCase() === "habilitado" ? true : false);
                 } catch (error) {
                     console.error('Earror al obtener el estado del Usuario:', error);

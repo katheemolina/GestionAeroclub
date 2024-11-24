@@ -52,7 +52,10 @@ function Sidebar() {
         <div className="sidebar-header-info">
           <span>{user?.name || 'ApellidoNombre'}</span>
           <hr className="divisor-header"/>
-          {role.toUpperCase()}
+          <p>{role.toUpperCase()}</p>
+        </div>
+        <div>
+        <img className='sidebar-header-img' src={user?.picture}></img>
         </div>
       </div>
        <BotonesPorRol  />

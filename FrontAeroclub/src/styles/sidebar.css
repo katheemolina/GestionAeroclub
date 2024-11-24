@@ -30,7 +30,19 @@
     font-weight: bold; /* Texto en negrita */
     color: white; /* Color del texto */
     text-align: left; /* Alineación del texto a la izquierda */
+    
 }
+
+.sidebar-header-img {
+    width: 50px; /* Tamaño ajustado */
+    height: 50px; /* Proporción cuadrada */
+    border-radius: 50%; /* Imagen redonda */
+    object-fit: cover; /* Evita deformaciones */
+    float: right; /* Alinea la imagen a la derecha */
+    margin: 10px 15px 0 0; /* Espaciado adecuado */
+}
+
+
 
 /* Estilo para el separador en la cabecera */
 .divisor-header {
