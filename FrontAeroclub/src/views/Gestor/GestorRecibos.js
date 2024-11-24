@@ -364,6 +364,12 @@ function GestorRecibos({ idUsuario = 0 }) {
       // Crear la previsualización
       const pdfOutput = doc.output("bloburl");
       const newWindow = window.open();
+
+      if (!newWindow) {
+        toast.error("Popup bloqueado o fallo al abrir la ventana");
+        return;
+      }
+
       newWindow.document.write(`
         <style>
           body, html { margin: 0; padding: 0; height: 100%; width: 100%; }
@@ -416,6 +422,8 @@ function GestorRecibos({ idUsuario = 0 }) {
         filterDisplay="row"
         scrollable
         scrollHeight="800px"
+        sortField="numero_recibo"
+        sortOrder={-1}
       >
         <Column
           body={renderCheckbox}

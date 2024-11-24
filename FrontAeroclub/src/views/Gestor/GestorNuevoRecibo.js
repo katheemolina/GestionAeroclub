@@ -523,6 +523,16 @@ function FormularioGestorRecibos() {
         </>
     );
 
+    const horaSalidaMasTemprana = itinerarioData.reduce((minHora, itinerario) => {
+        if (!minHora || itinerario.horaSalida < minHora) {
+          return itinerario.horaSalida;
+        }
+        return minHora;
+      }, null);
+
+    const fechaConHora = `${fecha} ${`${horaSalidaMasTemprana}:00` || "00:00:00"}`;
+    const fechaHoraRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+
     const navigate = useNavigate();
     const handleCancelar = () => {
         navigate('/gestor/recibos');
@@ -542,7 +552,7 @@ function FormularioGestorRecibos() {
                 TipoRecibo: 'Combustible',
                 Cantidad: Number(cantidad), 
                 Importe: monto,
-                Fecha: fecha,
+                Fecha: fechaConHora,
                 Instruccion: 0, // Valor predeterminado
                 IdInstructor: 0, // Valor predeterminado
                 Itinerarios: 0,                     // Valor predeterminado
@@ -561,8 +571,8 @@ function FormularioGestorRecibos() {
                 toast.warning('La cantidad y el importe deben ser mayores que 0');
                 return false;
             }
-            if (!reciboData.Fecha || isNaN(new Date(reciboData.Fecha))) {
-                toast.warning('La fecha es inválida');
+            if (!reciboData.Fecha || !fechaHoraRegex.test(reciboData.Fecha)) {
+                toast.warning('La fecha es inválida. Debe tener el formato YYYY-MM-DD HH:mm:ss');
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo'){
@@ -571,7 +581,7 @@ function FormularioGestorRecibos() {
                 TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
                 Cantidad: 1.00,                                    // Valor predeterminado
                 Importe: monto ?? 0,                                        // Valor predeterminado
-                Fecha: fecha,
+                Fecha: fechaConHora,
                 Instruccion: instruccionSeleccionada ? 1 : 0, // Valor predeterminado
                 IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
                 Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
