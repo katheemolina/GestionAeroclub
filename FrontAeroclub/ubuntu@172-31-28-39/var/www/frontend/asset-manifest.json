@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5698ba32.css",
+    "main.js": "/static/js/main.5b1cc5e7.js",
+    "static/js/239.21be033c.chunk.js": "/static/js/239.21be033c.chunk.js",
+    "static/js/213.c2eddea9.chunk.js": "/static/js/213.c2eddea9.chunk.js",
+    "static/js/732.1aa91227.chunk.js": "/static/js/732.1aa91227.chunk.js",
+    "static/media/InterVariable-Italic.woff2": "/static/media/InterVariable-Italic.e295f70fe3e2df296c7b.woff2",
+    "static/media/InterVariable.woff2": "/static/media/InterVariable.a0e477f2f1f9d2376fde.woff2",
+    "static/media/icon-aeroclub.png": "/static/media/icon-aeroclub.8a36b8dd721a9ff3ef69.png",
+    "index.html": "/index.html",
+    "main.5698ba32.css.map": "/static/css/main.5698ba32.css.map",
+    "main.5b1cc5e7.js.map": "/static/js/main.5b1cc5e7.js.map",
+    "239.21be033c.chunk.js.map": "/static/js/239.21be033c.chunk.js.map",
+    "213.c2eddea9.chunk.js.map": "/static/js/213.c2eddea9.chunk.js.map",
+    "732.1aa91227.chunk.js.map": "/static/js/732.1aa91227.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5698ba32.css",
+    "static/js/main.5b1cc5e7.js"
+  ]
+}
