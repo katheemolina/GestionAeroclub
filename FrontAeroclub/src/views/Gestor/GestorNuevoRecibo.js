@@ -312,7 +312,7 @@ function FormularioGestorRecibos() {
             {/* Duración total */}
             <div className="form-group">
                 <label className="label-recibo">Duración total:</label>
-                <span>0.0</span>
+                <span>{calcularDuracionTotal()}</span>
             </div>
 
             {/* Observaciones */}
@@ -389,6 +389,47 @@ function FormularioGestorRecibos() {
             <hr />
         </div>
     );
+    
+    const convertirMinutosAHorasDecimales = (minutos) => {
+        if (minutos >= 1 && minutos <= 2) return 0.0;
+        if (minutos >= 3 && minutos <= 8) return 0.1;
+        if (minutos >= 9 && minutos <= 14) return 0.2;
+        if (minutos >= 15 && minutos <= 20) return 0.3;
+        if (minutos >= 21 && minutos <= 26) return 0.4;
+        if (minutos >= 27 && minutos <= 33) return 0.5;
+        if (minutos >= 34 && minutos <= 39) return 0.6;
+        if (minutos >= 40 && minutos <= 45) return 0.7;
+        if (minutos >= 46 && minutos <= 51) return 0.8;
+        if (minutos >= 52 && minutos <= 57) return 0.9;
+        if (minutos >= 58 && minutos <= 60) return 1.0;
+        return 0.0;
+    };
+    
+    const calcularDuracionTotal = () => {
+        const totalHoras = itinerarioData.reduce((acumulador, itinerario) => {
+            if (itinerario.horaSalida && itinerario.horaLlegada) {
+                const [horasSalida, minutosSalida] = itinerario.horaSalida.split(':').map(Number);
+                const [horasLlegada, minutosLlegada] = itinerario.horaLlegada.split(':').map(Number);
+    
+                const salidaEnMinutos = horasSalida * 60 + minutosSalida;
+                const llegadaEnMinutos = horasLlegada * 60 + minutosLlegada;
+    
+                // Considera si la hora de llegada es al día siguiente
+                const duracionEnMinutos = llegadaEnMinutos >= salidaEnMinutos
+                    ? llegadaEnMinutos - salidaEnMinutos
+                    : 1440 - salidaEnMinutos + llegadaEnMinutos;
+    
+                const horas = Math.floor(duracionEnMinutos / 60); // Horas completas
+                const minutos = duracionEnMinutos % 60; // Minutos restantes
+    
+                return acumulador + horas + convertirMinutosAHorasDecimales(minutos);
+            }
+            return acumulador;
+        }, 0);
+    
+        return totalHoras.toFixed(1); // Duración total con un decimal
+    };
+
     
     const calcularMonto = () => {
         if (cantidad > 0 && tarifasCombustibleSeleccionado) {
