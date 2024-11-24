@@ -9,7 +9,7 @@ const PantallaCarga = () => {
             <ProgressSpinner 
             style={{width: '70px', height: '70px'}}
             strokeWidth="5"
-            strokeColor="red"
+            strokecolor="red"
             /> 
           </div>
         </div>
