@@ -1,7 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Styles/GestorDashboard.css'
+import { obtenerHorasVueloUltimoMes, obtenerSaldoCuentaCorrienteAeroclub } from '../../services/dashboardGestor';
 
 function GestorDashboard() {
+  const [saldo, setSaldo] = useState(null);
+  const [horasVuelo, setHorasVuelo] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const fetchHorasVuelo = async () => {
+          try {
+              const data = await obtenerHorasVueloUltimoMes();
+              setHorasVuelo(data);
+          } catch (err) {
+              setError(err.message);
+          }
+      };
+
+      fetchHorasVuelo();
+  }, []);
+
+
+  useEffect(() => {
+      const fetchSaldo = async () => {
+          try {
+              const data = await obtenerSaldoCuentaCorrienteAeroclub();
+              setSaldo(data[0]); // Asumimos que el SP devuelve un solo registro
+          } catch (err) {
+              setError(err.message);
+          }
+      };
+
+      fetchSaldo();
+  }, []);
+  
   return (
     <div className="background">
       

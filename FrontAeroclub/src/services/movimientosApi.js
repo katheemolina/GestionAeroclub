@@ -31,7 +31,7 @@ export const obtenerMovimientosNoPagos = async (id) => {
 export const obtenerTodosLosMovimientos = async () => {
     const response = await fetch(`${API_URL}/movimientos`);
     if (!response.ok) {
-        throw new Error('Error al listar asociados');
+        throw new Error('Error al obtener todos los movimientos');
     }
     return response.json();
 };
@@ -39,7 +39,7 @@ export const obtenerTodosLosMovimientos = async () => {
 export const obtenerCuentaCorrienteAeroclub = async () => {
     const response = await fetch(`${API_URL}/movimientosAeroclub`);
     if (!response.ok) {
-        throw new Error('Error al listar asociados');
+        throw new Error('Error al obtener la cuenta corriente del aeroclub');
     }
     return response.json();
 };

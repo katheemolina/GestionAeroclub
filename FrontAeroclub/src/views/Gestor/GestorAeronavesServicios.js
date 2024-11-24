@@ -39,6 +39,7 @@ const GestorAeronavesServicios = () => {
 
     const [horasVoladas, setHorasVoladas] = useState(0); 
 
+<<<<<<< HEAD
     const navigate = useNavigate(); 
 
     useEffect(() => {
@@ -55,6 +56,182 @@ const GestorAeronavesServicios = () => {
     useEffect(() => {
         if (!id_aeronave) {
             toast.error("No se recibió un ID de aeronave.");
+=======
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [aeronaveToDelete, setAeronaveToDelete] = useState(null);
+
+    const [estadoDialog, setEstadoDialog] = useState(false);
+    const [polizaDialog, setPolizaDialog] = useState(false);
+    const [intervaloDialog, setIntervaloDialog] = useState(false);
+
+    const [selectedAeronave, setSelectedAeronave] = useState(null);
+    const [nuevaPoliza, setNuevaPoliza] = useState({ numero_poliza: '', vencimiento_poliza: '' });
+    const [nuevoIntervalo, setNuevoIntervalo] = useState({ fecha: '' });
+
+
+    
+
+    // Fetch aeronaves data from the API
+    const fetchAeronaves = async () => {
+        try {
+            const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
+            setAeronaves(data);
+        } catch (error) {
+            //console.error('Error fetching aeronaves:', error);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchAeronaves();
+    }, []);
+
+    // Handle adding or updating aeronave
+    const handleSave = async () => {
+        try {
+            if (isEdit) {
+                await actualizarAeronave(aeronaveData.id_aeronave, aeronaveData);
+                toast.success("Aeronave actualizada correctamente.");
+            } else {
+                await insertarAeronave(aeronaveData);
+                toast.success("Aeronave insertada correctamente.");
+            }
+            setAeronaveDialog(false);
+            fetchAeronaves(); // Refresh the list
+        } catch (error) {
+            //console.error('Error saving aeronave:', error);
+            toast.error("Error, todos los campos son obligatorios.");
+        }
+    };
+
+    // Handle edit
+    const handleEdit = (aeronave) => {
+        setAeronaveData(aeronave);
+        setIsEdit(true);
+        setAeronaveDialog(true);
+    };
+
+    // Handle add new aeronave
+    const handleAdd = () => {
+        setAeronaveData({
+            marca: '',
+            modelo: '',
+            matricula: '',
+            potencia: '',
+            clase: '',
+            fecha_adquisicion: '',
+            consumo_por_hora: '',
+            intervalo_inspeccion: '',
+            horas_historicas: '',
+            ultimo_servicio: '',
+            horas_vuelo_aeronave: '',
+            horas_vuelo_motor: '',
+            estado: 'activo',
+        });
+        setIsEdit(false);
+        setAeronaveDialog(true);
+    };
+
+    const confirmDelete = (aeronave) => {
+        setAeronaveToDelete(aeronave);
+        setDeleteDialog(true);
+    };
+
+    const handleDelete = async () => {
+        try {
+            if (aeronaveToDelete) {
+                await eliminarAeronave(aeronaveToDelete.id_aeronave);
+                fetchAeronaves();
+                toast.success("Aeronave eliminada correctamente.");
+            }
+            setDeleteDialog(false);
+        } catch (error) {
+            //console.error('Error al eliminar aeronave:', error);
+            toast.error("Error al eliminar aeronave.");
+        }
+    };
+    
+    
+    
+    // Para manejo de dialog de vista de detalles
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [selectedRowData, setSelectedRowData] = useState(null);
+    
+    const openDialog = (rowData) => {
+        setSelectedRowData(rowData);
+        setDialogVisible(true);
+    };
+    
+    const closeDialog = () => {
+        setDialogVisible(false);
+    };
+
+
+    // Funciones para manejar los diálogos
+const openEstadoDialog = (aeronave) => {
+    setSelectedAeronave(aeronave);
+    setEstadoDialog(true);
+};
+
+const openPolizaDialog = (aeronave) => {
+    setSelectedAeronave(aeronave);
+    setPolizaDialog(true);
+};
+
+const openIntervaloDialog = (aeronave) => {
+    setSelectedAeronave(aeronave);
+    setIntervaloDialog(true);
+};
+
+// Funciones para los servicios
+const handleCambiarEstado = async () => {
+    try {
+        if (selectedAeronave) {
+            await cambiarEstadoAeronave(selectedAeronave.id_aeronave);
+            fetchAeronaves();
+            toast.success("Aeronave eliminada correctamente.");
+        }
+        setEstadoDialog(false);
+        //console.log(selectedAeronave.id_aeronave)
+    } catch (error) {
+        console.error('Error al cambiar estado:', error);
+        toast.error('Error al cambiar el estado.');
+    }
+};
+
+const handleActualizarPoliza = async () => {
+    try {
+        if (selectedAeronave) {
+            const { id_aeronave } = selectedAeronave; // Extraer el ID de la aeronave
+            const { aseguradora, numero_poliza, vencimiento_poliza } = nuevaPoliza; // Datos de la póliza
+            
+            // Llamar al servicio con los parámetros correctos
+            await cambiarDatosPoliza(id_aeronave, aseguradora, numero_poliza, vencimiento_poliza);
+            
+            fetchAeronaves(); // Actualizar la lista de aeronaves
+            toast.success('Póliza actualizada correctamente.');
+        }
+        setPolizaDialog(false); // Cerrar el diálogo
+    } catch (error) {
+        console.error('Error al actualizar póliza:', error);
+        toast.error('Error al actualizar la póliza.');
+    }
+};
+
+
+const handleActualizarIntervalo = async () => {
+    try {
+        if (selectedAeronave) {
+            const { id_aeronave } = selectedAeronave; // Extraer el ID de la aeronave
+            const intervalo_inspeccion = nuevoIntervalo.intervalo_inspeccion; // Obtener el intervalo desde el estado
+            
+            // Llamar al servicio con los datos correctos
+            await actualizarIntervaloInspeccion(id_aeronave, intervalo_inspeccion);
+            
+            toast.success('Intervalo de inspección actualizado correctamente.');
+            setIntervaloDialog(false); // Cerrar el diálogo
+            fetchAeronaves(); // Refrescar datos
+>>>>>>> e667a6c666b1d5d1d81849a901519dff218fb1a9
         } else {
             // Obtener el listado de aeronaves y buscar la correspondiente
             obtenerAeronaves().then((aeronaves) => {

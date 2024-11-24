@@ -24,7 +24,7 @@ function FormularioGestorRecibos() {
     const [itinerarioData, setItinerarioData] = useState([{ origen: '', destino: '', horaSalida: '', horaLlegada: '',instruccion: false }]);
     const [instruccionSeleccionada, setInstruccionSeleccionada] = useState(false);
     const [instructorSeleccionado, setInstructorSeleccionado] = useState('');
-
+    const [checkboxDisabled, setCheckboxDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
     
     // Traigo datos de tipos de recibos
@@ -39,7 +39,7 @@ function FormularioGestorRecibos() {
             const data = await obtenerAeronaves();
             setAeronaves(data);
         } catch (error) {
-            console.error('Error fetching aeronaves:', error);
+            //console.error('Error fetching aeronaves:', error);
         }
     };
     useEffect(() => {
@@ -55,7 +55,7 @@ function FormularioGestorRecibos() {
             const data = await obtenerTarifas();
             setTarifas(data.data);
         } catch (error) {
-            console.error('Error fetching tarifas:', error);
+            //console.error('Error fetching tarifas:', error);
         }
     };
     useEffect(() => {
@@ -84,6 +84,19 @@ function FormularioGestorRecibos() {
         }
     }, [aeronavesSeleccionado, tarifas]);
     
+    useEffect(() => {
+        // Si la tarifa no incluye instrucción, el checkbox se deshabilita
+        if (tarifasSeleccionado){
+            if ((tarifasSeleccionado.importe_por_instruccion ?? 0) <= 0) {
+                setCheckboxDisabled(true);
+                setInstruccionSeleccionada(false); // Reseteamos si está deshabilitado
+            } else {
+                setCheckboxDisabled(false);
+            }
+        }
+    }, [tarifasSeleccionado]);
+    
+
     const [tarifasCombustible, setTarifasCombustible] = useState([]);
     const [tarifasCombustibleSeleccionado, setTarifasCombustibleSeleccionado] = useState(null);
     const fetchTarifasCombustible = async () => {
@@ -91,26 +104,12 @@ function FormularioGestorRecibos() {
             const data = await obtenerTarifasCombustible();
             setTarifasCombustible(data.data);
         } catch (error) {
-            console.error('Error fetching tarifas:', error);
+            //console.error('Error fetching tarifas:', error);
         }
     };
     useEffect(() => {
         fetchTarifasCombustible();
     }, []);
-
-    // Manejar el cambio de aeronave seleccionada
-    const handleAeronaveChange = (e) => {
-    const selectedAeronave = aeronaves.find(
-        (aeronave) => aeronave.id_aeronave === e.target.value
-    );
-        setAeronavesSeleccionado(selectedAeronave);
-        setTarifasSeleccionado(null);  // Reseteamos la tarifa seleccionada al cambiar de aeronave
-    };
-
-    // Manejar el cambio de tarifa seleccionada
-    const handleTarifaChange = (e) => {
-        setTarifasSeleccionado(e.target.value);
-    };
 
     // Traigo datos de tipos de vuelo
     const [tiposVuelo, setTiposVuelo] = useState([]);
@@ -120,7 +119,7 @@ function FormularioGestorRecibos() {
             const data = await obtenerTiposVuelos();
             setTiposVuelo(data.data);
         } catch (error) {
-            console.error('Error fetching tarifas:', error);
+            //console.error('Error fetching tarifas:', error);
         }
     };
     useEffect(() => {
@@ -135,7 +134,7 @@ function FormularioGestorRecibos() {
             const data = await listarAsociados();
             setAsociados(data);
         } catch (error) {
-            console.error('Error fetching tarifas:', error);
+            //console.error('Error fetching tarifas:', error);
         }
     };
     useEffect(() => {
@@ -144,13 +143,12 @@ function FormularioGestorRecibos() {
 
     // Traigo datos de instructores
     const [instructores, setInstructores] = useState([]);
-    const [instructoresSeleccionado, setInstructoresSeleccionado] = useState(null);
     const fetchInstructores = async () => {
         try {
             const data = await listarInstructores();
             setInstructores(data.data);
         } catch (error) {
-            console.error('Error fetching tarifas:', error);
+            //console.error('Error fetching tarifas:', error);
         }
     };
     useEffect(() => {
@@ -262,6 +260,7 @@ function FormularioGestorRecibos() {
                     type="checkbox"
                     checked={instruccionSeleccionada}
                     onChange={handleCheckboxChange}
+                    disabled={checkboxDisabled}
                 />
             </div>
 
@@ -328,11 +327,8 @@ function FormularioGestorRecibos() {
             </div>
         </>
     );
-
-
     
     const renderFormularioItinerario = (index) => (
-        
         <div className="itinerario-form" key={index}>
             <ToastContainer />
             <div className="form-group">
@@ -538,27 +534,29 @@ function FormularioGestorRecibos() {
         navigate('/gestor/recibos');
     };
     const idUsuarioEvento = useUser();
-    const handleGenerar = async () => {    
+    const handleGenerar = async () => {
+        // Si ya está en proceso, no ejecutar de nuevo
+        if (loading) return;
+    
         // Construir el objeto con los datos del formulario
         let reciboData = {};
         if (!['Combustible', 'Vuelo'].includes(tipoReciboSeleccionado)) {
             toast.warning('El tipo de recibo es inválido');
             return false;
         }
-        if (tipoReciboSeleccionado === 'Combustible')
-        {
+        if (tipoReciboSeleccionado === 'Combustible') {
             reciboData = {
                 IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,
                 TipoRecibo: 'Combustible',
-                Cantidad: Number(cantidad), 
+                Cantidad: Number(cantidad),
                 Importe: monto,
                 Fecha: fechaConHora,
                 Instruccion: 0, // Valor predeterminado
                 IdInstructor: 0, // Valor predeterminado
-                Itinerarios: 0,                     // Valor predeterminado
+                Itinerarios: 0, // Valor predeterminado
                 Datos: JSON.stringify(''),
                 Observaciones: observaciones ?? '',
-                Aeronave: 0,  // Valor predeterminado
+                Aeronave: 0, // Valor predeterminado
                 Tarifa: 0,
                 TipoItinerario: 0,
                 IdUsuarioEvento: idUsuarioEvento.usuarioId
@@ -575,25 +573,23 @@ function FormularioGestorRecibos() {
                 toast.warning('La fecha es inválida. Debe tener el formato YYYY-MM-DD HH:mm:ss');
                 return false;
             }
-        } else if (tipoReciboSeleccionado === 'Vuelo'){
+        } else if (tipoReciboSeleccionado === 'Vuelo') {
             reciboData = {
-                IdUsuario: asociadosSeleccionado?.id_usuario ?? 0,  // Valor predeterminado si es null o undefined
-                TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado',            // Valor predeterminado
-                Cantidad: calcularDuracionTotal() ?? 0,                                    // Valor predeterminado
-                Importe: monto ?? 0,                                        // Valor predeterminado
+                IdUsuario: asociadosSeleccionado?.id_usuario ?? 0, // Valor predeterminado si es null o undefined
+                TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado', // Valor predeterminado
+                Cantidad: calcularDuracionTotal() ?? 0, // Valor predeterminado
+                Importe: monto ?? 0, // Valor predeterminado
                 Fecha: fechaConHora,
                 Instruccion: instruccionSeleccionada ? 1 : 0, // Valor predeterminado
                 IdInstructor: instructorSeleccionado?.id_usuario ?? 0, // Valor predeterminado
-                Itinerarios: itinerarioData.length ?? 0,                     // Valor predeterminado
+                Itinerarios: itinerarioData.length ?? 0, // Valor predeterminado
                 Datos: JSON.stringify(itinerarioData),
                 Observaciones: observaciones,
-                Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0,  // Valor predeterminado
+                Aeronave: aeronavesSeleccionado?.id_aeronave ?? 0, // Valor predeterminado
                 Tarifa: tarifasSeleccionado?.id_tarifa ?? 0,
                 TipoItinerario: tiposVueloSeleccionado?.id_tipo_itinerario ?? 0,
                 IdUsuarioEvento: idUsuarioEvento.usuarioId
             };
-            console.log(reciboData);
-            // Validaciones
             if (reciboData.IdUsuario === 0) {
                 toast.warning('El usuario es obligatorio');
                 return false;
@@ -602,7 +598,7 @@ function FormularioGestorRecibos() {
                 toast.warning('La fecha es inválida');
                 return false;
             }
-            if (![0, 1,true,false].includes(reciboData.Instruccion)) {
+            if (![0, 1, true, false].includes(reciboData.Instruccion)) {
                 toast.warning('El valor de instrucción debe ser 0 o 1');
                 return false;
             }
@@ -614,7 +610,6 @@ function FormularioGestorRecibos() {
                 toast.warning('Debe haber al menos un itinerario');
                 return false;
             }
-            
             if (!reciboData.Datos || reciboData.Datos === '[]') {
                 toast.warning('Los datos de itinerarios son obligatorios');
                 return false;
@@ -632,44 +627,55 @@ function FormularioGestorRecibos() {
                 return false;
             }
         }
+    
         try {
-            setLoading(true);
+            setLoading(true); // Activar el estado de carga
             const result = await generarReciboApi(reciboData);
-            setLoading(false);
-            console.log('Recibo generado con éxito:', result);
             toast.success('Recibo generado con éxito');
             setTimeout(() => navigate('/gestor/recibos'), 2000);
         } catch (error) {
-            console.error('Error al generar el recibo:', error);
-            toast.error('Error al generar el recibo')
+            toast.error('Error al generar el recibo');
+        } finally {
+            setLoading(false); // Desactivar el estado de carga
         }
     };
     
     return (
-        <div className='background'>
-        <ToastContainer />
-        <div className="formulario-recibos">
-            <h1>Nuevo Recibo</h1>
-            <div className="form-group">
-                <label className="label-recibo">Tipo de recibo:</label>
-                {tipoRecibo && tipoRecibo.length > 0 ? (
-                <Dropdown value={tipoReciboSeleccionado}
-                 onChange={(e) => setTipoReciboSeleccionado(e.value)} 
-                 options={tipoRecibo} 
-                 optionLabel="value"
-                 placeholder="Seleciona el tipo de vuelo"
-                 className="w-full md:w-14rem" /> ) : (
-                    <p>Cargando opciones...</p>
-                )}
+        <div className="background">
+            <ToastContainer />
+            <div className="formulario-recibos">
+                <h1>Nuevo Recibo</h1>
+                <div className="form-group">
+                    <label className="label-recibo">Tipo de recibo:</label>
+                    {tipoRecibo && tipoRecibo.length > 0 ? (
+                        <Dropdown
+                            value={tipoReciboSeleccionado}
+                            onChange={(e) => setTipoReciboSeleccionado(e.value)}
+                            options={tipoRecibo}
+                            optionLabel="value"
+                            placeholder="Selecciona el tipo de vuelo"
+                            className="w-full md:w-14rem"
+                        />
+                    ) : (
+                        <p>Cargando opciones...</p>
+                    )}
+                </div>
+                <hr />re
+                {tipoReciboSeleccionado === 'Vuelo' && renderFormularioVuelo()}
+                {tipoReciboSeleccionado === 'Combustible' && renderFormularioCombustible()}
+                <div className="buttons">
+                    <button
+                        className="generate-btn"
+                        onClick={handleGenerar}
+                        disabled={loading} // Deshabilitar cuando loading es true
+                    >
+                        {loading ? 'Generando...' : 'Generar'}
+                    </button>
+                    <button className="cancel-btn" onClick={handleCancelar}>
+                        Cancelar
+                    </button>
+                </div>
             </div>
-            <hr></hr>
-            {tipoReciboSeleccionado === "Vuelo" && renderFormularioVuelo()}
-            {tipoReciboSeleccionado === "Combustible" && renderFormularioCombustible()}
-            <div className="buttons">
-                <button className="generate-btn" onClick={handleGenerar}>Generar</button>
-                <button className="cancel-btn" onClick={handleCancelar}>Cancelar</button>
-            </div>
-        </div>
         </div>
     );
 }

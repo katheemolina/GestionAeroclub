@@ -72,7 +72,7 @@ const AeronaveCrud = () => {
             const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
             setAeronaves(data);
         } catch (error) {
-            console.error('Error fetching aeronaves:', error);
+            //console.error('Error fetching aeronaves:', error);
         }
         setLoading(false);
     };
@@ -94,7 +94,7 @@ const AeronaveCrud = () => {
             setAeronaveDialog(false);
             fetchAeronaves(); // Refresh the list
         } catch (error) {
-            console.error('Error saving aeronave:', error);
+            //console.error('Error saving aeronave:', error);
             toast.error("Error, todos los campos son obligatorios.");
         }
     };
@@ -141,7 +141,7 @@ const AeronaveCrud = () => {
             }
             setDeleteDialog(false);
         } catch (error) {
-            console.error('Error al eliminar aeronave:', error);
+            //console.error('Error al eliminar aeronave:', error);
             toast.error("Error al eliminar aeronave.");
         }
     };
@@ -187,9 +187,9 @@ const handleCambiarEstado = async () => {
             toast.success("Aeronave eliminada correctamente.");
         }
         setEstadoDialog(false);
-        console.log(selectedAeronave.id_aeronave)
+        //console.log(selectedAeronave.id_aeronave)
     } catch (error) {
-        console.error('Error al cambiar estado:', error);
+        //console.error('Error al cambiar estado:', error);
         toast.error('Error al cambiar el estado.');
     }
 };
@@ -208,7 +208,7 @@ const handleActualizarPoliza = async () => {
         }
         setPolizaDialog(false); // Cerrar el diálogo
     } catch (error) {
-        console.error('Error al actualizar póliza:', error);
+        //console.error('Error al actualizar póliza:', error);
         toast.error('Error al actualizar la póliza.');
     }
 };
@@ -230,7 +230,7 @@ const handleActualizarIntervalo = async () => {
             throw new Error('No se seleccionó ninguna aeronave.');
         }
     } catch (error) {
-        console.error('Error al actualizar intervalo:', error);
+        //console.error('Error al actualizar intervalo:', error);
         toast.error('Error al actualizar el intervalo.');
     }
 };
