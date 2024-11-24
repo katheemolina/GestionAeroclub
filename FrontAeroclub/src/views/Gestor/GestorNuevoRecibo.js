@@ -527,6 +527,7 @@ function FormularioGestorRecibos() {
       }, null);
 
     const fechaConHora = `${fecha} ${`${horaSalidaMasTemprana}:00` || "00:00:00"}`;
+    const fechaConHoraCombustible = `${fecha} ${horaSalidaMasTemprana || new Date().toTimeString().split(' ')[0]}`;
     const fechaHoraRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 
     const navigate = useNavigate();
@@ -550,7 +551,7 @@ function FormularioGestorRecibos() {
                 TipoRecibo: 'Combustible',
                 Cantidad: Number(cantidad),
                 Importe: monto,
-                Fecha: fechaConHora,
+                Fecha: fechaConHoraCombustible,
                 Instruccion: 0, // Valor predeterminado
                 IdInstructor: 0, // Valor predeterminado
                 Itinerarios: 0, // Valor predeterminado
@@ -569,8 +570,9 @@ function FormularioGestorRecibos() {
                 toast.warning('La cantidad y el importe deben ser mayores que 0');
                 return false;
             }
-            if (!reciboData.Fecha || !fechaHoraRegex.test(reciboData.Fecha)) {
-                toast.warning('La fecha es inválida. Debe tener el formato YYYY-MM-DD HH:mm:ss');
+            if (!reciboData.Fecha || !fechaHoraRegex.test(reciboData.Fecha))  {
+                toast.warning('La fecha es inválida. Deah');
+                console.log(reciboData.Fecha);
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo') {
