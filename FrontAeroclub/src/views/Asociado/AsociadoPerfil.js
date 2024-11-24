@@ -311,6 +311,12 @@ const handleSubmit = async (e) => {
         visible={licenciaDialog}
         onHide={() => setLicenciaDialog(false)}
         style={{ width: '50vw' }}
+        footer={
+          <>
+            <Button  label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary gestor-btn-cancelar" />
+            <Button className="gestor-btn-confirmar" label="Actualizar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
+          </>
+        }
       >
         <div className="p-fluid">
           <div className="p-field">
@@ -332,10 +338,6 @@ const handleSubmit = async (e) => {
               showIcon
               dateFormat="yy-mm-dd"
             />
-          </div>
-          <div className="button-container">
-            <Button className="actualizar" label="Actualizar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
-            <Button label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary" />
           </div>
         </div>
       </Dialog>
