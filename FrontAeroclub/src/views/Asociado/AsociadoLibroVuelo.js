@@ -63,6 +63,17 @@ function AsociadoLibroVuelo() {
     return formatearFecha(rowData.fecha);
   };
 
+  const onInstruccionChange = (e, options) => {
+    setInstruccionFiltro(e.value);
+    options.filterApplyCallback(e.value); // Aplica el filtro
+  };
+
+  const instruccion = [
+    { label: "Sí", value: "Si" },
+    { label: "No", value: "No" },
+    { label: "Seleccione instrucción", value: " "}
+  ]
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -104,38 +115,42 @@ function AsociadoLibroVuelo() {
           sortable
           filter
           showFilterMenu={false}
+          style={{width: '200px'}}
           filterElement={
             <Dropdown
               value={aeronaveFiltro}
               options={aeronaves}
               onChange={(e) => setAeronaveFiltro(e.value)}
               placeholder="Seleccione aeronave"
+              style={{ width: '100%' }}
               showClear
+              
             />
           }
         />
         <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por origen" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} ></Column>
         <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por destino" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} ></Column>
         <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} ></Column>
+        
         <Column
-          field="instruccion"
-          header="Instrucción"
-          sortable
-          filter
-          showFilterMenu={false}
-          filterElement={
-            <Dropdown
-              value={instruccionFiltro}
-              options={[
-                { label: "Sí", value: "Sí" },
-                { label: "No", value: "No" },
-              ]}
-              onChange={(e) => setInstruccionFiltro(e.value)}
-              placeholder="Seleccione instrucción"
-              showClear
-            />
-          }
+      field="instruccion"
+      header="Instrucción"
+      style={{ width: '120px' }}
+      sortable
+      filter
+      showAddButton={false}
+      filterField="instruccion"
+      showFilterMenu={false}
+      filterElement={(options) => (
+        <Dropdown
+          value={instruccionFiltro}
+          options={instruccion}
+          onChange={(e) => onInstruccionChange(e, options)}
+          placeholder="Seleccione instrucción"
+          className="p-column-filter"
         />
+      )}
+      />
         <Column
           header="Acciones"
           body={(rowData) => (
