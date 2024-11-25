@@ -122,3 +122,10 @@ textarea {
 .cancel-btn:hover {
     background-color: #c82333;
 }
+
+.dropdown-generar-recibo{
+    width: 100% !important;
+    margin-top: 3px;
+    padding: 8px;
+    height: 37px !important;
+}
