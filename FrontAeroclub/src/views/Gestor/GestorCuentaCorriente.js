@@ -17,6 +17,8 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
 
+  const [detailData, setDetailData] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,20 +44,20 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     setDialogVisible(true); 
   
     try {
-      console.log(rowData)
+      // console.log(rowData)
       const detalleMovimientoDialog = await obtenerCuentaCorrienteAeroclubDetalle(rowData.referencia_aeroclub);
-      
-      // setDetalleMovimiento(dataDialog);
       console.log(detalleMovimientoDialog)
+      setDetailData(detalleMovimientoDialog)
     } catch (error) {
       console.error("Error al obtener detalles del movimiento:", error);
-      //setDetalleMovimiento(null);
+
     }
   };
 
   const closeDialog = () => {
     setDialogVisible(false);
     setSelectedRowData(null);
+    setDetailData(null);
   };
 
   // Formatear fecha a DD/MM/AAAA HH:MM:SS
@@ -165,10 +167,66 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           <div>
             <div className="p-fluid details-dialog">
               <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
-              <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo}</p></Card>
-              <Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>
               <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
               <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+              {detailData && detailData.length > 0 && detailData.map((data, index) => (
+              <Card key={index}>
+                {data.id_movimiento !== null && (
+                  <p><strong>ID del movimiento:</strong> {data.id_movimiento}</p>
+                )}
+                {data.tipo !== null && (
+                  <p><strong>Tipo:</strong> {data.tipo}</p>
+                )}
+                {data.tipo_recibo !== null && (
+                  <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
+                )}
+                {data.cantidad !== null && (
+                  <p><strong>Cantidad:</strong> {data.cantidad}</p>
+                )}
+                {data.estado !== null && (
+                  <p><strong>Estado:</strong> {data.estado}</p>
+                )}
+                {data.importe !== null && (
+                  <p><strong>Importe:</strong> {data.importe}</p>
+                )}
+                {data.observaciones !== null && (
+                  <p><strong>Observaciones:</strong> {data.observaciones}</p>
+                )}
+                {data.id_recibo !== null && (
+                  <p><strong>ID del recibo:</strong> {data.id_recibo}</p>
+                )}
+                {data.numero_recibo !== null && (
+                  <p><strong>Número del recibo:</strong> {data.numero_recibo}</p>
+                )}
+                {data.id_ref !== null && (
+                  <p><strong>Id_ref:</strong> {data.id_ref}</p>
+                )}
+                {data.referencia_aeroclub !== null && (
+                  <p><strong>Nro. de movimiento:</strong> {data.referencia_aeroclub}</p>
+                )}
+                {data.observaciones !== null && (
+                  <p><strong>Observaciones:</strong> {data.observaciones}</p>
+                )}
+                {data.id_usuario !== null && (
+                  <p><strong>ID del asociado:</strong> {data.id_usuario}</p>
+                )}
+                {data.instruccion !== null && (
+                  <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                )}
+                {data.id_instructor !== null && (
+                  <p><strong>id_instructor:</strong> {data.id_instructor}</p>
+                )}
+                {data.created_at !== null && (
+                  <p><strong>Created_at:</strong> {data.created_at}</p>
+                )}
+                {data.updated_at !== null && (
+                  <p><strong>Updated_at:</strong> {data.updated_at}</p>
+                )}
+              </Card>
+              ))}
+
+              
+              
             </div>
           </div>
         )}

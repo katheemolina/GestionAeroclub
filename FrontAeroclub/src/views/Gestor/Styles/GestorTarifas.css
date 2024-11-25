@@ -103,3 +103,10 @@
 #field-tarifa-con-instructor label{
     margin: 0;
 }
+
+.dropdown-tipo-tarifa{
+    width: 100%;
+    margin-top: 3px;
+    padding: 8px;
+    height: 37px;
+}

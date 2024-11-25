@@ -264,6 +264,7 @@ const TarifaCrud = () => {
                             options={opcionesTipoTarifa}
                             onChange={(e) => handleTipoTarifaChange(e.value)}
                             placeholder="Tipo de Tarifa"
+                            className='dropdown-tipo-tarifa'
                         />
                     </div>
                     <div className="p-field">
