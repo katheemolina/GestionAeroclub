@@ -122,6 +122,7 @@ function GestorRecibos({ idUsuario = 0 }) {
 
   const handlePreviewAndPrint = (rowData) => {
     console.log("Datos del recibo para generar PDF:", rowData);
+
   
     // Datos del recibo
     const reciboData = {
@@ -218,7 +219,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setFont("helvetica", "normal");
       doc.text(`${reciboData.observaciones}`, 20, yStart, { maxWidth: 180 });
       yStart += 6;
-      doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaViegenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
+      doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
   
       // Detalles de instrucción (condicional)
       if (reciboData.instructor && reciboData.instructor.trim() !== "") {
@@ -292,7 +293,12 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setFontSize(14); // Tamaño más grande para destacar
       doc.text("Total a pagar:", 105, yStart, { align: "center" });
       doc.setFont("helvetica", "normal");
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 105, yStart + 8, { align: "center" });
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 150, yStart, { align: "center" });
+
+      // Línea divisoria
+      yStart += 6;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
 
 
   
