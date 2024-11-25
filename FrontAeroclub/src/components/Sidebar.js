@@ -30,7 +30,7 @@ function Sidebar() {
       { ruta: '/gestor/tarifas', texto: 'Tarifas' },
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves' },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidacion para Instructores' },
-      { ruta: '/gestor/generarCuotaSocial', texto: 'Generacion de Cuotas Sociales' },
+      { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
     Instructor: [
@@ -53,7 +53,10 @@ function Sidebar() {
         <div className="sidebar-header-info">
           <span>{user?.name || 'ApellidoNombre'}</span>
           <hr className="divisor-header"/>
-          {role.toUpperCase()}
+          <p>{role.toUpperCase()}</p>
+        </div>
+        <div>
+        <img className='sidebar-header-img' src={user?.picture}></img>
         </div>
       </div>
        <BotonesPorRol  />

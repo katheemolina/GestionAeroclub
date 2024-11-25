@@ -20,6 +20,7 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import UpdateIcon from '@mui/icons-material/Update'; 
 import SettingsIcon from '@mui/icons-material/Settings'; 
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -56,6 +57,12 @@ const AeronaveCrud = () => {
     const [nuevaPoliza, setNuevaPoliza] = useState({ numero_poliza: '', vencimiento_poliza: '' });
     const [nuevoIntervalo, setNuevoIntervalo] = useState({ fecha: '' });
 
+    const handleSelectAeronave = (aeronave) => {
+        setSelectedAeronave(aeronave);
+    };
+    
+
+    const navigate = useNavigate();
 
     
 
@@ -228,6 +235,16 @@ const handleActualizarIntervalo = async () => {
     }
 };
 
+const handleGoToAeronavesServicios = (aeronave) => {
+    if (aeronave) {
+        navigate('/gestor/aeronavesServicios', {
+            state: { id_aeronave: aeronave.id_aeronave },
+        });
+    } else {
+        toast.error("No se ha seleccionado ninguna aeronave.");
+    }
+};
+
 
 
     const formatFecha = (fecha) => {
@@ -311,10 +328,15 @@ const handleActualizarIntervalo = async () => {
                         </Tooltip>
 
                         <Tooltip title="Historial de servicios">
-                        <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
-                            <ManageSearchIcon />
-                        </IconButton>
+                        <IconButton
+                                color="primary"
+                                aria-label="view-details"
+                                onClick={() => handleGoToAeronavesServicios(rowData)}
+                            >
+                                <ManageSearchIcon />
+                            </IconButton>
                         </Tooltip>
+
 
                     </div>
                 )}></Column>
