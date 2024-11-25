@@ -41,6 +41,21 @@ const GestorAeronavesServicios = () => {
 
     const navigate = useNavigate(); 
 
+    const [triggerEffect, setTriggerEffect] = useState(false); // Para llamar al useEffect que trae los datos de servicios
+
+    const formatearFecha = (fecha) => {
+        const date = new Date(fecha + 'T00:00:00'); // Agregar hora para evitar problemas de zona horaria
+        const dia = String(date.getDate()).padStart(2, '0');
+        const mes = String(date.getMonth() + 1).padStart(2, '0');
+        const año = date.getFullYear();
+        
+        return `${dia}/${mes}/${año}`;
+    };
+
+    const plantillaFecha = (rowData) => {
+    return formatearFecha(rowData.fecha);
+    };
+
     useEffect(() => {
         if (id_aeronave) {
             const today = new Date();
@@ -73,6 +88,7 @@ const GestorAeronavesServicios = () => {
                     // Obtener los servicios de la aeronave seleccionada
                     obtenerServicios(id_aeronave).then((serviciosData) => {
                         setServicios(serviciosData);
+                        console.log(serviciosData);
                         setLoading(false); // Cuando los servicios se hayan cargado, cambia el estado de carga
                     }).catch((error) => {
                         toast.error("La aeronave seleccionada no tiene servicios registrados");
@@ -85,7 +101,7 @@ const GestorAeronavesServicios = () => {
                 console.log("Hubo un error al cargar las aeronaves.");
             });
         }
-    }, [id_aeronave]);
+    }, [id_aeronave, triggerEffect]);
 
 
 
@@ -129,13 +145,10 @@ const GestorAeronavesServicios = () => {
         console.log("Datos del servicio:", servicioData);
     
         actualizarServicio(servicioSeleccionado.id_servicio, servicioData)
-            .then((updatedServicio) => {
-                const updatedServicios = servicios.map((serv) =>
-                    serv.id_servicio === servicioSeleccionado.id_servicio ? updatedServicio : serv
-                );
-                setServicios(updatedServicios);
+            .then(() => {
                 toast.success("Servicio actualizado correctamente.");
                 setMostrarDialogEditar(false);
+                setTriggerEffect(prev => !prev); // LLamo al useEffect para que retome los datos de la tabla
             })
             .catch(() => {
                 toast.error("Error al actualizar el servicio.");
@@ -182,7 +195,7 @@ const GestorAeronavesServicios = () => {
                 <div className="datatable-container">
                     <DataTable value={servicios} paginator rows={10} rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                        <Column field="fecha" header="Fecha" />
+                        <Column field="fecha" header="Fecha" body={plantillaFecha}/>
                         <Column field="horas_anteriores" header="Horas Anteriores" />
                         <Column field="observaciones" header="Observaciones" />
                         <Column header="Acciones" 
