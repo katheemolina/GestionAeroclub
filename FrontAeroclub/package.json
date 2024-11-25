@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
+    "gauge": "^5.0.2",
     "gestion-aeroclub": "file:",
     "jspdf": "^2.5.2",
     "primeicons": "^7.0.0",
