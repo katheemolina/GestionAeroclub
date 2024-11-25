@@ -42,6 +42,30 @@ function InstructorAsociados({idUsuario = 0}){
         state: { user }  // Aquí pasamos el objeto 'user' como estado
       });
     };
+    const estadoTemplate = (rowData) => (
+      <span
+        style={{
+          fontWeight: "bold",
+          color: rowData.estado === "Habilitado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+        }}
+      >
+        {rowData.estado}
+      </span>
+  );
+  
+    const estadoCMATemplate = (rowData) => {
+        const color = rowData.estadoCMA === "Vigente"
+          ? "rgb(76, 175, 80)"
+          : rowData.estadoCMA === "Actualizar CMA"
+          ? "rgb(255, 152, 0)" // Amarillo anaranjado
+          : "rgb(169, 70, 70)"; // Rojo
+      
+        return (
+          <span style={{ fontWeight: "bold", color }}>
+            {rowData.estadoCMA}
+          </span>
+        );
+    };
 
     if (loading) {
       return <PantallaCarga/>
@@ -57,9 +81,9 @@ function InstructorAsociados({idUsuario = 0}){
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
                 <Column field="usuario" header="Asociado"></Column>
-                <Column field="estado" header="Estado"></Column>
+                <Column field="estado" header="Estado" body={estadoTemplate}></Column>
                 <Column field="horas_vuelo" header="Horas de vuelo totales"></Column>
-                <Column field="estadoCMA" header="Estado del CMA"></Column>
+                <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate}></Column>
                 <Column header="Acciones"
                         body={(rowData) => (
                             <div className='acciones'>

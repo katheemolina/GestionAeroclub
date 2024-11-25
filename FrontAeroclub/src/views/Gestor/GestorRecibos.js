@@ -393,7 +393,16 @@ function GestorRecibos({ idUsuario = 0 }) {
     return formatearFecha(rowData.fecha);
   };
   
-
+  const estadoPagoTemplate = (rowData) => (
+    <span
+      style={{
+        fontWeight: "bold",
+        color: rowData.estado === "Pago" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+      }}
+    >
+      {rowData.estado}
+    </span>
+  );
 
   if (loading) {
     return <PantallaCarga />;
@@ -477,6 +486,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       filter
       filterField="estado"
       showFilterMenu={false}
+      body={estadoPagoTemplate}
       filterElement={(options) => (
         <Dropdown
           value={filtroEstado}

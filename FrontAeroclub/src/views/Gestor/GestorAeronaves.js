@@ -254,7 +254,7 @@ const AeronaveCrud = () => {
         >
           {rowData.estado === "activo" ? "Operativo" : "No operativo"}
         </span>
-      );
+    );
 
     const formatFecha = (fecha) => {
         if (!fecha) return ''; // Manejar valores nulos o vacíos
