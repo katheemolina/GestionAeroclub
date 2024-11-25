@@ -43,3 +43,21 @@ export const obtenerCuentaCorrienteAeroclub = async () => {
     }
     return response.json();
 };
+
+export const obtenerCuentaCorrienteAeroclubDetalle = async (referenciaAeroclub) => {
+    // Enviar una solicitud POST con el parámetro ReferenciaAeroclub
+    const response = await fetch(`${API_URL}/obtenerCuentaCorrienteAeroclubDetalle`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ReferenciaAeroclub: referenciaAeroclub }), // Pasamos el parámetro en el cuerpo de la solicitud
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al obtener la cuenta corriente del aeroclub');
+    }
+
+    // Parsear la respuesta JSON y retornarla
+    return response.json();
+};

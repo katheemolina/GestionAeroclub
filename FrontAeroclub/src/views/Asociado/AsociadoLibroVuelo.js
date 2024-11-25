@@ -164,7 +164,7 @@ function AsociadoLibroVuelo() {
               <Card><p><strong>Destino:</strong> {selectedRowData.destino}</p></Card>
               <Card><p><strong>Hora de salida:</strong> {selectedRowData.hora_salida}</p></Card>
               <Card><p><strong>Hora de llegada:</strong> {selectedRowData.hora_llegada}</p></Card>
-              <Card><p><strong>Tiempo de vuelo:</strong> {selectedRowData.Tiempo}</p></Card>
+              <Card><p><strong>Tiempo de vuelo:</strong> {selectedRowData.tiempo_vuelo}</p></Card>
               <Card><p><strong>Finalidad:</strong> {selectedRowData.finalidad}</p></Card>
               <Card><p><strong>Instrucción:</strong> {selectedRowData.instruccion}</p></Card>
               <Card><p><strong>Aterrizajes:</strong> {selectedRowData.aterrizajes}</p></Card>
