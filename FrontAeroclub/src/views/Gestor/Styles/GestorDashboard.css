@@ -70,7 +70,7 @@
 .avion-container {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+    flex-wrap: wrap;
     gap: 10px;
 }
 
@@ -83,6 +83,7 @@
     height: 400px;
     width: 400px;
     position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .nombre-avion {
@@ -91,17 +92,34 @@
     padding: 10px;
     font-size: 1em;
     color: #ffffff;
-    background-color: rgba(98, 98, 98, 0.396);
+    background-color: rgba(58, 58, 58);
+    top: 0;
+    z-index: 2;
 }
 
 .imagen-avion {
     background-color: rgb(58, 58, 58);
     flex-grow: 1;
     width: 100%;
+    height: 60%; /* Asegura que la imagen ocupe solo el 60% */
+    padding: 15px; /* Agrega espacio alrededor de la imagen */
+    box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen-avion img {
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain; /* Mantiene la relación de aspecto sin recortar */
+    
 }
 
 .tabla-avion {
     width: 100%;
+    margin-top: 15px; /* Asegura que haya espacio entre la imagen y la tabla */
 }
 
 .tabla-avion th,
@@ -109,4 +127,8 @@
     padding: 10px;
     border: 1px solid #000000;
     text-align: left;
+}
+
+.tabla-avion td {
+    font-size: 0.9em;
 }
