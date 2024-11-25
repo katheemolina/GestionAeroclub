@@ -56,7 +56,7 @@ function Sidebar() {
           <p>{role.toUpperCase()}</p>
         </div>
         <div>
-        <img className='sidebar-header-img' src={user?.picture}></img>
+        <img className='sidebar-header-img' src={user?.picture} alt='foto de perfil'></img>
         </div>
       </div>
        <BotonesPorRol  />

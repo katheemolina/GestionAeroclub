@@ -3,6 +3,7 @@
     border-radius: 10px; /* Adjust the value as needed */
     overflow: hidden; /* Prevents content from overflowing rounded corners */
     margin-top: 5px;
+    border: 2px solid #ddd;
 }
 
 .p-datatable-thead{
@@ -42,19 +43,23 @@
   margin-right: 8px; /* Adjust this value as needed */
   background-color: rgba(169, 70, 70, 1);
   cursor: pointer;
-}
-
-.p-paginator-page{
-    padding-top: 11px;
-    padding-bottom: 11px;
+  height: 2rem;
+  width: 2rem;
+  padding: 0px;
 }
 
 .p-dropdown{
     box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     gap: 5px;
-    padding: 10px;
+    padding: 5px;
+    height: 2rem;
+    width: 5rem;
     background-color: #ffffff;
+}
+
+.p-dropdown-trigger{
+    width: 1rem;
 }
 
 .p-dropdown-panel{
