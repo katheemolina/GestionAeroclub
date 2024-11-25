@@ -327,6 +327,7 @@ const handleSubmit = async (e) => {
               options={tiposLicencias}
               onChange={(e) => setSelectedLicencia(e.value)}
               placeholder="Seleccione una licencia"
+              style={{ width: '350px' }} // Cambia el valor según lo necesites
             />
           </div>
           <div className="p-field">

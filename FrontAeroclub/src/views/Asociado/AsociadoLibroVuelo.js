@@ -111,6 +111,7 @@ function AsociadoLibroVuelo() {
               onChange={(e) => setAeronaveFiltro(e.value)}
               placeholder="Seleccione aeronave"
               showClear
+              style={{ width: '100%' }} // Cambia el valor según lo necesites
             />
           }
         />
@@ -133,6 +134,7 @@ function AsociadoLibroVuelo() {
               onChange={(e) => setInstruccionFiltro(e.value)}
               placeholder="Seleccione instrucción"
               showClear
+              style={{ width: '100%' }} // Cambia el valor según lo necesites
             />
           }
         />
