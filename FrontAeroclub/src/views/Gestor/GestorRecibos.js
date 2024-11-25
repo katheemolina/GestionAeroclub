@@ -121,9 +121,6 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
   const handlePreviewAndPrint = (rowData) => {
-    console.log("Datos del recibo para generar PDF:", rowData);
-
-  
     // Datos del recibo
     const reciboData = {
       recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
