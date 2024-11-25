@@ -202,7 +202,7 @@ function FormularioGestorRecibos() {
                  optionLabel="matricula"
                  placeholder="Seleciona la aeronave"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -215,7 +215,7 @@ function FormularioGestorRecibos() {
                  optionLabel="importe"
                  placeholder="Seleciona la tarifa"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>No se encuentran tarifas para la aeronave seleccionada.</p>
                 )}
             </div>
@@ -234,7 +234,7 @@ function FormularioGestorRecibos() {
                  optionLabel="descripcion"
                  placeholder="Seleciona el tipo de vuelo"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -247,7 +247,7 @@ function FormularioGestorRecibos() {
                  optionLabel="usuario"
                  placeholder="Seleciona el asociado"
                  filter 
-                 className="w-full md:w-14rem" /> ) : (
+                 className="dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -274,7 +274,7 @@ function FormularioGestorRecibos() {
                     optionLabel="usuario"
                     placeholder="Seleciona el instructor"
                     filter 
-                    className="w-full md:w-14rem" /> ) : (
+                    className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                         <p>Cargando opciones...</p>
                     )}
                 </div>
@@ -465,7 +465,7 @@ function FormularioGestorRecibos() {
                  optionLabel="importe"
                  placeholder="Seleciona la tarifa"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -479,7 +479,7 @@ function FormularioGestorRecibos() {
                  optionLabel="usuario"
                  placeholder="Seleciona el asociado"
                  filter 
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -518,16 +518,10 @@ function FormularioGestorRecibos() {
             <hr/>
         </>
     );
-
-    const horaSalidaMasTemprana = itinerarioData.reduce((minHora, itinerario) => {
-        if (!minHora || itinerario.horaSalida < minHora) {
-          return itinerario.horaSalida;
-        }
-        return minHora;
-      }, null);
-
-    const fechaConHora = `${fecha} ${`${horaSalidaMasTemprana}:00` || "00:00:00"}`;
-    const fechaConHoraCombustible = `${fecha} ${horaSalidaMasTemprana || new Date().toTimeString().split(' ')[0]}`;
+    
+    const now = new Date();
+    const horaActual = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
+    const fechaConHora = `${fecha} ${horaActual}`;
     const fechaHoraRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 
     const navigate = useNavigate();
@@ -551,7 +545,7 @@ function FormularioGestorRecibos() {
                 TipoRecibo: 'Combustible',
                 Cantidad: Number(cantidad),
                 Importe: monto,
-                Fecha: fechaConHoraCombustible,
+                Fecha: fechaConHora,
                 Instruccion: 0, // Valor predeterminado
                 IdInstructor: 0, // Valor predeterminado
                 Itinerarios: 0, // Valor predeterminado
@@ -576,6 +570,7 @@ function FormularioGestorRecibos() {
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo') {
+            console.log(fechaConHora)
             reciboData = {
                 IdUsuario: asociadosSeleccionado?.id_usuario ?? 0, // Valor predeterminado si es null o undefined
                 TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado', // Valor predeterminado
@@ -656,7 +651,7 @@ function FormularioGestorRecibos() {
                             options={tipoRecibo}
                             optionLabel="value"
                             placeholder="Selecciona el tipo de vuelo"
-                            className="w-full md:w-14rem"
+                            className="w-full md:w-14rem dropdown-generar-recibo"
                         />
                     ) : (
                         <p>Cargando opciones...</p>

@@ -35,16 +35,29 @@
     color: black;
 }
 
-.alertas-btn{
-    margin: 10px;
-    width: 160px;
-    background-color: #ddd;
-    border: 1px solid #dce1e7;
-    border-radius: 8px;
-    text-align: center;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.alertas-btn {
+  margin: 10px;
+  width: 160px;
+  height: 160px; /* Asegura que el botón sea cuadrado */
+  background-color: #ddd;
+  border: 1px solid #dce1e7;
+  border-radius: 8px;
+  display: flex; /* Usamos flexbox para centrar */
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
+
+.alertas-btn:hover {
+  background-color: #ccc; /* Cambia el color al pasar el mouse */
+}
+
+.alertas-btn svg {
+  font-size: 3em; /* Tamaño del ícono */
+  color: #666; /* Color del ícono */
+}
+
 
 .gauge-container{
     display: flex;
