@@ -45,10 +45,16 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     setSelectedRowData(null);
   };
 
-  // Formatear fecha a DD/MM/AAAA
+  // Formatear fecha a DD/MM/AAAA HH:MM:SS
   const formatearFecha = (fecha) => {
-    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(fecha).toLocaleDateString('es-ES', opciones);
+    const date = new Date(fecha);
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const año = date.getFullYear();
+    const horas = String(date.getHours()).padStart(2, '0');
+    const minutos = String(date.getMinutes()).padStart(2, '0');
+    const segundos = String(date.getSeconds()).padStart(2, '0');
+    return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
   };
 
   // Plantilla para mostrar la fecha 

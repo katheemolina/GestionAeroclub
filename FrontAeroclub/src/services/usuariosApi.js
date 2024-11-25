@@ -96,9 +96,6 @@ export async function actualizarRoles(idUsuario, roles) {
     }
 }
 
-
-
-
 export async function eliminarRol(idUsuario, idRol) {
     try {
         const response = await fetch(`${API_URL}/usuario/eliminarRol`, {
@@ -168,8 +165,6 @@ export async function deshabilitarUsuario(idUsuario) {
     }
 }
 
-
-
 export const actualizarLicencias = async (idUsuario, licencias) => {
     try {
         // Realizar la solicitud PUT a la API
@@ -194,5 +189,11 @@ export const actualizarLicencias = async (idUsuario, licencias) => {
     }
 };
 
-
-
+// Función listar todos los asociados
+export const movimientosNoLiquidadosPorInstructor = async () => {
+    const response = await fetch(`${API_URL}/movimientosNoLiquidadosPorInstructor`);
+    if (!response.ok) {
+        throw new Error('Error al listar instructores');
+    }
+    return response.json();
+};

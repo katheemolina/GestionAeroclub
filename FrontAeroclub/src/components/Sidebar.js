@@ -29,6 +29,7 @@ function Sidebar() {
       { ruta: '/gestor/asociados', texto: 'Asociados' },
       { ruta: '/gestor/tarifas', texto: 'Tarifas' },
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves' },
+      { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidacion para Instructores' },
       { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],

@@ -662,7 +662,7 @@ function FormularioGestorRecibos() {
                         <p>Cargando opciones...</p>
                     )}
                 </div>
-                <hr />re
+                <hr />
                 {tipoReciboSeleccionado === 'Vuelo' && renderFormularioVuelo()}
                 {tipoReciboSeleccionado === 'Combustible' && renderFormularioCombustible()}
                 <div className="buttons">

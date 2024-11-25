@@ -39,7 +39,6 @@
     border-radius: 50%; /* Imagen redonda */
     object-fit: cover; /* Evita deformaciones */
     float: right; /* Alinea la imagen a la derecha */
-    margin: 10px 15px 0 0; /* Espaciado adecuado */
 }
 
 
