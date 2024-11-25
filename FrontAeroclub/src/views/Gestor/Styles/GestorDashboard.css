@@ -132,3 +132,44 @@
 .tabla-avion td {
     font-size: 0.9em;
 }
+
+
+.alerta-inspeccion {
+    background-color: #ffcccc; /* Fondo rojo claro */
+    color: #ff0000; /* Texto rojo */
+    font-weight: bold; /* Resaltar texto */
+    animation: titilar 1s infinite; /* Efecto de titileo */
+  }
+  
+  @keyframes titilar {
+    0% {
+      background-color: #ffcccc;
+    }
+    50% {
+      background-color: #ffe6e6; /* Fondo más claro en el intermedio */
+    }
+    100% {
+      background-color: #ffcccc;
+    }
+  }
+
+
+  .atencion-inspeccion {
+    background-color: #fff3cd; /* Fondo amarillo claro */
+    color: #856404; /* Texto marrón oscuro */
+    font-weight: bold; /* Resaltar texto */
+    animation: parpadeo-amarillo 2s infinite; /* Efecto de parpadeo */
+  }
+  
+  @keyframes parpadeo-amarillo {
+    0% {
+      background-color: #fff3cd;
+    }
+    50% {
+      background-color: #ffeeba; /* Fondo más claro en el intermedio */
+    }
+    100% {
+      background-color: #fff3cd;
+    }
+  }
+  

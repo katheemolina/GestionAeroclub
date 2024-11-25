@@ -139,9 +139,19 @@ function GestorDashboard() {
                   <td>{horasPorAvion[aeronave.matricula] || "0 hs 00 min"}</td>
                 </tr>
                 <tr>
-                  <td>Próxima inspección:</td>
-                  <td>{`${horasRestantes} hs ${minutosRestantesExactos} min`}</td>
-                </tr>
+                <td>Próxima inspección:</td>
+                <td
+                  className={
+                    horasRestantes === 0 && minutosRestantesExactos === 0
+                      ? "alerta-inspeccion" // Alerta crítica
+                      : horasRestantes < 24
+                      ? "atencion-inspeccion" // Alerta de atención
+                      : ""
+                  }
+                >
+                  {`${horasRestantes} hs ${minutosRestantesExactos} min`}
+                </td>
+              </tr>
                 <tr>
                   <td>Fecha última inspección:</td>
                   <td>{aeronave.ultimo_servicio ? fechaUltimaInspeccion.toLocaleDateString() : "No tiene"}</td>
