@@ -7,11 +7,11 @@ import { UserProvider } from './context/UserContext';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <UserProvider>
       <RoleProvider>
         <App />
       </RoleProvider>
     </UserProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

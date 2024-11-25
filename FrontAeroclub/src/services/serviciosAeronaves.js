@@ -32,25 +32,26 @@ export const insertarServicio = async (servicioData) => {
     }
 };
 
-
-export const actualizarServicio = async (id_aeronave, servicioData) => {
+export const actualizarServicio = async (id, servicioData) => {
     try {
-        const response = await fetch(`${API_URL}/serviciosAeronaves/${id_aeronave}`, {
+        const response = await fetch(`${API_URL}/serviciosAeronaves/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(servicioData),
         });
-        
+
         if (!response.ok) {
-            throw new Error('Error al actualizar el servicio');
+            const errorDetails = await response.json(); // Leer detalles del servidor
+            throw new Error(errorDetails.message || 'Error al actualizar el servicio');
         }
 
         return await response.json();
     } catch (error) {
-        console.error(error);
-        throw error;
+        console.error('Detalles del error:', error.message);
+        throw error; // Lanza el error para manejarlo donde se invoque
     }
 };
+
 
