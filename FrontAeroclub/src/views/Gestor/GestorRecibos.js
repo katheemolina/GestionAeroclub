@@ -237,7 +237,7 @@ function GestorRecibos({ idUsuario = 0 }) {
         return suma + duracion;
       }, 0);
 
-      // Calcular importe y importe de instrucción
+      // Calcular importe e importe de instrucción
       const tarifa = parseFloat(reciboData.tarifa) || 0; // Convertir tarifa a número flotante
       //const importePorInstruccion = parseFloat(reciboData.importePorInstruccion) || 0; // Usar la propiedad correcta del objeto reciboData
 
@@ -266,7 +266,12 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setFont("helvetica", "bold");
       doc.text("Instrucción:", 10, yStart);
       doc.setFont("helvetica", "normal");
-      doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
+
+      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
+        doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
+      } else {
+        doc.text("-", 35, yStart); // Mostrar un guion si la condición no se cumple
+      }
 
       // Duración total y Aterrizajes (alineados a la derecha)
       yStart -= 6; // Reposicionar para que estén a la misma altura que "Importe"
