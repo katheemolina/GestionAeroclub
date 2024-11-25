@@ -202,7 +202,7 @@ function FormularioGestorRecibos() {
                  optionLabel="matricula"
                  placeholder="Seleciona la aeronave"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -215,7 +215,7 @@ function FormularioGestorRecibos() {
                  optionLabel="importe"
                  placeholder="Seleciona la tarifa"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>No se encuentran tarifas para la aeronave seleccionada.</p>
                 )}
             </div>
@@ -234,7 +234,7 @@ function FormularioGestorRecibos() {
                  optionLabel="descripcion"
                  placeholder="Seleciona el tipo de vuelo"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -247,7 +247,7 @@ function FormularioGestorRecibos() {
                  optionLabel="usuario"
                  placeholder="Seleciona el asociado"
                  filter 
-                 className="w-full md:w-14rem" /> ) : (
+                 className="dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -274,7 +274,7 @@ function FormularioGestorRecibos() {
                     optionLabel="usuario"
                     placeholder="Seleciona el instructor"
                     filter 
-                    className="w-full md:w-14rem" /> ) : (
+                    className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                         <p>Cargando opciones...</p>
                     )}
                 </div>
@@ -465,7 +465,7 @@ function FormularioGestorRecibos() {
                  optionLabel="importe"
                  placeholder="Seleciona la tarifa"
                  filter
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -479,7 +479,7 @@ function FormularioGestorRecibos() {
                  optionLabel="usuario"
                  placeholder="Seleciona el asociado"
                  filter 
-                 className="w-full md:w-14rem" /> ) : (
+                 className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
                     <p>Cargando opciones...</p>
                 )}
             </div>
@@ -651,7 +651,7 @@ function FormularioGestorRecibos() {
                             options={tipoRecibo}
                             optionLabel="value"
                             placeholder="Selecciona el tipo de vuelo"
-                            className="w-full md:w-14rem"
+                            className="w-full md:w-14rem dropdown-generar-recibo"
                         />
                     ) : (
                         <p>Cargando opciones...</p>
