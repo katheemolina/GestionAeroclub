@@ -197,7 +197,8 @@
 
 .center-header {
     text-align: center;
-  }
+    
+}
 
 .p-dialog .p-card{
     padding: 10px;
@@ -207,6 +208,16 @@
     margin-bottom: 10px;
 }
 
+.p-column-header-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    border-right: 1px dotted #aaaaaa; /* Add a border between headers */
+  }
 @media(max-width:750px){
    
     .p-column-header-content{

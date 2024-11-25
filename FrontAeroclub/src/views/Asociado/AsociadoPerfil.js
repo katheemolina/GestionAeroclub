@@ -299,8 +299,8 @@ const handleSubmit = async (e) => {
           style={{ width: '100%' }} >
           <Column field="codigos_licencias" header="Codigos de licencias"></Column>
           <Column field="descripcion" header="Descripcion"></Column>
-          <Column field="fecha_vigencia" header="Fecha de inicio de vigencia" body={formatFecha} /> 
-          <Column header="Estado" body={calcularEstadoLicencia} />
+          <Column field="fecha_vigencia" header="Fecha de otorgamiento" body={formatFecha} /> 
+          {/* <Column header="Estado" body={calcularEstadoLicencia} /> */}
         </DataTable>
         <Button className="actualizar" label="Actualizar licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
       

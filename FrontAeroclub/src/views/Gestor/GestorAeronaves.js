@@ -163,23 +163,23 @@ const AeronaveCrud = () => {
 
 
     // Funciones para manejar los diálogos
-const openEstadoDialog = (aeronave) => {
+    const openEstadoDialog = (aeronave) => {
     setSelectedAeronave(aeronave);
     setEstadoDialog(true);
-};
+    };
 
-const openPolizaDialog = (aeronave) => {
+    const openPolizaDialog = (aeronave) => {
     setSelectedAeronave(aeronave);
     setPolizaDialog(true);
-};
+    };
 
-const openIntervaloDialog = (aeronave) => {
+    const openIntervaloDialog = (aeronave) => {
     setSelectedAeronave(aeronave);
     setIntervaloDialog(true);
-};
+    };
 
-// Funciones para los servicios
-const handleCambiarEstado = async () => {
+    // Funciones para los servicios
+    const handleCambiarEstado = async () => {
     try {
         if (selectedAeronave) {
             await cambiarEstadoAeronave(selectedAeronave.id_aeronave);
@@ -192,9 +192,9 @@ const handleCambiarEstado = async () => {
         //console.error('Error al cambiar estado:', error);
         toast.error('Error al cambiar el estado.');
     }
-};
+    };
 
-const handleActualizarPoliza = async () => {
+    const handleActualizarPoliza = async () => {
     try {
         if (selectedAeronave) {
             const { id_aeronave } = selectedAeronave; // Extraer el ID de la aeronave
@@ -211,10 +211,10 @@ const handleActualizarPoliza = async () => {
         //console.error('Error al actualizar póliza:', error);
         toast.error('Error al actualizar la póliza.');
     }
-};
+    };
 
 
-const handleActualizarIntervalo = async () => {
+    const handleActualizarIntervalo = async () => {
     try {
         if (selectedAeronave) {
             const { id_aeronave } = selectedAeronave; // Extraer el ID de la aeronave
@@ -233,9 +233,9 @@ const handleActualizarIntervalo = async () => {
         //console.error('Error al actualizar intervalo:', error);
         toast.error('Error al actualizar el intervalo.');
     }
-};
+    };
 
-const handleGoToAeronavesServicios = (aeronave) => {
+    const handleGoToAeronavesServicios = (aeronave) => {
     if (aeronave) {
         navigate('/gestor/aeronavesServicios', {
             state: { id_aeronave: aeronave.id_aeronave },
@@ -243,9 +243,18 @@ const handleGoToAeronavesServicios = (aeronave) => {
     } else {
         toast.error("No se ha seleccionado ninguna aeronave.");
     }
-};
+    };
 
-
+    const estadoTemplate = (rowData) => (
+        <span
+          style={{
+            color: rowData.estado === "activo" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+            fontWeight: "bold",
+          }}
+        >
+          {rowData.estado === "activo" ? "Operativo" : "No operativo"}
+        </span>
+      );
 
     const formatFecha = (fecha) => {
         if (!fecha) return ''; // Manejar valores nulos o vacíos
@@ -293,7 +302,7 @@ const handleGoToAeronavesServicios = (aeronave) => {
                     header="Vto. Póliza"
                     body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
                     ></Column>
-                <Column field="estado" header="Estado"></Column>
+                <Column field="estado" header="Estado" body={estadoTemplate}></Column>
                 <Column header="Acciones" 
                     style={{width: '1px'}}
                     body={(rowData) => (
