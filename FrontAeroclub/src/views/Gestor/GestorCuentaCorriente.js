@@ -124,11 +124,21 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           body={plantillaFecha}
         />
         <Column
+          field="asociado"
+          header="Asociado"
+          sortable
+          filter
+          filterPlaceholder="Buscar por asociado"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+        />
+        <Column
           field="descripcion_completa"
           header="Descripción"
           sortable
           filter
-          filterPlaceholder="Buscar por usuario"
+          filterPlaceholder="Buscar por descripcion"
           filterMatchMode="contains"
           showFilterMenu={false}
           style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -166,66 +176,49 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
         {selectedRowData && (
           <div>
             <div className="p-fluid details-dialog">
+              <Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>
               <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
               <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
               <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-              {detailData && detailData.length > 0 && detailData.map((data, index) => (
-              <Card key={index}>
-                {data.id_movimiento !== null && (
-                  <p><strong>ID del movimiento:</strong> {data.id_movimiento}</p>
-                )}
-                {data.tipo !== null && (
-                  <p><strong>Tipo:</strong> {data.tipo}</p>
-                )}
-                {data.tipo_recibo !== null && (
-                  <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
-                )}
-                {data.cantidad !== null && (
-                  <p><strong>Cantidad:</strong> {data.cantidad}</p>
-                )}
-                {data.estado !== null && (
-                  <p><strong>Estado:</strong> {data.estado}</p>
-                )}
-                {data.importe !== null && (
-                  <p><strong>Importe:</strong> {data.importe}</p>
-                )}
-                {data.observaciones !== null && (
-                  <p><strong>Observaciones:</strong> {data.observaciones}</p>
-                )}
-                {data.id_recibo !== null && (
-                  <p><strong>ID del recibo:</strong> {data.id_recibo}</p>
-                )}
-                {data.numero_recibo !== null && (
-                  <p><strong>Número del recibo:</strong> {data.numero_recibo}</p>
-                )}
-                {data.id_ref !== null && (
-                  <p><strong>Id_ref:</strong> {data.id_ref}</p>
-                )}
-                {data.referencia_aeroclub !== null && (
-                  <p><strong>Nro. de movimiento:</strong> {data.referencia_aeroclub}</p>
-                )}
-                {data.observaciones !== null && (
-                  <p><strong>Observaciones:</strong> {data.observaciones}</p>
-                )}
-                {data.id_usuario !== null && (
-                  <p><strong>ID del asociado:</strong> {data.id_usuario}</p>
-                )}
-                {data.instruccion !== null && (
-                  <p><strong>Instrucción:</strong> {data.instruccion}</p>
-                )}
-                {data.id_instructor !== null && (
-                  <p><strong>id_instructor:</strong> {data.id_instructor}</p>
-                )}
-                {data.created_at !== null && (
-                  <p><strong>Created_at:</strong> {data.created_at}</p>
-                )}
-                {data.updated_at !== null && (
-                  <p><strong>Updated_at:</strong> {data.updated_at}</p>
-                )}
-              </Card>
+             {detailData && detailData.length > 0 && detailData.map((data, index) => (
+                <Card key={index}>
+                  {data.id_movimiento !== null && (
+                    <p><strong>Nro de movimiento:</strong> {data.id_movimiento}</p>
+                  )}
+                  {data.tipo !== null && (
+                    <p><strong>Tipo:</strong> {data.tipo}</p>
+                  )}
+                  {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
+                    <div>
+                      <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
+                      {data.cantidad !== null && (
+                        <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
+                      )}
+                      {data.estado !== null && (
+                        <p><strong>Estado:</strong> {data.estado}</p>
+                      )}
+                      {data.importe !== null && (
+                        <p><strong>Importe:</strong> {data.importe_mov}</p>
+                      )}
+                      {data.observaciones !== null && (
+                        <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
+                      )}
+                      {data.observaciones !== null && (
+                        <p><strong>Observaciones:</strong> {data.observaciones}</p>
+                      )}
+                      {data.instruccion !== null && (
+                        <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                      )}
+                      {data.instructor !== null && (
+                        <p><strong>Instructor:</strong> {data.instructor}</p>
+                      )}
+                      {data.created_at !== null && (
+                        <p><strong>Fecha del Movimiento:</strong> {data.fecha_creacion}</p>
+                      )}
+                    </div>
+                  )}
+                </Card>
               ))}
-
-              
               
             </div>
           </div>
