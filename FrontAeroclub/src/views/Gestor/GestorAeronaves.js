@@ -522,8 +522,8 @@ const handleGoToAeronavesServicios = (aeronave) => {
                 style={{ width: '400px' }}
                 footer={
                     <div>
-                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
-                        <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
+                        <Button className="gestor-btn-cancelar p-button-text" label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} />
+                        <Button className="gestor-btn-confirmar p-button-danger" label="Eliminar" icon="pi pi-check" onClick={handleDelete}  />
                     </div>
                 }
             >
@@ -537,8 +537,8 @@ const handleGoToAeronavesServicios = (aeronave) => {
                 style={{ width: '400px' }}
                 footer={
                     <div>
-                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setEstadoDialog(false)} className="p-button-text" />
-                        <Button label="Confirmar" icon="pi pi-check" onClick={handleCambiarEstado} className="p-button-danger" />
+                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setEstadoDialog(false)} className="p-button-text gestor-btn-cancelar" />
+                        <Button label="Confirmar" icon="pi pi-check" onClick={handleCambiarEstado} className="p-button-danger gestor-btn-confirmar" />
                     </div>
                 } > <p>¿Está seguro de que desea cambiar el estado de esta aeronave?</p>
             </Dialog>
@@ -580,8 +580,10 @@ const handleGoToAeronavesServicios = (aeronave) => {
                 <Button label="Actualizar" onClick={handleActualizarPoliza} />
             </Dialog>
 
-            <Dialog visible={intervaloDialog} onHide={() => setIntervaloDialog(false)} header="Actualizar Intervalo de Inspección">
-
+            <Dialog visible={intervaloDialog} 
+                    onHide={() => setIntervaloDialog(false)} 
+                    header="Actualizar Intervalo de Inspección"
+                    footer={<Button label="Actualizar" onClick={handleActualizarIntervalo} className='gestor-btn-confirmar' />}>
                 <div className="p-field">
                         <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
                         <InputText
@@ -592,8 +594,8 @@ const handleGoToAeronavesServicios = (aeronave) => {
                             onChange={(e) => setNuevoIntervalo({ ...nuevoIntervalo, intervalo_inspeccion: e.target.value })}
                             placeholder="Horas para inspección"
                         />
-                    </div>
-                <Button label="Actualizar" onClick={handleActualizarIntervalo} />
+                </div>
+                
             </Dialog>
 
 
