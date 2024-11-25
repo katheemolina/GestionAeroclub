@@ -57,7 +57,7 @@
     padding: 15px;
     background-color: #ddd;
     border-radius: 8px;
-    height: 300px;
+    height: 100px;
     width: 300px;
 }
 
@@ -67,25 +67,25 @@
     margin-bottom: 10px;
 }
 
-.avion-container{
+.avion-container {
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
     gap: 10px;
 }
 
-.avion-box{
+.avion-box {
     display: flex;
     flex-direction: column;
     overflow: hidden;
     background-color: #ddd;
     border-radius: 8px;
     height: 400px;
-    width: 500px;
+    width: 400px;
     position: relative;
 }
 
-.nombre-avion{
+.nombre-avion {
     width: 100%;
     position: absolute;
     padding: 10px;
@@ -94,19 +94,18 @@
     background-color: rgba(98, 98, 98, 0.396);
 }
 
-.imagen-avion{
+.imagen-avion {
     background-color: rgb(58, 58, 58);
     flex-grow: 1;
     width: 100%;
-    
 }
 
-.tabla-avion{
+.tabla-avion {
     width: 100%;
 }
 
 .tabla-avion th,
-.tabla-avion td{
+.tabla-avion td {
     padding: 10px;
     border: 1px solid #000000;
     text-align: left;
