@@ -42,7 +42,7 @@ const GestorAeronavesServicios = () => {
     const navigate = useNavigate(); 
 
     const [triggerEffect, setTriggerEffect] = useState(false); // Para llamar al useEffect que trae los datos de servicios
-
+    
     const formatearFecha = (fecha) => {
         const date = new Date(fecha + 'T00:00:00'); // Agregar hora para evitar problemas de zona horaria
         const dia = String(date.getDate()).padStart(2, '0');
@@ -56,6 +56,7 @@ const GestorAeronavesServicios = () => {
     return formatearFecha(rowData.fecha);
     };
 
+
     useEffect(() => {
         if (id_aeronave) {
             const today = new Date();
@@ -68,6 +69,7 @@ const GestorAeronavesServicios = () => {
     }, [id_aeronave]);
     
     useEffect(() => {
+        
         if (!id_aeronave) {
             toast.error("No se recibió un ID de aeronave.");
         } else {
@@ -91,8 +93,8 @@ const GestorAeronavesServicios = () => {
                         console.log(serviciosData);
                         setLoading(false); // Cuando los servicios se hayan cargado, cambia el estado de carga
                     }).catch((error) => {
-                        toast.error("La aeronave seleccionada no tiene servicios registrados");
                         setLoading(false);
+                        toast.error("La aeronave seleccionada no tiene servicios registrados");
                     });
                 } else {
                     toast.error("No se encontró la aeronave con el ID especificado.");
