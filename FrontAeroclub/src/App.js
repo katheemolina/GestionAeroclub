@@ -65,6 +65,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="*" element={<UsuarioDeshabilitado />} />
+          <Route path='/InicioSesion' element={<Inicio />}/>
         </Routes>
       </Router>
     );
