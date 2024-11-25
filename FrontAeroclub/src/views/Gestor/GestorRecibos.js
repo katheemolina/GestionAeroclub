@@ -114,6 +114,7 @@ function GestorRecibos({ idUsuario = 0 }) {
   const estados = [
     { label: 'Pago', value: 'Pago' },
     { label: 'Impago', value: 'Impago' },
+    { label: 'Seleccione estado', value: ' ' }
   ];
   const onEstadoChange = (e, options) => {
     setFiltroEstado(e.value);
@@ -489,6 +490,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       header="Estado"
       sortable
       filter
+      style={{width: '150px'}}
       filterField="estado"
       showFilterMenu={false}
       body={estadoPagoTemplate}
@@ -497,8 +499,9 @@ function GestorRecibos({ idUsuario = 0 }) {
           value={filtroEstado}
           options={estados}
           onChange={(e) => onEstadoChange(e, options)}
-          placeholder="Seleccionar estado"
+          placeholder="Seleccione estado"
           className="p-column-filter"
+          style={{width: '150px'}}
         />
       )}
       

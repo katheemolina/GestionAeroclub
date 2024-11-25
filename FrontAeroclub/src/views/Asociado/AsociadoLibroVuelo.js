@@ -68,7 +68,7 @@ function AsociadoLibroVuelo() {
     options.filterApplyCallback(e.value); // Aplica el filtro
   };
 
-  const instruccion = [
+  const OpcionesInstruccion = [
     { label: "Sí", value: "Si" },
     { label: "No", value: "No" },
     { label: "Seleccione instrucción", value: " "}
@@ -134,7 +134,7 @@ function AsociadoLibroVuelo() {
         <Column
       field="instruccion"
       header="Instrucción"
-      style={{ width: '120px' }}
+      style={{ width: '150px' }}
       sortable
       filter
       showAddButton={false}
@@ -143,10 +143,10 @@ function AsociadoLibroVuelo() {
       filterElement={(options) => (
         <Dropdown
           value={instruccionFiltro}
-          options={instruccion}
+          options={OpcionesInstruccion}
           onChange={(e) => onInstruccionChange(e, options)}
           placeholder="Seleccione instrucción"
-          className="p-column-filter"
+          style={{ width: '150px' }}
         />
       )}
       />
