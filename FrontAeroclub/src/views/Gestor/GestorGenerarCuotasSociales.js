@@ -17,7 +17,7 @@ const GestorGenerarCuotasSociales = () => {
     const [mes, setMes] = useState('');
     const [importe, setImporte] = useState('');
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [fechaMovimiento, setFechaMovimiento] = useState(''); // Nueva variable para la fecha del movimiento
+    const [fechaMovimiento, setFechaMovimiento] = useState(new Date().toISOString().split('T')[0]); 
     const [resultado, setResultado] = useState(null);
     const [error, setError] = useState('');  // Nuevo estado para manejar el error
     const { usuarioId } = useUser();
@@ -52,7 +52,6 @@ const GestorGenerarCuotasSociales = () => {
             id_usuario_evento: usuarioId, // Agregar el usuario actual
             fecha_movimiento: fechaMovimiento, // Usamos la fecha seleccionada
         };
-        console.log(reciboData);
         try {
             // Llamamos al backend para generar las cuotas sociales
             const response = await generarCuotasSociales(reciboData);
@@ -61,6 +60,7 @@ const GestorGenerarCuotasSociales = () => {
             console.error('Error al generar las cuotas sociales:', error);
             setResultado('');  // Limpiar cualquier mensaje de éxito previo
             setError(error.message || 'Error desconocido');  // Mostrar el error recibido del backend
+            toast.error(error.message); // toast para mostrar error de la base
         } finally {
             setLoading(false); // Desactivar la carga
         }
@@ -112,7 +112,6 @@ const GestorGenerarCuotasSociales = () => {
                 </button>
             </div>
             {resultado && <div className="resultado"><p>{resultado}</p></div>}
-            {error && <div className="error"><p>{error}</p></div>} {/* Mostrar el mensaje de error */}
             </div>
 
             <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
