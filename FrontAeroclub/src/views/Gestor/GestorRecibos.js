@@ -42,7 +42,6 @@ function GestorRecibos({ idUsuario = 0 }) {
     };
 
     fetchData();
-    console.log(data);
   }, [idUsuario]);
 
   const handleCheckboxChange = (recibo) => {
