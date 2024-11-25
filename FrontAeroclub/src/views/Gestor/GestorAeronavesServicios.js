@@ -10,7 +10,6 @@ import { obtenerAeronaves} from '../../services/aeronavesApi';
 import { obtenerServicios, insertarServicio, actualizarServicio } from '../../services/serviciosAeronaves'; 
 import '../../styles/datatable-style.css';
 import './Styles/GestorAeronaves.css';
-
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search'; 
@@ -20,7 +19,6 @@ import { ToastContainer } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
 
 
 const GestorAeronavesServicios = () => {
@@ -36,7 +34,9 @@ const GestorAeronavesServicios = () => {
         observaciones: '',
         id_aeronave: id_aeronave,
     }); // Estado para los datos del servicio
-
+    const [servicioEditar, setServicioEditar] = useState(null);
+    const [mostrarDialogEditar, setMostrarDialogEditar] = useState(false);
+    const [servicioSeleccionado, setServicioSeleccionado] = useState(null);
     const [horasVoladas, setHorasVoladas] = useState(0); 
 
     const navigate = useNavigate(); 
@@ -61,6 +61,15 @@ const GestorAeronavesServicios = () => {
                 const aeronaveSeleccionada = aeronaves.find(a => a.id_aeronave === id_aeronave);
                 if (aeronaveSeleccionada) {
                     setAeronave(aeronaveSeleccionada); // Establecer la aeronave seleccionada en el estado
+                    // Calcular las horas voladas: horas_historicas_voladas + horas_vuelo_aeronave
+                    // Asegurarse de que los valores sean números
+                    const horasHistoricas = Number(aeronaveSeleccionada.horas_historicas_voladas || 0);
+                    const horasVuelo = Number(aeronaveSeleccionada.horas_vuelo_aeronave || 0);
+
+                    // Calcular el total correctamente
+                    const totalHorasVoladas = horasHistoricas + horasVuelo;
+                    setHorasVoladas(totalHorasVoladas);
+
                     // Obtener los servicios de la aeronave seleccionada
                     obtenerServicios(id_aeronave).then((serviciosData) => {
                         setServicios(serviciosData);
@@ -103,6 +112,41 @@ const GestorAeronavesServicios = () => {
             });
     };
 
+    const handleEditClick = (servicio) => {
+        setServicioSeleccionado(servicio);
+        setServicioData({
+            fecha: servicio.fecha,
+            observaciones: servicio.observaciones,
+        });
+        setMostrarDialogEditar(true);
+    };
+
+    const handleUpdateSubmit = () => {
+        if (!servicioSeleccionado) return;
+    
+        // Verificar que el id_servicio está presente
+        console.log("Servicio a actualizar:", servicioSeleccionado.id_servicio);
+        console.log("Datos del servicio:", servicioData);
+    
+        actualizarServicio(servicioSeleccionado.id_servicio, servicioData)
+            .then((updatedServicio) => {
+                const updatedServicios = servicios.map((serv) =>
+                    serv.id_servicio === servicioSeleccionado.id_servicio ? updatedServicio : serv
+                );
+                setServicios(updatedServicios);
+                toast.success("Servicio actualizado correctamente.");
+                setMostrarDialogEditar(false);
+            })
+            .catch(() => {
+                toast.error("Error al actualizar el servicio.");
+            });
+    };
+    
+    
+
+
+
+
 
     return (
         <div className="background">
@@ -114,7 +158,7 @@ const GestorAeronavesServicios = () => {
                 color="primary" 
                 aria-label="Atras" 
                 className="back-button" 
-                onClick={handleBackClick} // Agrega el manejador de clics
+                onClick={handleBackClick} 
                 >
                 <ArrowBackIcon />
                 </IconButton>
@@ -145,11 +189,11 @@ const GestorAeronavesServicios = () => {
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
-                        <Tooltip title="Editar estado de la aeronave">
-                            <IconButton color="primary" >
-                                <EditIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <Tooltip title="Editar servicio">
+                                <IconButton color="primary" onClick={() => handleEditClick(rowData)}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
                     </div>
                 )}></Column>
                     </DataTable>
@@ -195,6 +239,7 @@ const GestorAeronavesServicios = () => {
                     </div>
 
                     {/* Mostrar horas voladas actuales */}
+                    <h4>Sugerencia:</h4>
                     <p>Horas voladas actuales: {horasVoladas}</p>
 
                     {/* Campo para horas anteriores */}
@@ -204,7 +249,42 @@ const GestorAeronavesServicios = () => {
                             name="horas_anteriores" 
                             value={servicioData.horas_anteriores} 
                             onChange={handleInputChange} 
-                            disabled 
+                            
+                        />
+                    </div>
+                </div>
+            </Dialog>
+
+            {/* Dialog para editar servicio */}
+            <Dialog 
+                visible={mostrarDialogEditar} 
+                onHide={() => setMostrarDialogEditar(false)} 
+                header="Editar Servicio" 
+                footer={
+                    <Button label="Guardar" icon="pi pi-check" onClick={handleUpdateSubmit} />
+                }
+            >
+                <div className="p-fluid">
+                    
+                    {/* Campo para fecha */}
+                    <div className="p-field">
+                        <label>Fecha</label>
+                        <InputText 
+                            name="fecha" 
+                            type="date" 
+                            value={servicioData.fecha} 
+                            onChange={handleInputChange} 
+                            placeholder="Fecha del servicio"
+                        />
+                    </div>
+
+                    {/* Campo para observaciones */}
+                    <div className="p-field">
+                        <label>Observaciones</label>
+                        <InputText 
+                            name="observaciones" 
+                            value={servicioData.observaciones} 
+                            onChange={handleInputChange} 
                         />
                     </div>
                 </div>

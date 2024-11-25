@@ -32,10 +32,9 @@ export const insertarServicio = async (servicioData) => {
     }
 };
 
-
-export const actualizarServicio = async (id_aeronave, servicioData) => {
+export const actualizarServicio = async (id, servicioData) => {
     try {
-        const response = await fetch(`${API_URL}/serviciosAeronaves/${id_aeronave}`, {
+        const response = await fetch(`${API_URL}/serviciosAeronaves/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,4 +52,5 @@ export const actualizarServicio = async (id_aeronave, servicioData) => {
         throw error;
     }
 };
+
 
