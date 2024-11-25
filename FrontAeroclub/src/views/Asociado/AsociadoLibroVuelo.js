@@ -125,6 +125,7 @@ function AsociadoLibroVuelo() {
               style={{ width: '100%' }}
               showClear
               
+              style={{ width: '100%' }} // Cambia el valor según lo necesites
             />
           }
         />

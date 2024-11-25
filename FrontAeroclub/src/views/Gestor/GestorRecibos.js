@@ -35,6 +35,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       try {
         const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
         setData(recibosResponse);
+        console.log(recibosResponse)
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
@@ -121,9 +122,6 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
   const handlePreviewAndPrint = (rowData) => {
-    console.log("Datos del recibo para generar PDF:", rowData);
-
-  
     // Datos del recibo
     const reciboData = {
       recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
@@ -385,18 +383,31 @@ function GestorRecibos({ idUsuario = 0 }) {
     img.src = logo; // Cambia esto por la ruta de tu logo
   };
   
-  // Formatear fecha a DD/MM/AAAA
-  const formatearFecha = (fecha) => {
-    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(fecha).toLocaleDateString('es-ES', opciones);
-  };
-
-  // Plantilla para mostrar la fecha 
   const plantillaFecha = (rowData) => {
-    return formatearFecha(rowData.fecha);
+    const fecha = new Date(rowData.fecha);
+    const formatoFecha = fecha.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    });
+    const formatoHora = fecha.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+    return `${formatoFecha} ${formatoHora}`;
   };
-  
 
+  const estadoPagoTemplate = (rowData) => (
+    <span
+      style={{
+        fontWeight: "bold",
+        color: rowData.estado === "Pago" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+      }}
+    >
+      {rowData.estado}
+    </span>
+  );
 
   if (loading) {
     return <PantallaCarga />;
@@ -480,6 +491,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       filter
       filterField="estado"
       showFilterMenu={false}
+      body={estadoPagoTemplate}
       filterElement={(options) => (
         <Dropdown
           value={filtroEstado}
