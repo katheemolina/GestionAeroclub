@@ -518,16 +518,10 @@ function FormularioGestorRecibos() {
             <hr/>
         </>
     );
-
-    const horaSalidaMasTemprana = itinerarioData.reduce((minHora, itinerario) => {
-        if (!minHora || itinerario.horaSalida < minHora) {
-          return itinerario.horaSalida;
-        }
-        return minHora;
-      }, null);
-
-    const fechaConHora = `${fecha} ${`${horaSalidaMasTemprana}:00` || "00:00:00"}`;
-    const fechaConHoraCombustible = `${fecha} ${horaSalidaMasTemprana || new Date().toTimeString().split(' ')[0]}`;
+    
+    const now = new Date();
+    const horaActual = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
+    const fechaConHora = `${fecha} ${horaActual}`;
     const fechaHoraRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 
     const navigate = useNavigate();
@@ -551,7 +545,7 @@ function FormularioGestorRecibos() {
                 TipoRecibo: 'Combustible',
                 Cantidad: Number(cantidad),
                 Importe: monto,
-                Fecha: fechaConHoraCombustible,
+                Fecha: fechaConHora,
                 Instruccion: 0, // Valor predeterminado
                 IdInstructor: 0, // Valor predeterminado
                 Itinerarios: 0, // Valor predeterminado
@@ -576,6 +570,7 @@ function FormularioGestorRecibos() {
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo') {
+            console.log(fechaConHora)
             reciboData = {
                 IdUsuario: asociadosSeleccionado?.id_usuario ?? 0, // Valor predeterminado si es null o undefined
                 TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado', // Valor predeterminado
