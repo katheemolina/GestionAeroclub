@@ -3,7 +3,7 @@ import Login from './components/Login';
 import './components/styles/Login.css'
 
 export const CLIENT_ID = "1081356917813-3b09t79q645qlt5a1j3ftntgmsko6jrp.apps.googleusercontent.com";
-
+export const REDIRECT_URI = 'https://18.226.94.236/callback';  // Actualiza con la IP pública del servidor
 
 export default function Inicio() {
     return (

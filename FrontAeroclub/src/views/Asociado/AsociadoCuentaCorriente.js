@@ -48,24 +48,24 @@ function AsociadoCuentaCorriente() {
 
   const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
 
-    // Formatear fecha a DD/MM/AAAA HH:MM:SS
-    const formatearFecha = (fecha) => {
-      const date = new Date(fecha);
-      const dia = String(date.getDate()).padStart(2, '0');
-      const mes = String(date.getMonth() + 1).padStart(2, '0');
-      const año = date.getFullYear();
-      const horas = String(date.getHours()).padStart(2, '0');
-      const minutos = String(date.getMinutes()).padStart(2, '0');
-      const segundos = String(date.getSeconds()).padStart(2, '0');
-      return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
-    };
-  
-  
-    // Plantilla para mostrar la fecha 
-    const plantillaFecha = (rowData) => {
-      return formatearFecha(rowData.fecha);
-    };
-  
+  // Formatear fecha a DD/MM/AAAA HH:MM:SS
+  const formatearFecha = (fecha) => {
+    const date = new Date(fecha);
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const año = date.getFullYear();
+    const horas = String(date.getHours()).padStart(2, '0');
+    const minutos = String(date.getMinutes()).padStart(2, '0');
+    const segundos = String(date.getSeconds()).padStart(2, '0');
+    return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
+  };
+
+
+  // Plantilla para mostrar la fecha 
+  const plantillaFecha = (rowData) => {
+    return formatearFecha(rowData.fecha);
+  };
+
 
   if (loading) {
     return <PantallaCarga />;
@@ -80,40 +80,22 @@ function AsociadoCuentaCorriente() {
       </div>
 
       <DataTable value={data} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
-      <Column 
-  field="fecha" 
-  header="Fecha" 
-  sortable 
-  filter 
-  filterPlaceholder="Buscar por fecha" 
-  filterMatchMode="contains" 
-  dataType="date" 
-  showFilterMenu={false} 
-  filterType='date' 
-  body={plantillaFecha} // Aplica la plantilla personalizada para mostrar el formato deseado
-/>
-
-        <Column 
-          field="tipo_movimiento" 
-          header="Tipo de Movimiento" 
-          sortable 
-          filter 
-          filterElement={
-            <Dropdown 
-              value={tipoFiltro} 
-              options={tiposMovimientos} 
-              onChange={(e) => setTipoFiltro(e.value)} 
-              placeholder="Filtrar por tipo" 
-              showClear 
-              
-            />
-          } 
-          showFilterMenu={false} 
+        <Column
+          field="fecha"
+          header="Fecha"
+          sortable
+          filter
+          filterPlaceholder="Buscar por fecha"
+          filterMatchMode="contains"
+          dataType="date"
+          showFilterMenu={false}
+          filterType='date'
+          body={plantillaFecha} // Aplica la plantilla personalizada para mostrar el formato deseado
         />
         <Column field="descripcion_completa" header="Descripción" sortable filter filterPlaceholder="Buscar por descripción" filterMatchMode="contains" showFilterMenu={false} />
         <Column field="importe" header="Importe" sortable body={(rowData) => formatoMoneda(rowData.importe)} filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} />
-        <Column 
-          header="Acciones" 
+        <Column
+          header="Acciones"
           body={(rowData) => (
             <div className="acciones">
               <Tooltip title="Ver detalles">
@@ -122,7 +104,7 @@ function AsociadoCuentaCorriente() {
                 </IconButton>
               </Tooltip>
             </div>
-          )} 
+          )}
         />
       </DataTable>
 
