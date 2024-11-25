@@ -135,6 +135,30 @@ const GestorAsociados  = () => {
         }
     };
     
+    const estadoTemplate = (rowData) => (
+        <span
+          style={{
+            fontWeight: "bold",
+            color: rowData.estado === "Habilitado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+          }}
+        >
+          {rowData.estado}
+        </span>
+    );
+    
+    const estadoCMATemplate = (rowData) => {
+        const color = rowData.estadoCMA === "Vigente"
+          ? "rgb(76, 175, 80)"
+          : rowData.estadoCMA === "Actualizar CMA"
+          ? "rgb(255, 152, 0)" // Amarillo anaranjado
+          : "rgb(169, 70, 70)"; // Rojo
+      
+        return (
+          <span style={{ fontWeight: "bold", color }}>
+            {rowData.estadoCMA}
+          </span>
+        );
+    };
 
      // Abrir el diálogo de confirmación para habilitar usuario
      const confirmHabilitarUsuario = (idUsuario) => {
@@ -180,10 +204,10 @@ const GestorAsociados  = () => {
                 scrollHeight="800px"
                 style={{ width: '100%' }} >
                 <Column field="usuario" header="Asociado" sortable ></Column>
-                <Column field="estado" header="Estado" sortable></Column>
+                <Column field="estado" header="Estado" body={estadoTemplate} sortable></Column>
                 <Column field="roles" header="Roles Activos" sortable></Column> 
                 <Column field="horas_vuelo" header="Horas de vuelo totales" sortable></Column>
-                <Column field="estadoCMA" header="Estado del CMA" sortable></Column>
+                <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable></Column>
                 <Column field="saldo" header="Saldo" sortable ></Column>
                 <Column 
                         style={{width: '1px'}}

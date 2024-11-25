@@ -35,8 +35,6 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
   const [licencias, setLicencias] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
-
   const location = useLocation();  // Hook para obtener el estado de la navegación
   const { user } = location.state || {};  // Accedemos al estado pasad
 
@@ -96,6 +94,16 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
   ? new Date(usuario.fecha_nacimiento).toLocaleDateString()
   : "Fecha no disponible";
 
+  const adaptacionTemplate = (rowData) => (
+    <span
+      style={{
+        fontWeight: "bold",
+        color: rowData.Adaptacion === "Adaptado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+      }}
+    >
+      {rowData.Adaptacion}
+    </span>
+  );
 
   if (loading) {
     return <PantallaCarga/>
@@ -159,7 +167,7 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
           <Column field="fecha_vuelo" header="Último vuelo" sortable ></Column>
           <Column field="tiempo_vuelo" header="Tiempo" sortable ></Column>
           <Column field="aterrizajes" header="Aterrizajes" sortable></Column>
-          <Column field="Adaptacion" header="Adaptación" sortable></Column>
+          <Column field="Adaptacion" header="Adaptación" body={adaptacionTemplate} sortable></Column>
         </DataTable>
 
       </section>

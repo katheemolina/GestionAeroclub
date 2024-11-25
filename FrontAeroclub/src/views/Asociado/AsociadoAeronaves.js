@@ -54,7 +54,18 @@ const AeronaveCrud = () => {
         if (!fecha) return ''; // Manejar valores nulos o vacíos
         const date = new Date(fecha); // Asegúrate de que sea un objeto Date
         return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
-      };
+    };
+
+    const estadoTemplate = (rowData) => (
+        <span
+          style={{
+            color: rowData.estado === "activo" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+            fontWeight: "bold",
+          }}
+        >
+          {rowData.estado === "activo" ? "Operativo" : "No operativo"}
+        </span>
+    );
 
     if (loading) {
         return <PantallaCarga />
@@ -94,7 +105,7 @@ const AeronaveCrud = () => {
                     header="Vto. Póliza"
                     body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
                     ></Column>
-                <Column field="estado" header="Estado"></Column>
+                <Column field="estado" header="Estado" body={estadoTemplate}></Column>
                 <Column header="Acciones" 
                     style={{width: '1px'}}
                     body={(rowData) => (

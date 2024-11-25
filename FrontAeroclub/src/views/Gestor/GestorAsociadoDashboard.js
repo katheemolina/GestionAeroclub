@@ -89,6 +89,17 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
     fetchData();
   }, [idUsuario]);
 
+  const adaptacionTemplate = (rowData) => (
+    <span
+      style={{
+        fontWeight: "bold",
+        color: rowData.Adaptacion === "Adaptado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+      }}
+    >
+      {rowData.Adaptacion}
+    </span>
+  );
+
   const cmaClass = cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente';
 
   const navigate = useNavigate(); // Inicializa el hook de navegación
@@ -157,7 +168,7 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
         <DataTable value={data}>  
             <Column field="matricula_aeronave" header="Avión"></Column>
             <Column field="fecha_vuelo" header="Último vuelo"></Column>
-            <Column field="Adaptacion" header="Adaptación"></Column>
+            <Column field="Adaptacion" header="Adaptación" body={adaptacionTemplate}></Column>
         </DataTable>
       </section>
 
