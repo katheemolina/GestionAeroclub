@@ -3,6 +3,10 @@ import './Styles/GestorDashboard.css';
 import { obtenerHorasVueloUltimoMes, obtenerSaldoCuentaCorrienteAeroclub } from '../../services/dashboardGestor';
 import { obtenerAeronaves } from '../../services/aeronavesApi';
 import avionImage from '../../avionetaBN.png'; // Ajusta la ruta según la ubicación de la imagen
+import { Dialog } from 'primereact/dialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+
 
 function GestorDashboard() {
   // Estados
@@ -12,6 +16,9 @@ function GestorDashboard() {
   const [aeronaves, setAeronaves] = useState([]);
   const [horasPorAvion, setHorasPorAvion] = useState({});
   const [error, setError] = useState(null);
+
+  const [dialogVisible, setDialogVisible] = useState(false); // Estado para controlar la visibilidad del diálogo
+
 
   // Función para obtener los datos desde las APIs
   const fetchData = async () => {
@@ -65,8 +72,25 @@ function GestorDashboard() {
           <h3>Saldo</h3>
           <div className="num-saldo">{`$${saldo}`}</div>
         </div>
-        <div className="alertas-btn">(notificaciones)</div>
+        <div
+          className="alertas-btn"
+          onClick={() => setDialogVisible(true)} // Al hacer clic, muestra el diálogo
+        >
+          <FontAwesomeIcon icon={faBell} size="lg" /> {/* Ícono de campanita */}
+        </div>
       </div>
+
+      {/* Dialogo para las notificaciones */}
+      <Dialog
+        header="Notificaciones" 
+        visible={dialogVisible} 
+        style={{ width: '40vw' }}
+        onHide={() => setDialogVisible(false)}
+      >
+        <p>Próximamente...</p>
+      </Dialog>
+
+      
 
       {/* Sección de Dinero */}
       <div className="contenedor-statbox">
