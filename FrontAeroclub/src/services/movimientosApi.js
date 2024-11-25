@@ -46,12 +46,8 @@ export const obtenerCuentaCorrienteAeroclub = async () => {
 
 export const obtenerCuentaCorrienteAeroclubDetalle = async (referenciaAeroclub) => {
     // Enviar una solicitud POST con el parámetro ReferenciaAeroclub
-    const response = await fetch(`${API_URL}/obtenerCuentaCorrienteAeroclubDetalle`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ReferenciaAeroclub: referenciaAeroclub }), // Pasamos el parámetro en el cuerpo de la solicitud
+    const response = await fetch(`${API_URL}/movimientosAeroclubDetalle/${referenciaAeroclub}`, {
+        method: 'GET'
     });
 
     if (!response.ok) {

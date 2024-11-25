@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Styles/GestorCuentaCorriente.css';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { obtenerCuentaCorrienteAeroclub } from '../../services/movimientosApi';
+import { obtenerCuentaCorrienteAeroclub, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
@@ -22,6 +22,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrienteAeroclub(idUsuario);
         setData(cuentaCorrienteResponse);
+        console.log(cuentaCorrienteResponse);
       } catch (error) {
         console.error('Error al obtener datos:', error);
       }
@@ -35,9 +36,21 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     return `$ ${parseFloat(rowData.importe).toFixed(2)}`;
   };
 
-  const openDialog = (rowData) => {
+  const openDialog = async (rowData) => {
+
     setSelectedRowData(rowData);
-    setDialogVisible(true);
+    setDialogVisible(true); 
+  
+    try {
+      console.log(rowData)
+      const detalleMovimientoDialog = await obtenerCuentaCorrienteAeroclubDetalle(rowData.referencia_aeroclub);
+      
+      // setDetalleMovimiento(dataDialog);
+      console.log(detalleMovimientoDialog)
+    } catch (error) {
+      console.error("Error al obtener detalles del movimiento:", error);
+      //setDetalleMovimiento(null);
+    }
   };
 
   const closeDialog = () => {
@@ -83,6 +96,18 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
         scrollHeight="800px"
         filterDisplay="row"
       >
+      <Column
+        field="referencia_aeroclub"
+        header="Nro. Movimiento"
+        sortable
+        filter
+        filterApply='numeric'
+        filterPlaceholder="Numero de Movimiento"
+        filterMatchMode="contains"
+        showFilterMenu={false}
+        
+        
+      />
         <Column
           field="fecha"
           header="Fecha"
