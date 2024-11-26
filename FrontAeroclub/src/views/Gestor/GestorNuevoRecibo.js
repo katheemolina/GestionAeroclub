@@ -650,7 +650,7 @@ function FormularioGestorRecibos() {
                             onChange={(e) => setTipoReciboSeleccionado(e.value)}
                             options={tipoRecibo}
                             optionLabel="value"
-                            placeholder="Selecciona el tipo de vuelo"
+                            placeholder="Selecciona el tipo de recibo"
                             className="w-full md:w-14rem dropdown-generar-recibo"
                         />
                     ) : (
