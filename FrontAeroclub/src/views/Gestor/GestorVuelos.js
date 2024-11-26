@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { obtenerTodosLosItinerarios } from '../../services/vuelosApi';
 import './Styles/GestorVuelos.css'
 import { DataTable } from 'primereact/datatable';
@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
 
 function GestorVuelos(){
     const [data, setData] = useState([]);
@@ -56,6 +57,14 @@ function GestorVuelos(){
         return formatearFecha(rowData.fecha);
       };
 
+    const dt = useRef(null);
+    const clearFilters = () => {
+      if (dt.current) {
+        dt.current.reset(); // Limpia los filtros de la tabla
+      }
+      
+    };
+
     if (loading) {
         return <PantallaCarga/>
     }
@@ -65,6 +74,7 @@ function GestorVuelos(){
             <h1>Vuelos</h1>
         </header>
         <DataTable 
+        ref={dt}
             value={data} 
             paginator rows={15} 
             rowsPerPageOptions={[10, 15, 25, 50]} 
@@ -81,6 +91,15 @@ function GestorVuelos(){
             <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por instruccion" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column header="Acciones"
+            filter
+            showFilterMenu={false}
+                filterElement={
+                    <Button
+                      label="Limpiar"
+                      onClick={clearFilters}
+                      style={{ width: '100%', height: '40px',  padding: '10px'}}
+                    />
+                  }
                 body={(rowData) => (
                     <div className='acciones'>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { movimientosNoLiquidadosPorInstructor } from '../../services/usuariosApi';
@@ -127,6 +127,14 @@ const GestorArmarLiquidacionInstructores = () => {
         );
     };
 
+    const dt = useRef(null);
+    const clearFilters = () => {
+      if (dt.current) {
+        dt.current.reset(); // Limpia los filtros de la tabla
+      }
+      
+    };
+
     if (loading) {
         return <PantallaCarga />;
     }
@@ -149,6 +157,7 @@ const GestorArmarLiquidacionInstructores = () => {
             />
 
             <DataTable
+                ref={dt}
                 value={movimientos}
                 paginator
                 rows={15}
@@ -202,6 +211,15 @@ const GestorArmarLiquidacionInstructores = () => {
 
                 {/* Columna de Acciones */}
                 <Column
+                filter
+                showFilterMenu={false}
+                filterElement={
+                  <Button
+                    label="Limpiar"
+                    onClick={clearFilters}
+                    style={{ width: '100%', height: '40px',  padding: '10px'}}
+                  />
+                }
                     header="Acciones"
                     body={(rowData) => (
                         <div className="acciones">

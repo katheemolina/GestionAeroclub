@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "./Styles/AsociadoCuentaCorriente.css";
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 import { DataTable } from 'primereact/datatable';
@@ -11,13 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
+import { toast } from 'react-toastify';
 
 function AsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { usuarioId } = useUser();
-  const [tiposMovimientos, setTiposMovimientos] = useState([]);
-  const [tipoFiltro, setTipoFiltro] = useState(null);
+  const { usuarioId } = useUser();  
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
 
@@ -26,10 +26,9 @@ function AsociadoCuentaCorriente() {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
-        const tiposUnicos = [...new Set(cuentaCorrienteResponse.map((item) => item.tipo_movimiento))];
-        setTiposMovimientos(tiposUnicos.map((tipo) => ({ label: tipo, value: tipo })));
+        
       } catch (error) {
-        console.error("Error al obtener datos:", error);
+        toast.error("Error al obtener datos:", error);
       }
       setLoading(false);
     };
@@ -66,6 +65,12 @@ function AsociadoCuentaCorriente() {
     return formatearFecha(rowData.fecha);
   };
 
+  const dt = useRef(null);
+    const clearFilters = () => {
+      if (dt.current) {
+        dt.current.reset(); // Limpia los filtros de la tabla
+      }
+    };
 
   if (loading) {
     return <PantallaCarga />;
@@ -79,7 +84,7 @@ function AsociadoCuentaCorriente() {
         </header>
       </div>
 
-      <DataTable value={data} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
+      <DataTable ref={dt} value={data} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
         <Column
           field="fecha"
           header="Fecha"
@@ -96,6 +101,15 @@ function AsociadoCuentaCorriente() {
         <Column field="importe" header="Importe" sortable body={(rowData) => formatoMoneda(rowData.importe)} filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} />
         <Column
           header="Acciones"
+          filter
+          showFilterMenu={false}
+          filterElement={
+            <Button
+              label="Limpiar"
+              onClick={clearFilters}
+              style={{ width: '100%', height: '40px',  padding: '10px'}}
+            />
+          }
           body={(rowData) => (
             <div className="acciones">
               <Tooltip title="Ver detalles">

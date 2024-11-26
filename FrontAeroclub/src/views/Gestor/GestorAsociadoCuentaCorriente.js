@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "./Styles/AsociadoCuentaCorriente.css";
 import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 import { DataTable } from 'primereact/datatable';
@@ -113,6 +113,8 @@ function GestorAsociadoCuentaCorriente() {
     );
   };
 
+ 
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -183,6 +185,15 @@ function GestorAsociadoCuentaCorriente() {
         />
         <Column
           header="Acciones"
+          filter
+        showFilterMenu={false}
+        filterElement={
+          <Button
+            label="Limpiar"
+            onClick={clearFilters}
+            style={{ width: '100%', height: '40px',  padding: '10px'}}
+          />
+        }
           body={(rowData) => (
             <div className="acciones">
               <Tooltip title="Ver detalles">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Styles/GestorCuentaCorriente.css';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -9,6 +9,7 @@ import { Card } from 'primereact/card';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import { Button } from 'primereact/button';
 
 function GestorCuentaCorriente({ idUsuario = 0 }) {
   const [data, setData] = useState([]);
@@ -77,6 +78,14 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     return formatearFecha(rowData.fecha);
   };
 
+  const dt = useRef(null);
+  const clearFilters = () => {
+    if (dt.current) {
+      dt.current.reset(); // Limpia los filtros de la tabla
+    }
+    
+  };
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -90,6 +99,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       </div>
 
       <DataTable
+      ref={dt}
         value={data}
         paginator
         rows={15}
@@ -155,6 +165,15 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
         />
         <Column
+        filter
+        showFilterMenu={false}
+        filterElement={
+          <Button
+            label="Limpiar"
+            onClick={clearFilters}
+            style={{ width: '100%', height: '40px',  padding: '10px'}}
+          />
+        }
           header="Acciones"
           body={(rowData) => (
             <div className="acciones">

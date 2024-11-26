@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Styles/GestorRecibos.css";
 import { obtenerTodosLosRecibos } from "../../services/recibosApi";
 import { DataTable } from "primereact/datatable";
@@ -70,7 +70,9 @@ function GestorRecibos({ idUsuario = 0 }) {
       setSelectedUsuario(recibo.usuario);
     }
   };
+
   const idUsuarioEvento = useUser();
+
   const handleEnviarSeleccionados = async () => {
     const idsMovimientos = selectedRecibos.map((recibo) => recibo.id_movimiento).join(",");
 
@@ -415,6 +417,14 @@ function GestorRecibos({ idUsuario = 0 }) {
     </span>
   );
 
+  const dt = useRef(null);
+    const clearFilters = () => {
+      if (dt.current) {
+        dt.current.reset(); // Limpia los filtros de la tabla
+      }
+      setFiltroEstado('');
+    };
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -432,6 +442,7 @@ function GestorRecibos({ idUsuario = 0 }) {
         disabled={selectedRecibos.length === 0}
       />
       <DataTable
+      ref={dt}
         value={data}
         paginator
         rows={15}
@@ -506,7 +517,7 @@ function GestorRecibos({ idUsuario = 0 }) {
           onChange={(e) => onEstadoChange(e, options)}
           placeholder="Seleccione estado"
           className="p-column-filter"
-          style={{width: '150px'}}
+          style={{ width: '100%', height: '40px',  padding: '10px'}}
         />
       )}
       
@@ -526,6 +537,15 @@ function GestorRecibos({ idUsuario = 0 }) {
         />
 
         <Column
+        filter
+        showFilterMenu={false}
+        filterElement={
+          <Button
+            label="Limpiar"
+            onClick={clearFilters}
+            style={{ width: '100%', height: '40px',  padding: '10px'}}
+          />
+        }
           body={(rowData) => (
             <IconButton
               onClick={() => handlePreviewAndPrint(rowData)}
