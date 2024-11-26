@@ -113,7 +113,13 @@ function GestorAsociadoCuentaCorriente() {
     );
   };
 
- 
+  const dt = useRef(null);
+  const clearFilters = () => {
+    if (dt.current) {
+      dt.current.reset(); // Limpia los filtros de la tabla
+    }
+    
+  };
 
   if (loading) {
     return <PantallaCarga />;
@@ -131,6 +137,7 @@ function GestorAsociadoCuentaCorriente() {
         className="procesar-button"
       />
       <DataTable
+      ref={dt}
         value={data}
         paginator
         rows={15}
