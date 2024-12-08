@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -37,6 +37,8 @@ const TarifaCrud = () => {
 
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [selectedTarifa, setSelectedTarifa] = useState(null);
+
+    const [tarifasFiltro, setTarifasFiltro] = useState(null);
 
 
 
@@ -193,6 +195,24 @@ const TarifaCrud = () => {
         // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
         return <span>${rowData?.importe_por_instruccion || ''}</span>;
     };
+
+    const onTarifasChange = (e, options) => {
+        setTarifasFiltro(e.value);
+        options.filterApplyCallback(e.value); // Aplica el filtro
+      };
+
+    const TiposTarifas = [
+        { label: "Combustible", value: "Combustible" },
+        { label: "Vuelo", value: "Vuelo" },
+        { label: "Seleccione instrucción", value: " "}
+      ]
+
+    const dt = useRef(null);
+    const clearFilters = () => {
+      if (dt.current) {
+        dt.current.reset(); // Limpia los filtros de la tabla
+        }
+    }
     
     
 
@@ -207,17 +227,37 @@ const TarifaCrud = () => {
             </header>
             <Button className="nuevo" label="Agregar Tarifa" onClick={handleAdd} />
             <DataTable 
+                ref={dt}
+                filterDisplay='row'
                 value={tarifas} 
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate}></Column>
-                <Column field="tipo_tarifa" header="Tipo Tarifa"></Column>
-                <Column field="importe" header="Importe" body={amountBodyTemplate}></Column>
-                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate}></Column>
-                <Column field="AeronavesMatri" header="Aeronaves" ></Column>
+                <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate} filter sorteable filterType='date' showFilterMenu={false}></Column>
+                <Column field="tipo_tarifa" header="Tipo Tarifa" sortable filter showFilterMenu={false} filterElement={(options) => (
+                            <Dropdown
+                            value={tarifasFiltro}
+                            options={TiposTarifas}
+                            onChange={(e) => onTarifasChange(e, options)}
+                            placeholder="Seleccione instrucción"
+                            style={{ width: '100%', height: '40px',  padding: '10px'}}
+                        />
+                      )
+                    }></Column>
+                <Column field="importe" header="Importe" body={amountBodyTemplate} filterPlaceholder='Buscar por Importe' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
+                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate} filterPlaceholder='Buscar por Importe' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
+                <Column field="AeronavesMatri" header="Aeronaves" filterPlaceholder='Buscar por Aeronave' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
 
-                <Column 
+                <Column
+                    filter
+                    showFilterMenu={false}
+                    filterElement={
+                        <Button
+                        label="Limpiar"
+                        onClick={clearFilters}
+                        style={{ width: '100%', height: '40px',  padding: '10px'}}
+                        />
+                        } 
                     header="Acciones" 
                     style={{ width: '1px'}}
                     body={(rowData) => (

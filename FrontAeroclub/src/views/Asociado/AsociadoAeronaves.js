@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog'
@@ -11,12 +11,15 @@ import './Styles/GestorAeronaves.css';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search'; 
 import Tooltip from '@mui/material/Tooltip';
+import { Button } from 'primereact/button';
+import { Dropdown } from 'primereact/dropdown';
 
 
 
 const AeronaveCrud = () => {
     const [aeronaves, setAeronaves] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [estadoFiltro, setEstadoFiltro] = useState(null);
 
     
 
@@ -67,6 +70,25 @@ const AeronaveCrud = () => {
         </span>
     );
 
+    const OpcionesEstados = [
+        { label: "Operativo", value: "activo" },
+        { label: "No operativo", value: "baja" },
+        { label: "Seleccione instrucción", value: " "}
+      ]
+
+    const onEstadoChange = (e, options) => {
+        setEstadoFiltro(e.value);
+        options.filterApplyCallback(e.value); // Aplica el filtro
+      };
+
+    const dt = useRef(null);
+        const clearFilters = () => {
+        if (dt.current) {
+            dt.current.reset(); // Limpia los filtros de la tabla
+        }
+    }
+  
+
     if (loading) {
         return <PantallaCarga />
     }
@@ -75,11 +97,14 @@ const AeronaveCrud = () => {
             <header className="header">
                 <h1>Aeronaves</h1>
             </header>
-            <DataTable 
+            <DataTable
+                ref={dt} 
                 value={aeronaves} 
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
-                style={{ width: '100%' }} >
+                style={{ width: '100%' }} 
+                filterDisplay='row'
+                >
                 <Column 
                     header="Aeronave" 
                     body={(rowData) => (
@@ -87,26 +112,91 @@ const AeronaveCrud = () => {
                             <strong>{rowData.marca}</strong>  {rowData.modelo}
                         </>
                     )}
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por Aeronave" 
+                    filterMatchMode="contains" 
+                    showFilterMenu={false}  
+                    showClearButton={false} 
                 />
-                <Column field="matricula" header="Matrícula"></Column>
+                <Column
+                    field="matricula"
+                    header="Matrícula"
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por Matricula" 
+                    filterMatchMode="contains" 
+                    showFilterMenu={false}  
+                    showClearButton={false} 
+                />
                 <Column
                 field="intervalo_para_inspeccion"
                 header="Inspección"
                 body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs.`}
+                sortable
+                    filter
+                    filterPlaceholder="Buscar por inspeccion" 
+                    filterMatchMode="contains" 
+                    showFilterMenu={false}  
+                    showClearButton={false}     
                 />
                 <Column
-                field="ultimo_servicio"
-                header="Último servicio"
-                body={(rowData) => formatFecha(rowData.ultimo_servicio)}
-                ></Column>
-                <Column field="numero_poliza" header="Nro. Póliza" ></Column>
+                    field="ultimo_servicio"
+                    header="Último servicio"
+                    body={(rowData) => formatFecha(rowData.ultimo_servicio)}
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por Servicio" 
+                    filterType='date' 
+                    showFilterMenu={false}  
+                    showClearButton={false}
+                />
+                <Column field="numero_poliza" header="Nro. Póliza" sortable
+                    filter
+                    filterPlaceholder="Buscar por Poliza" 
+                    filterMatchMode="contains" 
+                    showFilterMenu={false}  
+                    showClearButton={false} />
                 <Column
                     field="vencimiento_poliza"
                     header="Vto. Póliza"
+                    sorteable
                     body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
-                    ></Column>
-                <Column field="estado" header="Estado" body={estadoTemplate}></Column>
-                <Column header="Acciones" 
+                    filter
+                    filterPlaceholder="Buscar por Vencimiento" 
+                    filterType='date'
+                    showFilterMenu={false}  
+                    showClearButton={false}
+                    />
+                <Column 
+                    sortable
+                    filter
+                    showFilterMenu={false}
+                    field="estado" 
+                    header="Estado" 
+                    body={estadoTemplate}
+                    filterElement={(options) => (
+                        <Dropdown
+                        value={estadoFiltro}
+                        options={OpcionesEstados}
+                        onChange={(e) => onEstadoChange(e, options)}
+                        placeholder="Seleccione instrucción"
+                        style={{ width: '100%', height: '40px',  padding: '10px'}}
+                    />
+                  )
+                }
+                />
+                <Column 
+                    header="Acciones" 
+                    filter
+                    showFilterMenu={false}
+                    filterElement={
+                      <Button
+                        label="Limpiar"
+                        onClick={clearFilters}
+                        style={{ width: '100%', height: '40px',  padding: '10px'}}
+                      />
+                    }
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
@@ -119,7 +209,8 @@ const AeronaveCrud = () => {
 
 
                     </div>
-                )}></Column>
+                )}
+                />
             </DataTable>
 
 
