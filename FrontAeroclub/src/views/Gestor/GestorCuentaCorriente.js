@@ -108,18 +108,6 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
         scrollHeight="800px"
         filterDisplay="row"
       >
-      <Column
-        field="referencia_aeroclub"
-        header="Nro. Movimiento"
-        sortable
-        filter
-        filterApply='numeric'
-        filterPlaceholder="Numero de Movimiento"
-        filterMatchMode="contains"
-        showFilterMenu={false}
-        
-        
-      />
         <Column
           field="fecha"
           header="Fecha"
@@ -201,9 +189,6 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
               <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
              {detailData && detailData.length > 0 && detailData.map((data, index) => (
                 <Card key={index}>
-                  {data.id_movimiento !== null && (
-                    <p><strong>Nro de movimiento:</strong> {data.id_movimiento}</p>
-                  )}
                   {data.tipo !== null && (
                     <p><strong>Tipo:</strong> {data.tipo}</p>
                   )}

@@ -35,9 +35,9 @@ function GestorRecibos({ idUsuario = 0 }) {
       try {
         const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
         setData(recibosResponse);
-        console.log(recibosResponse)
+        //console.log(recibosResponse)
       } catch (error) {
-        console.error("Error al obtener datos:", error);
+        //console.error("Error al obtener datos:", error);
       }
       setLoading(false);
     };

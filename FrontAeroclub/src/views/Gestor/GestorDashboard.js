@@ -12,6 +12,7 @@ function GestorDashboard() {
   // Estados
   const [saldo, setSaldo] = useState("0.00");
   const [importePorCobrar, setImportePorCobrar] = useState("0.00");
+  const [importeAdeudado, setImporteAdeudado] = useState("0.00");
   const [horasVuelo, setHorasVuelo] = useState("0.00");
   const [aeronaves, setAeronaves] = useState([]);
   const [horasPorAvion, setHorasPorAvion] = useState({});
@@ -27,6 +28,7 @@ function GestorDashboard() {
       const saldoData = await obtenerSaldoCuentaCorrienteAeroclub();
       setSaldo(saldoData[0]?.importe_saldo || "0.00");
       setImportePorCobrar(saldoData[0]?.importe_por_cobrar || "0.00");
+      setImporteAdeudado(saldoData[0]?.importe_adeudado || "0.00");
 
       // Obtener horas de vuelo
       const horasData = await obtenerHorasVueloUltimoMes();
@@ -80,18 +82,6 @@ function GestorDashboard() {
         </div>
       </div>
 
-      {/* Dialogo para las notificaciones */}
-      <Dialog
-        header="Notificaciones" 
-        visible={dialogVisible} 
-        style={{ width: '40vw' }}
-        onHide={() => setDialogVisible(false)}
-      >
-        <p>Próximamente...</p>
-      </Dialog>
-
-      
-
       {/* Sección de Dinero */}
       <div className="contenedor-statbox">
         <div className="statbox">
@@ -100,32 +90,14 @@ function GestorDashboard() {
         </div>
         <div className="statbox">
           <h3>Dinero adeudado</h3>
-          <div className="num-secundario">$0.00</div>
-        </div>
-      </div>
-
-      {/* Sección de Gauges */}
-      <div className="contenedor-statbox">
-        <div className="statbox gauge-container">
-          <div className="gauge-box">
-            <h3>100LL</h3>
-          </div>
-          <div className="gauge-box">
-            <h3>Mogas</h3>
-          </div>
-          <div className="gauge-box">
-            <h3>Aceite 1</h3>
-          </div>
-          <div className="gauge-box">
-            <h3>Aceite 2</h3>
-          </div>
+          <div className="num-secundario">{`$${importeAdeudado}`}</div>
         </div>
       </div>
 
       {/* Sección de Horas Voladas */}
       <div className="contenedor-statbox">
         <div className="statbox">
-          <h3>Horas voladas</h3>
+          <h3>Horas voladas ultimos 30 dias</h3>
           <div className="num-secundario">{horasVuelo}</div>
         </div>
       </div>

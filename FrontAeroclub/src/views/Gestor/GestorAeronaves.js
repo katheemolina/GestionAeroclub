@@ -323,12 +323,13 @@ const AeronaveCrud = () => {
                             </IconButton>
                         </Tooltip>
 
-                        <Tooltip title="Eliminar aeronave">
+                        {/* <Tooltip title="Eliminar aeronave">
                         <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
                             <DeleteIcon />
-                        </IconButton>
+                        </IconButton> 
 
                         </Tooltip>
+                        */}
                         
                         <Tooltip title="Ver detalles">
                         <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>

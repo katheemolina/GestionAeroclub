@@ -31,6 +31,7 @@ function Sidebar() {
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves' },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores' },
       { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales' },
+      { ruta: '/gestor/configuracionesGenerales', texto: 'Configuraciones Generales' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
     Instructor: [

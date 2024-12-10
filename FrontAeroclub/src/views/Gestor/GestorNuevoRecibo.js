@@ -37,14 +37,17 @@ function FormularioGestorRecibos() {
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves();
-            setAeronaves(data);
+            const aeronavesNoBaja = data.filter(aeronave => aeronave.estado === 'activo');
+            setAeronaves(aeronavesNoBaja);
         } catch (error) {
-            //console.error('Error fetching aeronaves:', error);
+            // console.error('Error fetching aeronaves:', error); // Manejo de errores si la llamada falla
         }
     };
+    
     useEffect(() => {
         fetchAeronaves();
     }, []);
+    
 
     // Traigo datos de tarifas
     const [tarifas, setTarifas] = useState([]);
@@ -212,7 +215,7 @@ function FormularioGestorRecibos() {
                 <Dropdown value={tarifasSeleccionado}
                  onChange={(e) => setTarifasSeleccionado(e.value)} 
                  options={tarifasFiltradasAeronave} 
-                 optionLabel="importe"
+                 optionLabel="importe_fecha"
                  placeholder="Seleciona la tarifa"
                  filter
                  className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (

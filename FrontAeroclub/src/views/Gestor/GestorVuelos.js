@@ -24,7 +24,7 @@ function GestorVuelos(){
             setData(vuelosResponse);
             
         } catch (error) {
-            console.error("Error al obtener datos:", error);
+            //console.error("Error al obtener datos:", error);
         }
         setLoading(false); // Cambia el estado de carga
         };
@@ -39,7 +39,7 @@ function GestorVuelos(){
     const openDialog = (rowData) => {
         setSelectedRowData(rowData);
         setDialogVisible(true);
-        console.log(rowData)
+        //console.log(rowData)
     };
     
     const closeDialog = () => {
@@ -84,7 +84,7 @@ function GestorVuelos(){
             scrollHeight="800px"
             >
             <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" filterType='date' showFilterMenu={false} body={plantillaFecha}  ></Column>
-            <Column field="aeronave" header="Aeronave" sortable filter filterPlaceholder="Busar por aeronave" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+            <Column field="matricula" header="Aeronave" sortable filter filterPlaceholder="Busar por aeronave" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="usuario" header="Asociado" sortable filter filterPlaceholder="Buscar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>

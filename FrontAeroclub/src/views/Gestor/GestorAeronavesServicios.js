@@ -253,18 +253,13 @@ const GestorAeronavesServicios = () => {
                         />
                     </div>
 
-                    {/* Mostrar horas voladas actuales */}
-                    <h4>Sugerencia:</h4>
-                    <p>Horas voladas actuales: {horasVoladas}</p>
-
                     {/* Campo para horas anteriores */}
                     <div className="p-field">
                         <label>Horas Anteriores</label>
                         <InputText 
                             name="horas_anteriores" 
-                            value={servicioData.horas_anteriores} 
+                            value={horasVoladas} 
                             onChange={handleInputChange} 
-                            
                         />
                     </div>
                 </div>
