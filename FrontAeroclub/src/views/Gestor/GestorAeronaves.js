@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -21,6 +21,7 @@ import { ToastContainer } from 'react-toastify';
 import UpdateIcon from '@mui/icons-material/Update'; 
 import SettingsIcon from '@mui/icons-material/Settings'; 
 import { useNavigate } from 'react-router-dom';
+import { Dropdown } from 'primereact/dropdown';
 
 
 
@@ -57,6 +58,8 @@ const AeronaveCrud = () => {
     const [nuevaPoliza, setNuevaPoliza] = useState({ numero_poliza: '', vencimiento_poliza: '' });
     const [nuevoIntervalo, setNuevoIntervalo] = useState({ fecha: '' });
 
+    const [EstadosFiltro, setEstadosFiltro] = useState(null);
+
     const handleSelectAeronave = (aeronave) => {
         setSelectedAeronave(aeronave);
     };
@@ -64,13 +67,12 @@ const AeronaveCrud = () => {
 
     const navigate = useNavigate();
 
-    
-
     // Fetch aeronaves data from the API
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
             setAeronaves(data);
+            console.log(data)
         } catch (error) {
             //console.error('Error fetching aeronaves:', error);
         }
@@ -145,8 +147,6 @@ const AeronaveCrud = () => {
             toast.error("Error al eliminar aeronave.");
         }
     };
-    
-    
     
     // Para manejo de dialog de vista de detalles
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -262,6 +262,25 @@ const AeronaveCrud = () => {
         return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
       };
 
+    const Estados = [
+        { label: "Operativo", value: "activo" },
+        { label: "No operativo", value: "baja" },
+        { label: "Seleccione un estado", value: " "}
+      ]
+
+    const onEstadosChange = (e, options) => {
+        setEstadosFiltro(e.value);
+        options.filterApplyCallback(e.value); // Aplica el filtro
+      };
+
+    const dt = useRef(null);
+    const clearFilters = () => {
+      if (dt.current) {
+        dt.current.reset(); // Limpia los filtros de la tabla
+        setEstadosFiltro(" ");    
+    }
+    }
+
     if (loading) {
         return <PantallaCarga />
     }
@@ -272,12 +291,15 @@ const AeronaveCrud = () => {
                 <h1>Aeronaves</h1>
             </header>
             <Button className="nuevo" label="Agregar Aeronave" onClick={handleAdd} />
-            <DataTable 
+            <DataTable
+                ref={dt}
+                filterDisplay='row' 
                 value={aeronaves} 
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
                 <Column 
+                    sortable filter filterMatchMode='startsWith' showFilterMenu={false} filterPlaceholder='Buscar por Aeronave'
                     header="Aeronave" 
                     body={(rowData) => (
                         <>
@@ -285,25 +307,49 @@ const AeronaveCrud = () => {
                         </>
                     )}
                 />
-                <Column field="matricula" header="Matrícula"></Column>
+                <Column field="matricula" header="Matrícula" sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Matrícula'></Column>
                 <Column
                 field="intervalo_para_inspeccion"
                 header="Intervalo de inspección"
+                Sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Intervalo'
                 body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs.`}
                 />
                 <Column
+                sortable filter filterType='date' showFilterMenu={false} 
                 field="ultimo_servicio"
                 header="Último servicio"
                 body={(rowData) => formatFecha(rowData.ultimo_servicio)}
                 ></Column>
-                <Column field="numero_poliza" header="Nro. Póliza" ></Column>
+                <Column field="numero_poliza" header="Nro. Póliza" sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Póliza'></Column>
                 <Column
+                    sortable filter filterType='date' showFilterMenu={false} 
                     field="vencimiento_poliza"
                     header="Vto. Póliza"
                     body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
                     ></Column>
-                <Column field="estado" header="Estado" body={estadoTemplate}></Column>
-                <Column header="Acciones" 
+                <Column field="estado" header="Estado" filter sorteable showFilterMenu={false} body={estadoTemplate}
+                filterElement={(options) => (
+                    <Dropdown
+                    value={EstadosFiltro}
+                    options={Estados}
+                    onChange={(e) => onEstadosChange(e, options)}
+                    placeholder="Seleccione un Estado"
+                    style={{ width: '100%', height: '40px',  padding: '10px'}}
+                />
+              )
+            }
+                ></Column>
+                <Column 
+                    filter
+                    showFilterMenu={false}
+                    filterElement={
+                        <Button
+                        label="Limpiar"
+                        onClick={clearFilters}
+                        style={{ width: '100%', height: '40px',  padding: '10px'}}
+                        />
+                        } 
+                    header="Acciones" 
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
@@ -322,15 +368,6 @@ const AeronaveCrud = () => {
                                 <SettingsIcon />
                             </IconButton>
                         </Tooltip>
-
-                        {/* <Tooltip title="Eliminar aeronave">
-                        <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
-                            <DeleteIcon />
-                        </IconButton> 
-
-                        </Tooltip>
-                        */}
-                        
                         <Tooltip title="Ver detalles">
                         <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
                             <SearchIcon />

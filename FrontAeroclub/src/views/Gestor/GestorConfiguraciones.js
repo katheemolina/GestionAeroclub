@@ -89,7 +89,7 @@ const GestorConfiguraciones = () => {
           <h3>Parametros para adaptacion de aeronave:</h3>
           <div className="form-row">
             <label>
-              Horas de vuelo en el ultimo mes::
+              Horas de vuelo en el ultimo mes:
               <input
                 type="number"
                 name="tiempo_adaptacion"
