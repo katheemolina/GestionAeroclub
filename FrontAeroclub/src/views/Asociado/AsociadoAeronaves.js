@@ -97,6 +97,7 @@ const AeronaveCrud = () => {
             <header className="header">
                 <h1>Aeronaves</h1>
             </header>
+            <p>AGREGAR EN LA COLUMNA HORAS DE VUELO TOTAL, HORAS PARA LA PROXIMA INSPECCION</p>
             <DataTable
                 ref={dt} 
                 value={aeronaves} 
@@ -129,45 +130,7 @@ const AeronaveCrud = () => {
                     showFilterMenu={false}  
                     showClearButton={false} 
                 />
-                <Column
-                field="intervalo_para_inspeccion"
-                header="Inspección"
-                body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs.`}
-                sortable
-                    filter
-                    filterPlaceholder="Buscar por inspeccion" 
-                    filterMatchMode="contains" 
-                    showFilterMenu={false}  
-                    showClearButton={false}     
-                />
-                <Column
-                    field="ultimo_servicio"
-                    header="Último servicio"
-                    body={(rowData) => formatFecha(rowData.ultimo_servicio)}
-                    sortable
-                    filter
-                    filterPlaceholder="Buscar por Servicio" 
-                    filterType='date' 
-                    showFilterMenu={false}  
-                    showClearButton={false}
-                />
-                <Column field="numero_poliza" header="Nro. Póliza" sortable
-                    filter
-                    filterPlaceholder="Buscar por Poliza" 
-                    filterMatchMode="contains" 
-                    showFilterMenu={false}  
-                    showClearButton={false} />
-                <Column
-                    field="vencimiento_poliza"
-                    header="Vto. Póliza"
-                    sorteable
-                    body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
-                    filter
-                    filterPlaceholder="Buscar por Vencimiento" 
-                    filterType='date'
-                    showFilterMenu={false}  
-                    showClearButton={false}
-                    />
+                
                 <Column 
                     sortable
                     filter
