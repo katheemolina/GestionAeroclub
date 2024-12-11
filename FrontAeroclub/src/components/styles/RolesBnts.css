@@ -36,6 +36,20 @@
     margin-right: 0.5rem; /* Espacio entre los botones */
 }
 
+.opciones-select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .opciones-select:focus {
+    outline: none;
+    border-color: #6e6e6e;
+  }
+  
+
 @media (max-width: 1800px){
     .opcion-boton{
         padding: 0.7rem 0.1rem;

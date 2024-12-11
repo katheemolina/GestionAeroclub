@@ -41,20 +41,23 @@ function BotonesPorRol() {
 
   return (
     <div className="menu-opciones">
-      {rolesDisponibles.length === 0 ? (
-        <p>Cargando roles...</p>
-      ) : (
-        rolesDisponibles.map((rol, index) => (
-          <button
-            key={index}
-            onClick={() => handleButtonClick(rol.descripcion)}
-            className={`opcion-boton ${rol.descripcion === rolActivo ? 'activo' : ''}`} // Compara el rol activado
-          >
-            {rol.descripcion} {/* Aquí el nombre del rol */}
-          </button>
-        ))
-      )}
-    </div>
+  {rolesDisponibles.length === 0 ? (
+    <p>Cargando roles...</p>
+  ) : (
+    <select 
+      onChange={(e) => handleButtonClick(e.target.value)} 
+      value={rolActivo} 
+      className="opciones-select"
+    >
+      {rolesDisponibles.map((rol, index) => (
+        <option key={index} value={rol.descripcion}>
+          {rol.descripcion}
+        </option>
+      ))}
+    </select>
+  )}
+</div>
+
   );
 }
 
