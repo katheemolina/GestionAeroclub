@@ -31,7 +31,6 @@ function Sidebar() {
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves' },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores' },
       { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales' },
-      { ruta: '/gestor/configuracionesGenerales', texto: 'Configuraciones Generales' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
     Instructor: [
@@ -42,6 +41,12 @@ function Sidebar() {
       { ruta: '/instructor/aeronaves', texto: 'Aeronaves' },
       { ruta: '/instructor/tarifas', texto: 'Tarifas' },
       { ruta: '/instructor/asociados', texto: 'Asociados' },
+      { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
+    ],
+    Administrador: [
+      { ruta: '/administrador/configuracionesGenerales', texto: 'Configuraciones generales' },
+      { ruta: '/administrador/Recibos', texto: 'Recibos' },
+      { ruta: '/administrador/Aeronaves', texto: 'Aeronaves' },
       { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
     ],
   };

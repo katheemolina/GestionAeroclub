@@ -40,7 +40,9 @@ import AsociadoTarifas from './views/Asociado/AsociadoTarifas';
 import AsociadoAeronaves from './views/Asociado/AsociadoAeronaves';
 import GestorAeronavesServicios from './views/Gestor/GestorAeronavesServicios';
 import GestorArmarLiquidacionInstructores from './views/Gestor/GestorArmarLiquidacionInstructores';
-import GestorConfiguraciones from './views/Gestor/GestorConfiguraciones';
+import AdministradorConfiguraciones from './views/Administrador/AdministradorConfiguraciones';
+import AdministradorRecibos from './views/Administrador/AdministradorRecibos';
+import AdministradorAeronaves from './views/Administrador/AdministradorAeronaves';
 
 
 
@@ -117,7 +119,7 @@ function App() {
             <Route path="/gestor/aeronavesServicios" element={<ProtectedRoute component={GestorAeronavesServicios} allowedRoles={['gestor']} />} />
             <Route path="/gestor/generarCuotaSocial" element={<ProtectedRoute component={GestorGenerarCuotasSociales} allowedRoles={['gestor']} />} />
             <Route path="/gestor/liquidarInstrucciones" element={<ProtectedRoute component={GestorArmarLiquidacionInstructores} allowedRoles={['gestor']} />} />
-            <Route path="/gestor/configuracionesGenerales" element={<ProtectedRoute component={GestorConfiguraciones} allowedRoles={['gestor']} />} />
+            
             {/* ruta nuevo recibo */}
             <Route path="/gestor/recibos/nuevo" element={<ProtectedRoute component={GestorNuevoRecibo} allowedRoles={['gestor']} />} />
 
@@ -132,7 +134,12 @@ function App() {
             <Route path="/instructor/aeronaves" element={<ProtectedRoute component={AsociadoAeronaves} allowedRoles={['instructor']} />} />
             <Route path="/instructor/tarifas" element={<ProtectedRoute component={AsociadoTarifas} allowedRoles={['instructor']} />} />
 
-            <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor']} />} />
+            {/* Rutas para Administrador */}
+            <Route path="/administrador/configuracionesGenerales" element={<ProtectedRoute component={AdministradorConfiguraciones} allowedRoles={['administrador']} />} />
+            <Route path="/administrador/Recibos" element={<ProtectedRoute component={AdministradorRecibos} allowedRoles={['administrador']} />} />
+            <Route path="/administrador/Aeronaves" element={<ProtectedRoute component={AdministradorAeronaves} allowedRoles={['administrador']} />} />
+
+            <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor','administrador']} />} />
           </Routes>
         </div>
       </div>

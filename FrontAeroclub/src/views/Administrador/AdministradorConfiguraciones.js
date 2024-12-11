@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { actualizarConfiguraciones, obtenerConfiguraciones } from '../../services/configuracionesApi';
 
-const GestorConfiguraciones = () => {
+const AdministradorConfiguraciones = () => {
   const [loading, setLoading] = useState(true);
   const [configuraciones, setConfiguraciones] = useState([]);
 
@@ -155,4 +155,4 @@ const GestorConfiguraciones = () => {
   );
 };
 
-export default GestorConfiguraciones;
+export default AdministradorConfiguraciones;
