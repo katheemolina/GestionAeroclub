@@ -353,11 +353,14 @@ const AeronaveCrud = () => {
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
-                        <Tooltip title="Editar estado de la aeronave">
-                            <IconButton color="primary" onClick={() => openEstadoDialog(rowData)}>
-                                <EditIcon />
-                            </IconButton>
-                        </Tooltip>
+                        {
+                            /* <Tooltip title="Editar estado de la aeronave">
+                                <IconButton color="primary" onClick={() => openEstadoDialog(rowData)}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip> */
+                            }
+
                         <Tooltip title="Actualizar póliza">
                             <IconButton color="primary" onClick={() => openPolizaDialog(rowData)}>
                                 <UpdateIcon />
