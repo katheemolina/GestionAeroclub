@@ -90,6 +90,7 @@ function AdministradorRecibos({ idUsuario = 0 }) {
       <header className="header">
         <h1>Recibos</h1>
       </header>
+      <h2>En esta vista el administrador podra eliminar los recibos que aun no esten pagos. Por el momento no esta funcional, lo dejamos para febrero 🌻 </h2>
       <DataTable
       ref={dt}
         value={data}
