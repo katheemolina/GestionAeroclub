@@ -56,6 +56,7 @@ const GestorGenerarCuotasSociales = () => {
             // Llamamos al backend para generar las cuotas sociales
             const response = await generarCuotasSociales(reciboData);
             setResultado('Cuotas sociales generadas con éxito.');
+            toast.success(resultado)
         } catch (error) {
             console.error('Error al generar las cuotas sociales:', error);
             setResultado('');  // Limpiar cualquier mensaje de éxito previo
@@ -63,6 +64,7 @@ const GestorGenerarCuotasSociales = () => {
             toast.error(error.message); // toast para mostrar error de la base
         } finally {
             setLoading(false); // Desactivar la carga
+            
         }
     };
 
@@ -111,7 +113,6 @@ const GestorGenerarCuotasSociales = () => {
                     Generar Cuotas
                 </button>
             </div>
-            {resultado && <div className="resultado"><p>{resultado}</p></div>}
             </div>
 
             <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={

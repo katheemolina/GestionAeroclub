@@ -202,7 +202,7 @@ const GestorAsociados  = () => {
       const OpcionesEstados = [
         { label: "Habilitado", value: "Habilitado" },
         { label: "Deshabilitado", value: "Deshabilitado" },
-        { label: "Seleccione instrucción", value: " "}
+        { label: "Seleccione estado", value: " "}
       ]
 
       const OpcionesCMA = [
@@ -210,7 +210,7 @@ const GestorAsociados  = () => {
         { label: "Actualizar CMA", value: "Actualizar CMA" },
         { label: "Cargar CMA", value: "Cargar CMA" },
         { label: "No vigente", value: "No vigente" },
-        { label: "Seleccione instrucción", value: " "}
+        { label: "Seleccione CMA", value: " "}
       ]
 
     const dt = useRef(null);
@@ -256,9 +256,9 @@ const GestorAsociados  = () => {
                 />
                 
                 
-                <Column field="roles" header="Roles Activos" sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}></Column> 
+                <Column field="roles" header="Roles Activos" sortable filter filterPlaceholder='Buscar por roles' showFilterMenu={false}></Column> 
                 <Column field="horas_vuelo" header="Horas de vuelo totales" sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}></Column>
-                <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}
+                <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable filter filterPlaceholder='Buscar por estado' showFilterMenu={false}
                 filterElement={(options) => (
                     <Dropdown
                     value={estadoCMAFiltro}
@@ -270,7 +270,7 @@ const GestorAsociados  = () => {
                     )
                  }
                 ></Column>
-                <Column field="saldo" header="Saldo" sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}></Column>
+                <Column field="saldo" header="Saldo" sortable filter filterPlaceholder='Buscar por saldo' showFilterMenu={false}></Column>
                 <Column filter
                     showFilterMenu={false}
                     filterElement={
