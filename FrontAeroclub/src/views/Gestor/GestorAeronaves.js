@@ -320,13 +320,6 @@ const AeronaveCrud = () => {
                 header="Último servicio"
                 body={(rowData) => formatFecha(rowData.ultimo_servicio)}
                 ></Column>
-                <Column field="numero_poliza" header="Nro. Póliza" sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Póliza'></Column>
-                <Column
-                    sortable filter filterType='date' showFilterMenu={false} 
-                    field="vencimiento_poliza"
-                    header="Vto. Póliza"
-                    body={(rowData) => formatFecha(rowData.vencimiento_poliza)}
-                    ></Column>
                 <Column field="estado" header="Estado" filter sorteable showFilterMenu={false} body={estadoTemplate}
                 filterElement={(options) => (
                     <Dropdown
