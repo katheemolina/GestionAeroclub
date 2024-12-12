@@ -1,0 +1,28 @@
+import React, { useEffect, useState } from 'react';
+import '../components/styles/Footer.css'
+
+
+function Footer() {
+   
+  return (
+    <footer className="footer">
+      <div className="footer-content">
+        <nav>
+          <ul>
+            <p>Desarrolladores:</p>
+            <li><a href="https://github.com/agusmoscato" target='blank'>Agustín Moscato</a></li>
+            <li><a href="https://github.com/Juanigpunte" target='blank'>Juan Ignacio Punte</a></li>
+            <li><a href="https://github.com/katheemolina" target='blank'>Katherine Molina</a></li>
+            <li><a href="https://github.com/Renn4" target='blank'>Martín Peralta</a></li>
+            <li><a href="https://github.com/ericarias30" target='blank'>Eric Andy Arias</a></li>
+          </ul>
+        </nav>
+        <p>&copy; 2025 All rights reserved.</p>
+      </div>
+    </footer>
+  );
+
+
+}
+
+export default Footer;

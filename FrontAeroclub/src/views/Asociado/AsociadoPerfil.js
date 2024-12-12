@@ -338,6 +338,7 @@ const handleSubmit = async (e) => {
               onChange={(e) => setFechaVencimiento(e.value)}
               showIcon
               dateFormat="yy-mm-dd"
+              style={{ width: '400px' }}
             />
           </div>
         </div>

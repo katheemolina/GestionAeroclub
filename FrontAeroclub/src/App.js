@@ -31,6 +31,7 @@ import './styles/Index.css';
 import Inicio from './Inicio';
 import Bienvenida from './views/Bienvenida';
 import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
 
 import 'primereact/resources/themes/lara-light-indigo/theme.css';  // O cualquier tema que prefieras
 import 'primereact/resources/primereact.min.css';
@@ -94,6 +95,7 @@ function App() {
       {/* <Navbar /> */}
       <div className="app-container">
         <Sidebar />
+        
         {/* Rutas según el rol */}
         <div className="layout">
           <Routes>
@@ -142,7 +144,9 @@ function App() {
             <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor','administrador']} />} />
           </Routes>
         </div>
+      <Footer />
       </div>
+        
     </Router>
   );
 }
