@@ -7,11 +7,11 @@ import { Dialog } from 'primereact/dialog'
 import { Card } from 'primereact/card';
 import PantallaCarga from '../../components/PantallaCarga';
 import { obtenerAeronaves} from '../../services/aeronavesApi'; 
-import { obtenerServicios, insertarServicio, actualizarServicio } from '../../services/serviciosAeronaves'; 
+import { obtenerServicios, insertarServicio } from '../../services/serviciosAeronaves'; 
 import '../../styles/datatable-style.css';
 import './Styles/GestorAeronaves.css';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
+
 import SearchIcon from '@mui/icons-material/Search'; 
 import Tooltip from '@mui/material/Tooltip';
 import { toast } from 'react-toastify';
@@ -34,9 +34,7 @@ const GestorAeronavesServicios = () => {
         observaciones: '',
         id_aeronave: id_aeronave,
     }); // Estado para los datos del servicio
-    const [servicioEditar, setServicioEditar] = useState(null);
-    const [mostrarDialogEditar, setMostrarDialogEditar] = useState(false);
-    const [servicioSeleccionado, setServicioSeleccionado] = useState(null);
+
     const [horasVoladas, setHorasVoladas] = useState(0); 
 
     const navigate = useNavigate(); 
@@ -54,6 +52,20 @@ const GestorAeronavesServicios = () => {
 
     const plantillaFecha = (rowData) => {
     return formatearFecha(rowData.fecha);
+    };
+
+       // Para manejo de dialog de vista de detalles
+       const [dialogVisible, setDialogVisible] = useState(false);
+       const [selectedRowData, setSelectedRowData] = useState(null);
+       
+       const openDialog = (rowData) => {
+           setSelectedRowData(rowData);
+           setDialogVisible(true);
+       };
+
+         
+    const closeDialog = () => {
+        setDialogVisible(false);
     };
 
 
@@ -130,38 +142,6 @@ const GestorAeronavesServicios = () => {
             });
     };
 
-    const handleEditClick = (servicio) => {
-        setServicioSeleccionado(servicio);
-        setServicioData({
-            fecha: servicio.fecha,
-            observaciones: servicio.observaciones,
-        });
-        setMostrarDialogEditar(true);
-    };
-
-    const handleUpdateSubmit = () => {
-        if (!servicioSeleccionado) return;
-    
-        // Verificar que el id_servicio está presente
-        console.log("Servicio a actualizar:", servicioSeleccionado.id_servicio);
-        console.log("Datos del servicio:", servicioData);
-    
-        actualizarServicio(servicioSeleccionado.id_servicio, servicioData)
-            .then(() => {
-                toast.success("Servicio actualizado correctamente.");
-                setMostrarDialogEditar(false);
-                setTriggerEffect(prev => !prev); // LLamo al useEffect para que retome los datos de la tabla
-            })
-            .catch(() => {
-                toast.error("Error al actualizar el servicio.");
-            });
-    };
-    
-    
-
-
-
-
 
     return (
         <div className="background">
@@ -197,21 +177,33 @@ const GestorAeronavesServicios = () => {
                 <div className="datatable-container">
                     <DataTable value={servicios} paginator rows={10} rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                        <Column field="fecha" header="Fecha" body={plantillaFecha}/>
+                        <Column sortable field="fecha" header="Fecha" body={plantillaFecha}/>
                         <Column field="horas_anteriores" header="Horas Anteriores" />
-                        <Column field="observaciones" header="Observaciones" />
                         <Column header="Acciones" 
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
                         <Tooltip title="Editar servicio">
-                                <IconButton color="primary" onClick={() => handleEditClick(rowData)}>
-                                    <EditIcon />
+                                <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
+                                    <SearchIcon />
                                 </IconButton>
                             </Tooltip>
                     </div>
                 )}></Column>
                     </DataTable>
+                    <Dialog header="Observaciones del servicio" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
+                {selectedRowData && (
+                <div>
+                    <div className='p-fluid details-dialog'>
+                        
+                        <Card>
+                            <p> {selectedRowData.observaciones}</p>
+                        </Card>
+                          
+                    </div>
+                </div>
+                )}
+            </Dialog>
                 </div>
             )}
             
@@ -259,41 +251,6 @@ const GestorAeronavesServicios = () => {
                         <InputText 
                             name="horas_anteriores" 
                             value={horasVoladas} 
-                            onChange={handleInputChange} 
-                        />
-                    </div>
-                </div>
-            </Dialog>
-
-            {/* Dialog para editar servicio */}
-            <Dialog 
-                visible={mostrarDialogEditar} 
-                onHide={() => setMostrarDialogEditar(false)} 
-                header="Editar Servicio" 
-                footer={
-                    <Button label="Guardar" icon="pi pi-check" onClick={handleUpdateSubmit} />
-                }
-            >
-                <div className="p-fluid">
-                    
-                    {/* Campo para fecha */}
-                    <div className="p-field">
-                        <label>Fecha</label>
-                        <InputText 
-                            name="fecha" 
-                            type="date" 
-                            value={servicioData.fecha} 
-                            onChange={handleInputChange} 
-                            placeholder="Fecha del servicio"
-                        />
-                    </div>
-
-                    {/* Campo para observaciones */}
-                    <div className="p-field">
-                        <label>Observaciones</label>
-                        <InputText 
-                            name="observaciones" 
-                            value={servicioData.observaciones} 
                             onChange={handleInputChange} 
                         />
                     </div>
