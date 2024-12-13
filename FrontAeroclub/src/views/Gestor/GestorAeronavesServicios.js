@@ -196,8 +196,8 @@ const GestorAeronavesServicios = () => {
                 <div>
                     <div className='p-fluid details-dialog'>
                         
-                        <Card>
-                            <p> {selectedRowData.observaciones}</p>
+                        <Card className='card-observaciones'>
+                             {selectedRowData.observaciones}
                         </Card>
                           
                     </div>

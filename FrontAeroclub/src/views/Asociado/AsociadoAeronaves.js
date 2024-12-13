@@ -73,7 +73,7 @@ const AeronaveCrud = () => {
     const OpcionesEstados = [
         { label: "Operativo", value: "activo" },
         { label: "No operativo", value: "baja" },
-        { label: "Seleccione instrucción", value: " "}
+        { label: "Seleccione un estado", value: " "}
       ]
 
     const onEstadoChange = (e, options) => {
@@ -143,7 +143,7 @@ const AeronaveCrud = () => {
                         value={estadoFiltro}
                         options={OpcionesEstados}
                         onChange={(e) => onEstadoChange(e, options)}
-                        placeholder="Seleccione instrucción"
+                        placeholder="Seleccione un estado"
                         style={{ width: '100%', height: '40px',  padding: '10px'}}
                     />
                   )

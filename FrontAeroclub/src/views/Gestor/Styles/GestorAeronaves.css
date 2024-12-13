@@ -1,0 +1,20 @@
+.card-observaciones{
+    word-wrap: break-word;
+}
+
+.p-field{
+    padding: 0px;
+    
+    
+}
+
+.p-dialog .p-inputtext{
+    padding: 12px;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.p-dropdown .p-dropdown-label{
+    border: none;
+}

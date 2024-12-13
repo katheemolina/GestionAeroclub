@@ -323,6 +323,7 @@ const AeronaveCrud = () => {
                 <Column field="estado" header="Estado" filter sorteable showFilterMenu={false} body={estadoTemplate}
                 filterElement={(options) => (
                     <Dropdown
+                    id="dropdown-filtro-estado"
                     value={EstadosFiltro}
                     options={Estados}
                     onChange={(e) => onEstadosChange(e, options)}
@@ -379,8 +380,6 @@ const AeronaveCrud = () => {
                                 <ManageSearchIcon />
                             </IconButton>
                         </Tooltip>
-
-
                     </div>
                 )}></Column>
             </DataTable>
@@ -588,9 +587,10 @@ const AeronaveCrud = () => {
 
            
 
-            <Dialog visible={polizaDialog} onHide={() => setPolizaDialog(false)} header="Actualizar Póliza">
-            <div>
-                <label htmlFor="aseguradora">Aseguradora</label>
+            <Dialog c visible={polizaDialog} onHide={() => setPolizaDialog(false)} header="Actualizar Póliza"
+                footer={<Button className='gestor-btn-confirmar' label="Actualizar" onClick={handleActualizarPoliza} />}>
+                <div className="p-field">   
+                    <label htmlFor="aseguradora">Aseguradora</label>
                     <InputText
                         id="aseguradora"
                         value={nuevaPoliza.aseguradora}
@@ -598,35 +598,32 @@ const AeronaveCrud = () => {
                         placeholder="Aseguradora"
                         maxLength={250}
                     />
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="numero_poliza">Número de Póliza</label>
-                        <InputText
-                            id="numero_poliza"
-                            value={nuevaPoliza.numero_poliza}
-                            onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, numero_poliza: e.target.value })}
-                            placeholder="Número de Póliza"
-                            maxLength={250}
-                        />
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="vencimiento_poliza">Vencimiento de Póliza</label>
-                        <InputText
-                            id="vencimiento_poliza"
-                            type="date"
-                            value={nuevaPoliza.vencimiento_poliza}
-                            onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, vencimiento_poliza: e.target.value })}
-                        />
-                    </div>
-                
-    
-                <Button label="Actualizar" onClick={handleActualizarPoliza} />
+                </div>
+                <div className="p-field">
+                    <label htmlFor="numero_poliza">Número de Póliza</label>
+                    <InputText
+                        id="numero_poliza"
+                        value={nuevaPoliza.numero_poliza}
+                        onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, numero_poliza: e.target.value })}
+                        placeholder="Número de Póliza"
+                        maxLength={250}
+                    />
+                </div>
+                <div className="p-field">
+                    <label htmlFor="vencimiento_poliza">Vencimiento de Póliza</label>
+                    <InputText
+                        id="vencimiento_poliza"
+                        type="date"
+                        value={nuevaPoliza.vencimiento_poliza}
+                        onChange={(e) => setNuevaPoliza({ ...nuevaPoliza, vencimiento_poliza: e.target.value })}
+                    />
+                </div> 
             </Dialog>
 
             <Dialog visible={intervaloDialog} 
                     onHide={() => setIntervaloDialog(false)} 
                     header="Actualizar Intervalo de Inspección"
-                    footer={<Button label="Actualizar" onClick={handleActualizarIntervalo} className='gestor-btn-confirmar' />}>
+                    footer={<Button className='gestor-btn-confirmar' label="Actualizar" onClick={handleActualizarIntervalo}  />}>
                 <div className="p-field">
                         <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
                         <InputText
@@ -638,7 +635,6 @@ const AeronaveCrud = () => {
                             placeholder="Horas para inspección"
                         />
                 </div>
-                
             </Dialog>
 
 
