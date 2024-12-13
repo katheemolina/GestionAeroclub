@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "./Styles/AsociadoCuentaCorriente.css";
-import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
+import { obtenerCuentaCorrientePorUsuario, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
+import { obtenerDatosDelUsuario} from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
@@ -20,12 +21,15 @@ function AsociadoCuentaCorriente() {
   const { usuarioId } = useUser();  
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [detalleMovimiento, setDetalleMovimiento] = useState(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
+        console.log(cuentaCorrienteResponse);
         
       } catch (error) {
         toast.error("Error al obtener datos:", error);
@@ -35,14 +39,23 @@ function AsociadoCuentaCorriente() {
     fetchData();
   }, [usuarioId]);
 
-  const openDialog = (rowData) => {
+  const openDialog = async (rowData) => {
     setSelectedRowData(rowData);
+    try {
+      const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
+      console.log(detalles)
+      setDetalleMovimiento(detalles); // Almacena los detalles en el estado
+    } catch (error) {
+      toast.error("Error al obtener detalles del movimiento");
+    }
     setDialogVisible(true);
   };
+  
 
   const closeDialog = () => {
     setDialogVisible(false);
     setSelectedRowData(null);
+    setDetalleMovimiento(null);
   };
 
   const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
@@ -122,18 +135,57 @@ function AsociadoCuentaCorriente() {
         />
       </DataTable>
 
-      <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '650px' }} onHide={closeDialog}>
-        {selectedRowData && (
-          <div>
-            <div className="p-fluid details-dialog">
-              <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
-              <Card><p><strong>Tipo de Movimiento:</strong> {selectedRowData.tipo_movimiento}</p></Card>
-              <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
-              <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-            </div>
-          </div>
-        )}
-      </Dialog>
+      <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '450px' }} onHide={closeDialog}>
+              {selectedRowData && (
+                <div>
+                  <div className="p-fluid details-dialog">
+                    {/* <Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card> */}
+                    <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+                    <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
+                    <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+                    {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
+                    <Card key={index}>
+                      {data.tipo !== null && (
+                        <p><strong>Tipo:</strong> {data.tipo}</p>
+                      )}
+                      {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
+                        <div>
+                          <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
+                          {data.cantidad !== null && (
+                            <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
+                          )}
+                          {data.estado !== null && (
+                            <p><strong>Estado:</strong> {data.estado}</p>
+                          )}
+                          {data.importe !== null && (
+                            <p><strong>Importe:</strong> {data.importe_mov}</p>
+                          )}
+                          {data.observaciones !== null && (
+                            <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
+                          )}
+                          {data.observaciones !== null && (
+                            <p><strong>Observaciones:</strong> {data.observaciones}</p>
+                          )}
+                          {data.instruccion !== null && (
+                            <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                          )}
+                          {data.instructor !== null && (
+                            <p><strong>Instructor:</strong> {data.instructor}</p>
+                          )}
+                          {data.created_at !== null && (
+                            <p><strong>Fecha del Movimiento:</strong> {data.fecha_creacion}</p>
+                          )}
+                        </div>
+                      )}
+                    </Card>
+                  ))}
+
+                    
+                  </div>
+                </div>
+              )}
+            </Dialog>
+
     </div>
   );
 }
