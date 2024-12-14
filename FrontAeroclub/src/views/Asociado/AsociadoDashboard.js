@@ -6,18 +6,9 @@ import { Column } from 'primereact/column';
 import '../../styles/datatable-style.css';
 import PantallaCarga from '../../components/PantallaCarga';
 
-import {
-  obtenerDatosDelUsuario,
-  obtenerEstadoCMA,
-  obtenerLicenciasPorUsuario
-} from '../../services/usuariosApi';
-import {
-  obtenerSaldoCuentaCorrientePorUsuario
-} from '../../services/movimientosApi';
-import {
-  horasVoladasPorUsuario,
-  ultimosVuelosPorUsuario
-} from '../../services/vuelosApi';
+import {obtenerDatosDelUsuario, obtenerEstadoCMA, obtenerLicenciasPorUsuario} from '../../services/usuariosApi';
+import {obtenerSaldoCuentaCorrientePorUsuario} from '../../services/movimientosApi';
+import {horasVoladasPorUsuario, ultimosVuelosPorUsuario} from '../../services/vuelosApi';
 import { useUser } from '../../context/UserContext';
 
 function Dashboard() {
@@ -54,7 +45,7 @@ function Dashboard() {
           obtenerLicenciasPorUsuario(usuarioId)
         ]);
 
-        console.log("Datos de 'ultimosVuelosPorUsuario':", vuelosResponse); // Aquí se muestra el log.
+        console.log("Saldo Response:", saldoResponse); // Aquí se registra el saldo.
 
 
         const usuario = usuarioResponse?.[0] || {};

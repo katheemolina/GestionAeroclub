@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "./Styles/AsociadoCuentaCorriente.css";
-import { obtenerCuentaCorrientePorUsuario, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
-import { obtenerDatosDelUsuario } from '../../services/usuariosApi';
+import { obtenerCuentaCorrientePorUsuario, obtenerSaldoCuentaCorrientePorUsuario, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
+//import { obtenerDatosDelUsuario } from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
@@ -17,27 +17,38 @@ import { toast } from 'react-toastify';
 
 function AsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
+  const [saldo, setSaldo] = useState(0);
   const [loading, setLoading] = useState(true);
   const { usuarioId } = useUser();  
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [detalleMovimiento, setDetalleMovimiento] = useState(null);
-  const [usuario, setUsuario] = useState(null); // Nuevo estado para almacenar los datos del usuario
+  //const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
-        console.log(cuentaCorrienteResponse)        
+
+        // Obtener saldo de la cuenta corriente
+        const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
+
+        const saldoData = saldoResponse?.[0] || {};  // Accede al primer elemento
+
+        const saldo = parseFloat(saldoData.Saldo) || 0;  // Convertir el saldo a número
+        setSaldo(saldo); // Suponiendo que tienes un estado llamado saldo
+
         // Obtener datos del usuario
-        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
-        setUsuario(usuarioResponse);  // Guardar los datos del usuario en el estado   
+        //const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
+        //setUsuario(usuarioResponse);  
+
       } catch (error) {
         toast.error("Error al obtener datos:", error);
       }
       setLoading(false);
     };
+
     fetchData();
   }, [usuarioId]);
   
@@ -97,6 +108,13 @@ function AsociadoCuentaCorriente() {
           <h1>Cuenta Corriente</h1>
         </header>
       </div>
+
+      <section className="stats-section">
+        <div className="stat-box" style={{ maxWidth: '50%' }}>
+          <h3>Saldo</h3>
+          <p>{formatoMoneda(saldo)}</p> {/* Muestra el saldo formateado */}
+        </div>
+      </section>
 
       <DataTable ref={dt} value={data} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
         <Column
