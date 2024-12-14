@@ -57,10 +57,17 @@
   color: red;
 }
 
-/* Sección de la tabla */
-.table-section {
-  margin-bottom: 20px;
+/* Estilo para centrar el contenido de las celdas en la tabla */
+.table-section .p-datatable td {
+  text-align: center;
+  vertical-align: middle;
 }
+
+/* Opcional: también puedes centrar el encabezado */
+.table-section .p-datatable th {
+  text-align: center;
+}
+
 
 /* Sección de licencias */
 .licencias-section {
