@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { obtenerTarifas } from '../../services/tarifasApi'; // Import the API functions
-import '../../styles/datatable-style.css'; // Estilado para la tabla
+import { obtenerTarifas } from '../../services/tarifasApi'; 
+import '../../styles/datatable-style.css'; 
 import './Styles/GestorTarifas.css';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Button } from 'primereact/button';
@@ -11,57 +11,78 @@ const AsociadoTarifas = () => {
     const [tarifas, setTarifas] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Fetch tarifas data from the API
-    const fetchTarifas = async () => {
-        try {
-            const data = await obtenerTarifas();
-            setTarifas(data.data);
-            console.log(data);
-        } catch (error) {
-            console.error('Error fetching tarifas:', error);
-        }
-        setLoading(false);
-    };
+    // Filtrar tarifas para mostrar solo las vigentes actualmente con fechas desde y hasta
+const filterVigentes = (tarifas) => {
+    const today = new Date();
+    return tarifas.filter(tarifa => {
+        const fechaVigenciaDesde = new Date(tarifa.fecha_vigencia_desde);
+        const fechaVigenciaHasta = tarifa.fecha_vigencia_hasta ? new Date(tarifa.fecha_vigencia_hasta) : null;
+        
+        // Asegurarse de que ambas fechas existan y estén dentro del rango actual
+        return fechaVigenciaDesde && fechaVigenciaHasta &&
+        fechaVigenciaDesde <= today && fechaVigenciaHasta >= today;
+    });
+};
+
+// Fetch tarifas data from the API
+const fetchTarifas = async () => {
+    try {
+        const data = await obtenerTarifas();
+        const tarifasFiltradas = filterVigentes(data.data); // Filtra las tarifas vigentes
+        setTarifas(tarifasFiltradas);
+        console.log(tarifasFiltradas);
+    } catch (error) {
+        console.error('Error fetching tarifas:', error);
+    }
+    setLoading(false);
+};
+
 
     useEffect(() => {
         fetchTarifas();
     }, []);
 
-    // Column definitions
-    
 
+    //CHECKEAR SU FUNCIONALIDAD
     const dateBodyTemplate = (rowData) => {
-        if (!rowData.fecha_vigencia) return ''; // Para manejar valores nulos o indefinidos
+        if (!rowData.fecha_vigencia_desde) return ''; 
     
+        // Convertir la fecha recibida a un formato sin hora
+        const fechaString = rowData.fecha_vigencia_desde;
         
-        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        const fechaFormateada = new Date(rowData.fecha_vigencia).toLocaleDateString('es-ES', opciones); // Formatear la fecha a DD/MM/AAAA
+        // Asegúrate de que la fecha esté en el formato adecuado, esto lo realizo por la zonas horarias
+        const [year, month, day] = fechaString.split('-');
+        const fecha = new Date(year, month - 1, day);  // Año, mes (0-11), día
+        
+        // Verifica si la fecha es válida
+        if (isNaN(fecha)) return ''; 
     
+        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones); 
         return <span>{fechaFormateada}</span>;
     };
+    
+    
+    
 
     const amountBodyTemplate = (rowData) => {
         return <span>${rowData.importe}</span>;
     };
 
     const importeInstruccionBodyTemplate = (rowData) => {
-        // Convertimos el importe_por_instruccion a número y comparamos
         const importePorInstruccion = parseFloat(rowData.importe_por_instruccion);
-        
-        // Verificamos si el tipo de tarifa es "Combustible" o si el importe es 0
         if (rowData && (rowData.tipo_tarifa.toLowerCase() === 'combustible' || importePorInstruccion === 0)) {
             return "No aplica";
         }
-        // Si no es ninguno de esos casos, mostramos el valor del importe por instrucción
         return <span>${rowData?.importe_por_instruccion || ''}</span>;
     };
 
     const dt = useRef(null);
     const clearFilters = () => {
       if (dt.current) {
-        dt.current.reset(); // Limpia los filtros de la tabla
+        dt.current.reset(); 
       }
-      }
+    };
 
     if (loading) {
         return <PantallaCarga />;
@@ -80,10 +101,9 @@ const AsociadoTarifas = () => {
                 rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                <Column field="fecha_vigencia" header="Fecha Vigencia" body={dateBodyTemplate} sortable filter showFilterMenu={false} filterType='date'/>
+                <Column field="fecha_vigencia_desde" header="Fecha Vigencia" body={dateBodyTemplate} sortable filter showFilterMenu={false} filterType='date'/>
                 <Column field="tipo_tarifa" header="Tipo Tarifa" sortable filter showFilterMenu={false} filterPlaceholder="Buscar por Tarifa" filterMatchMode="contains"></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate} sortable filter showFilterMenu={false} filterPlaceholder="Buscar por Importe" filterMatchMode="contains"/>
-                {/* Aplicamos la función de personalización en la columna de Importe por Instrucción */}
                 <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate} sortable filter showFilterMenu={false} filterPlaceholder="Buscar por instruccion" filterMatchMode="contains"/>
                 <Column field="AeronavesMatri" header="Aeronaves" sortable filter showFilterMenu={false} filterPlaceholder="Buscar por Aeronave" filterMatchMode="contains"/>
                 <Column
@@ -96,7 +116,7 @@ const AsociadoTarifas = () => {
                         onClick={clearFilters}
                         style={{ width: '100%', height: '40px',  padding: '10px'}}
                         />
-                        }
+                    }
                 />
             </DataTable>
         </div>

@@ -161,7 +161,7 @@ function AsociadoCuentaCorriente() {
               {/*<Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>*/}
               <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
               <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
-              <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+              <Card>  <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p></Card>
               <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
               <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones}</p></Card>
               {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
@@ -194,7 +194,7 @@ function AsociadoCuentaCorriente() {
                         <p><strong>Instructor:</strong> {data.instructor}</p>
                       )}
                       {data.created_at !== null && (
-                        <p><strong>Fecha del Movimiento:</strong> {data.fecha_creacion}</p>
+                        <p><strong>Fecha del Movimiento:</strong> {formatearFecha(data.fecha_creacion)}</p>
                       )}
                     </div>
                   )}
