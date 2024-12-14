@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "./Styles/AsociadoCuentaCorriente.css";
 import { obtenerCuentaCorrientePorUsuario, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
-import { obtenerDatosDelUsuario} from '../../services/usuariosApi';
+import { obtenerDatosDelUsuario } from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
@@ -22,15 +22,17 @@ function AsociadoCuentaCorriente() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [detalleMovimiento, setDetalleMovimiento] = useState(null);
-
+  const [usuario, setUsuario] = useState(null); // Nuevo estado para almacenar los datos del usuario
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
-        console.log(cuentaCorrienteResponse);
-        
+        console.log(cuentaCorrienteResponse)        
+        // Obtener datos del usuario
+        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
+        setUsuario(usuarioResponse);  // Guardar los datos del usuario en el estado   
       } catch (error) {
         toast.error("Error al obtener datos:", error);
       }
@@ -38,13 +40,13 @@ function AsociadoCuentaCorriente() {
     };
     fetchData();
   }, [usuarioId]);
+  
 
   const openDialog = async (rowData) => {
     setSelectedRowData(rowData);
     try {
       const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
-      console.log(detalles)
-      setDetalleMovimiento(detalles); // Almacena los detalles en el estado
+      setDetalleMovimiento(detalles);
     } catch (error) {
       toast.error("Error al obtener detalles del movimiento");
     }
@@ -72,18 +74,17 @@ function AsociadoCuentaCorriente() {
     return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
   };
 
-
   // Plantilla para mostrar la fecha 
   const plantillaFecha = (rowData) => {
     return formatearFecha(rowData.fecha);
   };
 
   const dt = useRef(null);
-    const clearFilters = () => {
-      if (dt.current) {
-        dt.current.reset(); // Limpia los filtros de la tabla
-      }
-    };
+  const clearFilters = () => {
+    if (dt.current) {
+      dt.current.reset(); // Limpia los filtros de la tabla
+    }
+  };
 
   if (loading) {
     return <PantallaCarga />;
@@ -120,7 +121,7 @@ function AsociadoCuentaCorriente() {
             <Button
               label="Limpiar"
               onClick={clearFilters}
-              style={{ width: '100%', height: '40px',  padding: '10px'}}
+              style={{ width: '100%', height: '40px', padding: '10px'}}
             />
           }
           body={(rowData) => (
@@ -136,56 +137,55 @@ function AsociadoCuentaCorriente() {
       </DataTable>
 
       <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '450px' }} onHide={closeDialog}>
-              {selectedRowData && (
-                <div>
-                  <div className="p-fluid details-dialog">
-                    {/* <Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card> */}
-                    <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
-                    <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
-                    <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-                    {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
-                    <Card key={index}>
-                      {data.tipo !== null && (
-                        <p><strong>Tipo:</strong> {data.tipo}</p>
+        {selectedRowData && (
+          <div>
+            <div className="p-fluid details-dialog">
+              {/*<Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>*/}
+              <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+              <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
+              <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+              <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
+              <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones}</p></Card>
+              {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
+                <Card key={index}>
+                  {data.tipo !== null && (
+                    <p><strong>Tipo:</strong> {data.tipo}</p>
+                  )}
+                  {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
+                    <div>
+                      <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
+                      {data.cantidad !== null && (
+                        <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
                       )}
-                      {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
-                        <div>
-                          <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
-                          {data.cantidad !== null && (
-                            <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
-                          )}
-                          {data.estado !== null && (
-                            <p><strong>Estado:</strong> {data.estado}</p>
-                          )}
-                          {data.importe !== null && (
-                            <p><strong>Importe:</strong> {data.importe_mov}</p>
-                          )}
-                          {data.observaciones !== null && (
-                            <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
-                          )}
-                          {data.observaciones !== null && (
-                            <p><strong>Observaciones:</strong> {data.observaciones}</p>
-                          )}
-                          {data.instruccion !== null && (
-                            <p><strong>Instrucción:</strong> {data.instruccion}</p>
-                          )}
-                          {data.instructor !== null && (
-                            <p><strong>Instructor:</strong> {data.instructor}</p>
-                          )}
-                          {data.created_at !== null && (
-                            <p><strong>Fecha del Movimiento:</strong> {data.fecha_creacion}</p>
-                          )}
-                        </div>
+                      {data.estado !== null && (
+                        <p><strong>Estado:</strong> {data.estado}</p>
                       )}
-                    </Card>
-                  ))}
-
-                    
-                  </div>
-                </div>
-              )}
-            </Dialog>
-
+                      {data.importe !== null && (
+                        <p><strong>Importe:</strong> {data.importe_mov}</p>
+                      )}
+                      {data.observaciones !== null && (
+                        <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
+                      )}
+                      {/*data.observaciones !== null && (
+                        <p><strong>Observaciones:</strong> {data.observaciones}</p>
+                      )*/}
+                      {data.instruccion !== null && (
+                        <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                      )}
+                      {data.instructor !== null && (
+                        <p><strong>Instructor:</strong> {data.instructor}</p>
+                      )}
+                      {data.created_at !== null && (
+                        <p><strong>Fecha del Movimiento:</strong> {data.fecha_creacion}</p>
+                      )}
+                    </div>
+                  )}
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 }
