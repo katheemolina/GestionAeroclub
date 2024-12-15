@@ -37,7 +37,7 @@ function AsociadoCuentaCorriente() {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
-        console.log("Movimientos de cuenta corriente por usuario:",cuentaCorrienteResponse)
+        //console.log("Movimientos de cuenta corriente por usuario:",cuentaCorrienteResponse)
 
         // Obtener saldo de la cuenta corriente
         const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
@@ -46,15 +46,15 @@ function AsociadoCuentaCorriente() {
         setSaldo(saldo); // Suponiendo que tienes un estado llamado saldo
 
               // Obtener todos los recibos
-      const recibosResponse = await obtenerTodosLosRecibos(usuarioId);
-      console.log("Todos los recibos:", recibosResponse);
+        const recibosResponse = await obtenerTodosLosRecibos(usuarioId);
+        //console.log("Todos los recibos:", recibosResponse);
 
-      // Filtrar recibos utilizando un Set para optimizar la búsqueda
-      const movimientosIds = new Set(cuentaCorrienteResponse.map((movimiento) => movimiento.id_movimiento));
-      const filteredRecibos = recibosResponse.filter((recibo) => movimientosIds.has(recibo.id_movimiento));
-      
-      setDataRecibos(filteredRecibos);
-      console.log("Recibos filtrados:", filteredRecibos);
+        // Filtrar recibos utilizando un Set para optimizar la búsqueda
+        const movimientosIds = new Set(cuentaCorrienteResponse.map((movimiento) => movimiento.id_movimiento));
+        const filteredRecibos = recibosResponse.filter((recibo) => movimientosIds.has(recibo.id_movimiento));
+        
+        setDataRecibos(filteredRecibos);
+        //console.log("Recibos filtrados:", filteredRecibos);
 
         // Obtener datos del usuario
         //const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
@@ -128,13 +128,14 @@ function AsociadoCuentaCorriente() {
     // Buscar el recibo correspondiente en dataRecibos
     const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.id_movimiento);
 
-    console.log('Datos seleccionados:', recibo);
+    //console.log('Datos seleccionados:', recibo);
+
     // Datos del recibo
     const reciboData = {
-      recibo: recibo.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
+      tipoRecibo: recibo.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
       asociado: recibo.usuario || "-",
       aeronave: recibo.matricula || "-",
-      reciboNo: recibo.numero_recibo || "-",
+      numeroRecibo: recibo.numero_recibo || "-",
       fecha: recibo.fecha || new Date().toLocaleDateString(),
       observaciones: recibo.observaciones || "Sin observaciones",
       tarifa: recibo.importe_tarifa || "-",
@@ -142,7 +143,7 @@ function AsociadoCuentaCorriente() {
       instructor: recibo.instructor || "-",
       importePorInstruccion: recibo.importe_por_instruccion || "-",
       importeTotal: recibo.importe_total || "-",
-      cantidadCombustible: recibo.cantidad || "-",
+      cantidad: recibo.cantidad || "-",
     };
   
     // Parsear itinerarios (solo para recibos de vuelo)
@@ -165,20 +166,20 @@ function AsociadoCuentaCorriente() {
       // Datos básicos (asociado, recibo, fecha)
       doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
-      doc.text(`Asociado: ${recibo.usuario}`, 20, 50);
+      doc.text(`Asociado: ${reciboData.asociado}`, 20, 50);
       // Mostrar "Aeronave" solo si el tipo de recibo es "Vuelo"
-      if (reciboData.recibo === "vuelo") {
-        doc.text(`Aeronave: ${recibo.matricula}`, 20, 58);
+      if (reciboData.tipoRecibo === "vuelo") {
+        doc.text(`Aeronave: ${reciboData.aeronave}`, 20, 58);
       }
       doc.setFont("helvetica", "bold");
-      doc.text(`Recibo Nº: ${recibo.numero_recibo}`, 120, 50);
+      doc.text(`Recibo Nº: ${reciboData.numeroRecibo}`, 120, 50);
       doc.setFont("helvetica", "normal");
-      doc.text(`Fecha: ${recibo.fecha}`, 120, 58);
+      doc.text(`Fecha: ${reciboData.fecha}`, 120, 58);
       doc.setLineWidth(0.3);
       doc.line(10, 66, 200, 66);
   
       // Lógica para recibo de "Vuelo"
-      if (reciboData.recibo === "vuelo") {
+      if (reciboData.tipoRecibo === "vuelo") {
         // Encabezado de itinerarios
         doc.setFont("helvetica", "bold");
         doc.text("Itinerarios", 10, 74);
@@ -238,20 +239,20 @@ function AsociadoCuentaCorriente() {
       doc.line(10, yStart, 200, yStart);
   
       // Calcular la duración total
-      const duracionTotal = itinerarios.reduce((suma, itinerario) => {
-        const duracion = parseFloat(itinerario.duracion) || 0; // Convertir a número flotante, si no es válido usa 0
-        return suma + duracion;
-      }, 0);
+      //const duracionTotal = itinerarios.reduce((suma, itinerario) => {
+        //const duracion = parseFloat(itinerario.duracion) || 0; // Convertir a número flotante, si no es válido usa 0
+        //return suma + duracion;
+      //}, 0);
 
       // Calcular importe e importe de instrucción
       const tarifa = parseFloat(reciboData.tarifa) || 0; // Convertir tarifa a número flotante
       //const importePorInstruccion = parseFloat(reciboData.importePorInstruccion) || 0; // Usar la propiedad correcta del objeto reciboData
 
       // Importe total (sin instrucción)
-      const importe = tarifa * duracionTotal; 
+      const importe = tarifa * reciboData.cantidad; 
 
       // Importe por instrucción (si aplica)
-      const instruccionImporte = reciboData.importePorInstruccion * duracionTotal; // Multiplicar por la duración total
+      const instruccionImporte = reciboData.importePorInstruccion * reciboData.cantidad; // Multiplicar por la duración total
 
       // Calcular el total de aterrizajes
       const totalAterrizajes = itinerarios.reduce((suma, itinerario) => {
@@ -284,7 +285,7 @@ function AsociadoCuentaCorriente() {
       doc.setFont("helvetica", "bold");
       doc.text("Duración total:", 120, yStart);
       doc.setFont("helvetica", "normal");
-      doc.text(`${duracionTotal.toFixed(1)}`, 155, yStart, { align: "right" }); // Valor de duración total
+      doc.text(`${parseFloat(reciboData.cantidad).toFixed(1)}`, 155, yStart, { align: "right" });
 
       yStart += 6; // Espaciado para la siguiente línea
       doc.setFont("helvetica", "bold");
@@ -312,7 +313,7 @@ function AsociadoCuentaCorriente() {
 
 
   
-    } else if (reciboData.recibo === "combustible") {
+    } else if (reciboData.tipoRecibo === "combustible") {
       let yStart = 74;
     
       // Detalle del recibo
@@ -330,7 +331,7 @@ function AsociadoCuentaCorriente() {
       doc.setFont("helvetica", "normal");
       doc.text("Cantidad de Combustible:", 20, yStart);
       doc.setFont("helvetica", "bold");
-      doc.text(`${reciboData.cantidadCombustible} litros`, 80, yStart);
+      doc.text(`${reciboData.cantidad} litros`, 80, yStart);
     
       yStart += 10;
     
@@ -347,10 +348,48 @@ function AsociadoCuentaCorriente() {
       doc.setFont("helvetica", "bold");
       doc.text("Observaciones:", 20, yStart);
     
-      yStart += 6;
+      doc.setFont("helvetica", "normal");
+      doc.text(`${reciboData.observaciones}`, 80, yStart, { maxWidth: 180 });
+    
+      // Línea divisoria
+      yStart += 10;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+    
+      yStart += 8;
+      
+      // Total a pagar
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("Total a pagar:", 80, yStart);
+      doc.setFontSize(16);
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 125, yStart);
+
+      // Línea divisoria
+      yStart += 4;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+
+    } else if (reciboData.tipoRecibo === "cuota_social") {
+      let yStart = 74;
+
+      // Detalle del recibo
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+    
+      // recibo
+      doc.text("Recibo:", 20, yStart);
+      doc.setFont("helvetica", "bold");
+      doc.text("Cuota social", 70, yStart);
+    
+      yStart += 10;
+    
+      // Observaciones
+      doc.setFont("helvetica", "bold");
+      doc.text("Observaciones:", 20, yStart);
     
       doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observaciones}`, 20, yStart, { maxWidth: 180 });
+      doc.text(`${reciboData.observaciones}`, 70, yStart, { maxWidth: 180 });
 
       // Línea divisoria
       yStart += 10;
@@ -442,15 +481,26 @@ function AsociadoCuentaCorriente() {
           }
           body={(rowData) => (
             <div className="acciones">
-              <Tooltip> 
-                <IconButton color="primary"  title="Ver detalles" aria-label="view-details" onClick={() => openDialog(rowData)}>
-                  <SearchIcon />
-                </IconButton>
-                <IconButton  color="primary" title="Ver Recibo" onClick={() => handlePreviewAndPrint(rowData)}>
+            <Tooltip>
+              <IconButton
+                color="primary"
+                title="Ver detalles"
+                aria-label="view-details"
+                onClick={() => openDialog(rowData)}
+              >
+                <SearchIcon />
+              </IconButton>
+              {rowData.tipo !== null && ( // Condición para mostrar el ícono solo si tipo no es null
+                <IconButton
+                  color="primary"
+                  title="Ver Recibo"
+                  onClick={() => handlePreviewAndPrint(rowData)}
+                >
                   <PrintIcon />
                 </IconButton>
-              </Tooltip>
-            </div>
+              )}
+            </Tooltip>
+          </div>
           )}
         />
       </DataTable>
