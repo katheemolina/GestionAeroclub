@@ -125,6 +125,7 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
   const handlePreviewAndPrint = (rowData) => {
+    //console.log("Datos seleccionados",rowData)
     // Datos del recibo
     const reciboData = {
       recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
@@ -138,7 +139,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       instructor: rowData.instructor || "-",
       importePorInstruccion: rowData.importe_por_instruccion || "-",
       importeTotal: rowData.importe_total || "-",
-      cantidadCombustible: rowData.cantidad || "-",
+      cantidad: rowData.cantidad || "-",
     };
   
     // Parsear itinerarios (solo para recibos de vuelo)
@@ -234,20 +235,20 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.line(10, yStart, 200, yStart);
   
       // Calcular la duración total
-      const duracionTotal = itinerarios.reduce((suma, itinerario) => {
-        const duracion = parseFloat(itinerario.duracion) || 0; // Convertir a número flotante, si no es válido usa 0
-        return suma + duracion;
-      }, 0);
+      //const duracionTotal = itinerarios.reduce((suma, itinerario) => {
+      //const duracion = parseFloat(itinerario.duracion) || 0; // Convertir a número flotante, si no es válido usa 0
+      //return suma + duracion;
+      //}, 0);
 
       // Calcular importe e importe de instrucción
       const tarifa = parseFloat(reciboData.tarifa) || 0; // Convertir tarifa a número flotante
       //const importePorInstruccion = parseFloat(reciboData.importePorInstruccion) || 0; // Usar la propiedad correcta del objeto reciboData
 
       // Importe total (sin instrucción)
-      const importe = tarifa * duracionTotal; 
+      const importe = tarifa * reciboData.cantidad; 
 
       // Importe por instrucción (si aplica)
-      const instruccionImporte = reciboData.importePorInstruccion * duracionTotal; // Multiplicar por la duración total
+      const instruccionImporte = reciboData.importePorInstruccion * reciboData.cantidad; // Multiplicar por la duración total
 
       // Calcular el total de aterrizajes
       const totalAterrizajes = itinerarios.reduce((suma, itinerario) => {
@@ -280,7 +281,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setFont("helvetica", "bold");
       doc.text("Duración total:", 120, yStart);
       doc.setFont("helvetica", "normal");
-      doc.text(`${duracionTotal.toFixed(1)}`, 155, yStart, { align: "right" }); // Valor de duración total
+      doc.text(`${parseFloat(reciboData.cantidad).toFixed(1)}`, 155, yStart, { align: "right" });
 
       yStart += 6; // Espaciado para la siguiente línea
       doc.setFont("helvetica", "bold");
@@ -326,12 +327,12 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setFont("helvetica", "normal");
       doc.text("Cantidad de Combustible:", 20, yStart);
       doc.setFont("helvetica", "bold");
-      doc.text(`${reciboData.cantidadCombustible} litros`, 80, yStart);
+      doc.text(`${reciboData.cantidad} litros`, 80, yStart);
     
       yStart += 10;
     
       // Cálculo de tarifa por litro
-      const tarifaPorLitro = (parseFloat(reciboData.importeTotal) / parseFloat(reciboData.cantidadCombustible)).toFixed(2);
+      const tarifaPorLitro = (parseFloat(reciboData.importeTotal) / parseFloat(reciboData.cantidad)).toFixed(2);
       doc.setFont("helvetica", "normal");
       doc.text("Tarifa por litro:", 20, yStart);
       doc.setFont("helvetica", "bold");
@@ -367,8 +368,47 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
 
-    }
+    } else if (reciboData.recibo === "cuota_social") {
+      let yStart = 74;
+
+      // Detalle del recibo
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
     
+      // recibo
+      doc.text("Recibo:", 20, yStart);
+      doc.setFont("helvetica", "bold");
+      doc.text("Cuota social", 70, yStart);
+    
+      yStart += 10;
+    
+      // Observaciones
+      doc.setFont("helvetica", "bold");
+      doc.text("Observaciones:", 20, yStart);
+    
+      doc.setFont("helvetica", "normal");
+      doc.text(`${reciboData.observaciones}`, 70, yStart, { maxWidth: 180 });
+
+      // Línea divisoria
+      yStart += 10;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+    
+      yStart += 8;
+      
+      // Total a pagar
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("Total a pagar:", 80, yStart);
+      doc.setFontSize(16);
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 125, yStart);
+
+      // Línea divisoria
+      yStart += 4;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+
+    }
   
       // Crear la previsualización
       const pdfOutput = doc.output("bloburl");
