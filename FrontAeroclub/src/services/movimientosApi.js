@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './apiUrl';
 
 // Función para obtener el saldo de la cuenta corriente por usuario
 export const obtenerSaldoCuentaCorrientePorUsuario = async (idUsuario) => {

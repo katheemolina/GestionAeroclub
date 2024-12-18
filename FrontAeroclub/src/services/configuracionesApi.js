@@ -1,6 +1,4 @@
-// tarifasApi.js
-
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './apiUrl';
 
 // Función para obtener todas las tarifas
 export const obtenerConfiguraciones = async () => {

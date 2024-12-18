@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './apiUrl';
 
 // Función para obtener todas las aeronaves
 export const obtenerAeronaves = async () => {

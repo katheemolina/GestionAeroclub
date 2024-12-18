@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './apiUrl';
 
 // Función para obtener todos los tipos vuelo
 export const obtenerTiposVuelos = async () => {

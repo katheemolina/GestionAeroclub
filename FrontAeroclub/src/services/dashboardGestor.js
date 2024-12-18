@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './apiUrl';
 
 // Función para obtener las horas de vuelo del último mes
 export const obtenerHorasVueloUltimoMes = async () => {

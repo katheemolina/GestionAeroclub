@@ -1,6 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
-
-
+import { API_URL } from './apiUrl';
 
 export const obtenerServicios = async (id_aeronave) => {
     const response = await fetch(`${API_URL}/serviciosAeronaves/${id_aeronave}`);

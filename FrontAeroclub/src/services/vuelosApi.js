@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from './apiUrl';
 
 // Función para obtener las horas voladas por un usuario
 export const horasVoladasPorUsuario = async (idUsuario) => {
