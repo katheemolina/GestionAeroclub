@@ -1,57 +1,72 @@
-.menu-opciones {
-    margin-top: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-}
-
-.opcion-boton {
+/* Contenedor del dropdown */
+.dropdown-container {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .dropdown-header {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    margin: 10px 20px;
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
     font-size: 16px;
-    background-color: #b0b0b0; /* Color de fondo gris claro */
-    color: #333333; /* Texto en gris oscuro */
-    width: 30%;
-    border: 2px solid #999999; /* Borde gris medio */
-    padding: 0.7rem 1rem;
-    border-radius: 5px;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dropdown-header:hover {
+    border-color: #ad3333; /* Color del borde cuando se pasa el mouse */
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+  }
+  
+  /* Crear la flecha hacia abajo */
+  .dropdown-header::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333; /* Flecha hacia abajo */
+  }
+  
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 85%;
+    margin: 1px 20px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    list-style: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+  }
+  
+  .dropdown-item {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #333;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-
-.opcion-boton:hover {
-    background-color: #8e8e8e; /* Color de fondo al pasar el mouse */
-    color: #ffffff; /* Cambia el color del texto a blanco al pasar el mouse */
-}
-
-.opcion-boton.activo {
-    background-color: #6e6e6e; /* Color de fondo para el botón activo */
-    color: #ffffff; /* Texto en blanco para el botón activo */
-    font-weight: bold;
-    border-color: #6e6e6e; /* Borde del mismo color que el fondo del botón activo */
-}
-
-.menu-opciones .opcion-boton:not(:last-child) {
-    margin-right: 0.5rem; /* Espacio entre los botones */
-}
-
-.opciones-select {
-    width: 100%;
-    padding: 8px;
+  }
+  
+  .dropdown-item:hover {
+    background-color: rgb(176, 72, 72); /* Color de fondo en hover */
+    color: #fff; /* Texto blanco */
+  }
+  
+  .menu-opciones p {
+    color: #333;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    text-align: center;
   }
   
-  .opciones-select:focus {
-    outline: none;
-    border-color: #6e6e6e;
-  }
-  
-
-@media (max-width: 1800px){
-    .opcion-boton{
-        padding: 0.7rem 0.1rem;
-    }
-} 

@@ -9,14 +9,12 @@ function BotonesPorRol() {
   const { usuarioId } = useUser(); // Usamos el usuarioId para obtener los roles
   const [rolesDisponibles, setRolesDisponibles] = useState([]);
   const [rolActivo, setRolActivo] = useState(null);
+  const [isOpen, setIsOpen] = useState(false); // Controla la apertura del dropdown
 
   // Simulación de obtener roles desde una API
   const obtenerRolesDelAsociado = async () => {
     try {
-      // Reemplaza con tu llamada a la API para obtener los roles
       const response = await obtenerRolPorIdUsuario(usuarioId); // Suponiendo que esta API devuelve los roles del usuario
-
-      // Filtrar roles activos
       const rolesActivos = response.filter(rol => rol.estado === 'activo');
       setRolesDisponibles(rolesActivos);
     } catch (error) {
@@ -25,39 +23,44 @@ function BotonesPorRol() {
     }
   };
 
-  // Llamamos a la función cuando cambia el usuarioId
   useEffect(() => {
     if (usuarioId) {
       obtenerRolesDelAsociado();
     }
   }, [usuarioId]);
 
-  // Generamos dinámicamente los botones en función de los roles
   const handleButtonClick = (rol) => {
     setRole(rol);
     localStorage.setItem('role', rol);
     setRolActivo(rol);
+    setIsOpen(false); // Cierra el dropdown al seleccionar una opción
   };
 
   return (
     <div className="menu-opciones">
-  {rolesDisponibles.length === 0 ? (
-    <p>Cargando roles...</p>
-  ) : (
-    <select 
-      onChange={(e) => handleButtonClick(e.target.value)} 
-      value={rolActivo} 
-      className="opciones-select"
-    >
-      {rolesDisponibles.map((rol, index) => (
-        <option key={index} value={rol.descripcion}>
-          {rol.descripcion}
-        </option>
-      ))}
-    </select>
-  )}
-</div>
-
+      {rolesDisponibles.length === 0 ? (
+        <p>Cargando roles...</p>
+      ) : (
+        <div className="dropdown-container">
+          <div className="dropdown-header" onClick={() => setIsOpen(!isOpen)}>
+            {rolActivo || "Selecciona un rol"}
+          </div>
+          {isOpen && (
+            <ul className="dropdown-list">
+              {rolesDisponibles.map((rol, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleButtonClick(rol.descripcion)}
+                  className="dropdown-item"
+                >
+                  {rol.descripcion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

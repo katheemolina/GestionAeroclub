@@ -8,7 +8,7 @@
 /* Estilos básicos para el contenedor principal del sidebar */
 .sidebar-container {
     width: 20%;
-    min-width: 300px;
+    min-width: 150px;
     background-color: #E4E4E4; /* Color de fondo del sidebar */
     box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4); /* Sombra alrededor del sidebar */
     font-family: 'Arial', sans-serif; /* Tipografía */
@@ -30,7 +30,7 @@
     font-weight: bold; /* Texto en negrita */
     color: white; /* Color del texto */
     text-align: left; /* Alineación del texto a la izquierda */
-    
+    font-size: 16px;
 }
 
 .sidebar-header-img {
@@ -79,15 +79,18 @@
     color: black; /* Color del texto */
     box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.4); /* Sombra de los enlaces */
     text-decoration: none; /* Eliminar subrayado */
-    margin: 8px; /* Margen entre los enlaces */
-    padding: 15px; /* Espaciado interno */
-    text-align: center; /* Alineación centrada del texto */
+    font-size: 15px;
+    margin: 4px 15px; /* Margen entre los enlaces */
+    padding: 10px; /* Espaciado interno */
+    text-align:left; /* Alineación centrada del texto */
+    transition: transform 0.2s ease, background-color 0.2s ease; 
 }
 
 /* Estilo al pasar el ratón sobre un enlace */
 .sidebar-navbar-link:hover {
     color: white; /* Color de texto blanco al pasar el ratón */
     background-color: rgb(225, 179, 179); /* Fondo rojo cuando se pasa el ratón */
+    transform: scale(1.05); /* Agranda el botón un 5% */
 }
 
 .sidebar-navbar-link.active {
