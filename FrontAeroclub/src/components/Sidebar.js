@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
 import { useLocation } from 'react-router-dom';
-import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends ,FaReplyAll   } from 'react-icons/fa'; // Importando íconos
+import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends    } from 'react-icons/fa'; // Importando íconos
 import Boton from './Button';
 import BotonesPorRol from './RolesBnts';
 import '../styles/sidebar.css';
+import Tooltip from '@mui/material/Tooltip';
 
 function Sidebar() {
   const { user } = useUser();
   const { role } = useRole();
   const currentLocation = useLocation();
+  const [showLogout, setShowLogout] = useState(false);
   
   const enlacesPorRol = {
     Asociado: [
@@ -20,7 +22,7 @@ function Sidebar() {
       { ruta: '/asociado/cuenta-corriente', texto: 'Cuenta Corriente', icon: <FaCreditCard /> },
       { ruta: '/asociado/aeronaves', texto: 'Aeronaves', icon: <FaPlane /> },
       { ruta: '/asociado/tarifas', texto: 'Tarifas', icon: <FaDollarSign /> },
-      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll />, logout: true },
+     
     ],
     Gestor: [
       { ruta: '/gestor/dashboard', texto: 'Inicio', icon: <FaHome /> },
@@ -32,7 +34,7 @@ function Sidebar() {
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves', icon: <FaPlane /> },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores', icon: <FaCog /> },
       { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales', icon: <FaRegCalendarCheck  /> },
-      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll   />, logout: true },
+     
     ],
     Instructor: [
       { ruta: '/instructor/dashboard', texto: 'Inicio', icon: <FaHome />},
@@ -42,17 +44,21 @@ function Sidebar() {
       { ruta: '/instructor/aeronaves',texto: 'Aeronaves', icon: <FaPlane />  },
       { ruta: '/instructor/tarifas', texto: 'Tarifas', icon: <FaDollarSign />},
       { ruta: '/instructor/asociados',  texto: 'Asociados', icon: <FaRegAddressBook  /> },
-      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll   />, logout: true },
+     
     ],
     Administrador: [
       { ruta: '/administrador/configuracionesGenerales', texto: 'Configuraciones generales' , icon: <FaCog />},
       { ruta: '/administrador/Recibos', texto: 'Recibos', icon: <FaMoneyBillWave /> },
       { ruta: '/administrador/Aeronaves', texto: 'Aeronaves', icon: <FaPlane />  },
-      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll   />, logout: true},
+    
     ],
   };
 
   const enlaces = enlacesPorRol[role] || [];
+
+  const toggleLogout = () => {
+    setShowLogout((prev) => !prev); // Alterna el estado para mostrar/ocultar el botón de logout
+  };
 
   return (
     <div className={`sidebar-container `}>
@@ -62,9 +68,28 @@ function Sidebar() {
           <hr className="divisor-header"/>
           <p>{role.toUpperCase()}</p>
         </div>
-        <div>
-        <img className='sidebar-header-img' src={user?.picture} alt='foto de perfil'></img>
-        </div>
+        <Tooltip title="Haz clic para cerrar sesión" arrow>
+          <div
+            className="sidebar-header-img-container"
+            onClick={toggleLogout}
+          >
+            <img
+              className="sidebar-header-img"
+              src={user?.picture || '/path/to/default/image.jpg'}
+              alt="foto de perfil"
+            />
+          </div>
+        </Tooltip>
+        {showLogout && (
+          <div className="logout-button-container">
+            <Boton
+              texto="Cerrar Sesión"
+              estilos="logout-button"
+              logout={true}
+            />
+          </div>
+        )}
+
       </div>
        <BotonesPorRol  />
        <div className={`sidebar-navbar`}>
