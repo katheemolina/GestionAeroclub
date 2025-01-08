@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
-//Componente botón generico que puede usarse para desloguarse del sistema
-function Boton({ texto, ruta, estilos, logout }) {
+function Boton({ texto, ruta, estilos, logout, icon }) {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
@@ -15,13 +14,14 @@ function Boton({ texto, ruta, estilos, logout }) {
       localStorage.removeItem('role');
       navigate('/InicioSesion'); 
     } else if (ruta) {
-    // Si no es logout, entonces es para navegar (por ahora)
+      // Si no es logout, entonces es para navegar (por ahora)
       navigate(ruta);
     }
   };
 
   return (
     <button onClick={handleClick} className={estilos}>
+      {icon && <span className="icon">{icon}</span>} {/* Aquí se muestra el ícono */}
       {texto}
     </button>
   );

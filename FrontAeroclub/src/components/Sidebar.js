@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
 import { useLocation } from 'react-router-dom';
+import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends ,FaReplyAll   } from 'react-icons/fa'; // Importando íconos
 import Boton from './Button';
 import BotonesPorRol from './RolesBnts';
 import '../styles/sidebar.css';
@@ -13,41 +14,41 @@ function Sidebar() {
   
   const enlacesPorRol = {
     Asociado: [
-      { ruta: '/asociado/dashboard', texto: 'Inicio' },
-      { ruta: '/asociado/perfil', texto: 'Mi Perfil' },
-      { ruta: '/asociado/libro-vuelo', texto: 'Libro de Vuelo' },
-      { ruta: '/asociado/cuenta-corriente', texto: 'Cuenta Corriente' },
-      { ruta: '/asociado/aeronaves', texto: 'Aeronaves' },
-      { ruta: '/asociado/tarifas', texto: 'Tarifas' },
-      { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
+      { ruta: '/asociado/dashboard', texto: 'Inicio', icon: <FaHome /> },
+      { ruta: '/asociado/perfil', texto: 'Mi Perfil', icon: <FaUserAlt /> },
+      { ruta: '/asociado/libro-vuelo', texto: 'Libro de Vuelo', icon: <FaBook /> },
+      { ruta: '/asociado/cuenta-corriente', texto: 'Cuenta Corriente', icon: <FaCreditCard /> },
+      { ruta: '/asociado/aeronaves', texto: 'Aeronaves', icon: <FaPlane /> },
+      { ruta: '/asociado/tarifas', texto: 'Tarifas', icon: <FaDollarSign /> },
+      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll />, logout: true },
     ],
     Gestor: [
-      { ruta: '/gestor/dashboard', texto: 'Inicio' },
-      { ruta: '/gestor/recibos', texto: 'Recibos' },
-      { ruta: '/gestor/vuelos', texto: 'Libro de Vuelo' },
-      { ruta: '/gestor/cuenta-corriente', texto: 'Cuenta Corriente Aeroclub' },
-      { ruta: '/gestor/asociados', texto: 'Asociados' },
-      { ruta: '/gestor/tarifas', texto: 'Tarifas' },
-      { ruta: '/gestor/aeronaves', texto: 'Aeronaves' },
-      { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores' },
-      { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales' },
-      { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
+      { ruta: '/gestor/dashboard', texto: 'Inicio', icon: <FaHome /> },
+      { ruta: '/gestor/recibos', texto: 'Recibos', icon: <FaMoneyBillWave    /> },
+      { ruta: '/gestor/vuelos', texto: 'Libro de Vuelo', icon: <FaBook /> },
+      { ruta: '/gestor/cuenta-corriente', texto: 'Cuenta Corriente Aeroclub', icon: <FaCreditCard /> },
+      { ruta: '/gestor/asociados', texto: 'Asociados', icon: <FaUserFriends   /> },
+      { ruta: '/gestor/tarifas', texto: 'Tarifas', icon: <FaDollarSign /> },
+      { ruta: '/gestor/aeronaves', texto: 'Aeronaves', icon: <FaPlane /> },
+      { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores', icon: <FaCog /> },
+      { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales', icon: <FaRegCalendarCheck  /> },
+      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll   />, logout: true },
     ],
     Instructor: [
-      { ruta: '/instructor/dashboard', texto: 'Inicio' },
-      { ruta: '/instructor/perfil', texto: 'Mi Perfil' },
-      { ruta: '/instructor/libro-vuelo', texto: 'Libro de Vuelo' },
-      { ruta: '/instructor/cuenta-corriente', texto: 'Cuenta Corriente' },
-      { ruta: '/instructor/aeronaves', texto: 'Aeronaves' },
-      { ruta: '/instructor/tarifas', texto: 'Tarifas' },
-      { ruta: '/instructor/asociados', texto: 'Asociados' },
-      { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
+      { ruta: '/instructor/dashboard', texto: 'Inicio', icon: <FaHome />},
+      { ruta: '/instructor/perfil', texto: 'Mi Perfil', icon: <FaUserAlt />},
+      { ruta: '/instructor/libro-vuelo', texto: 'Libro de Vuelo', icon: <FaBook />  },
+      { ruta: '/instructor/cuenta-corriente', texto: 'Cuenta Corriente', icon: <FaCreditCard />  },
+      { ruta: '/instructor/aeronaves',texto: 'Aeronaves', icon: <FaPlane />  },
+      { ruta: '/instructor/tarifas', texto: 'Tarifas', icon: <FaDollarSign />},
+      { ruta: '/instructor/asociados',  texto: 'Asociados', icon: <FaRegAddressBook  /> },
+      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll   />, logout: true },
     ],
     Administrador: [
-      { ruta: '/administrador/configuracionesGenerales', texto: 'Configuraciones generales' },
-      { ruta: '/administrador/Recibos', texto: 'Recibos' },
-      { ruta: '/administrador/Aeronaves', texto: 'Aeronaves' },
-      { ruta: '/logout', texto: 'Cerrar Sesión', logout: true },
+      { ruta: '/administrador/configuracionesGenerales', texto: 'Configuraciones generales' , icon: <FaCog />},
+      { ruta: '/administrador/Recibos', texto: 'Recibos', icon: <FaMoneyBillWave /> },
+      { ruta: '/administrador/Aeronaves', texto: 'Aeronaves', icon: <FaPlane />  },
+      { ruta: '/logout', texto: 'Cerrar Sesión', icon: <FaReplyAll   />, logout: true},
     ],
   };
 
@@ -69,13 +70,12 @@ function Sidebar() {
        <div className={`sidebar-navbar`}>
          {enlaces.map((enlace, index) => (
            <Boton
-             key={index}
-             estilos={`sidebar-navbar-link ${
-              currentLocation.pathname === enlace.ruta ? 'active' : ''
-            }`}
-             ruta={enlace.ruta}
-             texto={enlace.texto}
-             logout={enlace.logout || false}
+           key={index}
+           estilos={`sidebar-navbar-link ${currentLocation.pathname === enlace.ruta ? 'active' : ''}`}
+           ruta={enlace.ruta}
+           texto={enlace.texto}
+           logout={enlace.logout || false}
+           icon={enlace.icon} // Aquí pasas el ícono
            />
          ))}
        </div>
