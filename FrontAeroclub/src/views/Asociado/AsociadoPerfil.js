@@ -39,6 +39,7 @@ function AsociadoPerfil() {
   const [licenciaDialog, setLicenciaDialog] = useState(false); // Controla si el dialog está abierto
   const [selectedLicencia, setSelectedLicencia] = useState(null); // Almacena la licencia seleccionada
   const [fechaVencimiento, setFechaVencimiento] = useState(null); // Almacena la fecha de vencimiento
+  const [editado, setEditado] = useState(false);
   const [tiposLicencias] = useState([
     { label: 'Piloto de planeador', value: 'Piloto de planeador' },
     { label: 'Piloto privado', value: 'Piloto privado' },
@@ -113,11 +114,12 @@ function AsociadoPerfil() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
+    setFormData({ ...formData, [name]: value });
+
+    // Cambia el estado `editado` a true cuando se detecte el primer cambio.
+    if (!editado) setEditado(true);
+};
+
 
 
 const validarFormulario = () => {
@@ -199,7 +201,7 @@ const handleSubmit = async (e) => {
         licencias={usuario.codigos_licencias || ["No posee licencias"]}
       />
       <form className="edit-form" onSubmit={handleSubmit}>
-        <h2>Editar información:</h2>
+        <h2>{editado ? "Editar información:" : "Ingresar información:"}</h2>
         <div className="form-row">
           <label>
             Teléfono:
