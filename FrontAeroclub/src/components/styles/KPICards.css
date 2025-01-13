@@ -1,0 +1,51 @@
+.kpi-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Centra las tarjetas en ambas filas */
+    gap: 0.5rem; /* Espaciado entre las tarjetas */
+    padding: 0.5rem;
+  }
+  
+  .kpi-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    width: calc(33.33% - 1rem); /* Ocupa un tercio del contenedor menos el espaciado */
+  }
+  
+  .kpi-card:nth-child(4) {
+    width: calc(25% - 0.5rem); /* La cuarta tarjeta y siguientes ocupan un cuarto del contenedor */
+  }
+  
+  .kpi-card:nth-child(n+5) {
+    width: calc(25% - 0.5rem); /* Las tarjetas de la segunda fila ocupan un cuarto */
+  }
+  
+  .kpi-card:hover {
+    transform: translateY(-3px);
+  }
+  
+  .kpi-card-header {
+    margin-bottom: 0.25rem;
+  }
+  
+  .kpi-card-title {
+    font-size: 0.90rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .kpi-card-content {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #222;
+  }
+  
+  .kpi-card-value {
+    font-size: 1.25rem;
+    color: #007bff;
+  }
+  
