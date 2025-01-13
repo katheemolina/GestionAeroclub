@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import './Styles/GestorDashboard.css';
 import { obtenerHorasVueloUltimoMes, obtenerSaldoCuentaCorrienteAeroclub } from '../../services/dashboardGestor';
 import { obtenerAeronaves } from '../../services/aeronavesApi';
-import avionImage from '../../avionetaBN.png'; // Ajusta la ruta según la ubicación de la imagen
-import { Dialog } from 'primereact/dialog';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+import avionImage from '../../avionetaBN.png';
+import { KpiCards } from "../../components/KpiCards";
+import { GraficoAeronaves } from "../../components/GraficoAeronaves";
+import { MantenimientoAeronaves } from "../../components/MantenimientoAeronaves";
+import { IndicadoresCuentas } from "../../components/IndicadoresCuentas";
+import { TopDeudores } from "../../components/TopDeudores";
 
 
 function GestorDashboard() {
@@ -17,45 +19,50 @@ function GestorDashboard() {
   const [aeronaves, setAeronaves] = useState([]);
   const [horasPorAvion, setHorasPorAvion] = useState({});
   const [error, setError] = useState(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [dialogVisible, setDialogVisible] = useState(false); // Estado para controlar la visibilidad del diálogo
-
+  // Estado para almacenar los datos del gráfico
+  const [graficoData, setGraficoData] = useState([]);
 
   // Función para obtener los datos desde las APIs
   const fetchData = async () => {
     try {
-      // Obtener saldo y por cobrar
       const saldoData = await obtenerSaldoCuentaCorrienteAeroclub();
       setSaldo(saldoData[0]?.importe_saldo || "0.00");
       setImportePorCobrar(saldoData[0]?.importe_por_cobrar || "0.00");
       setImporteAdeudado(saldoData[0]?.importe_adeudado || "0.00");
 
-      // Obtener horas de vuelo
       const horasData = await obtenerHorasVueloUltimoMes();
-       //console.log('Datos de horas de vuelo obtenidos:', horasData);
-
-      // Calcular total de horas en formato horas y minutos
       const totalHoras = horasData.reduce((total, aeronave) => {
-        const horas = Math.floor(aeronave.horas_ultimo_mes || 0); // Parte entera (horas completas)
-        const minutos = Math.round(((aeronave.horas_ultimo_mes || 0) % 1) * 60); // Parte decimal convertida a minutos (aproximadamente)
-        return total + horas + (minutos / 60); // Sumar en formato decimal
+        const horas = Math.floor(aeronave.horas_ultimo_mes || 0);
+        const minutos = Math.round(((aeronave.horas_ultimo_mes || 0) % 1) * 60);
+        return total + horas + (minutos / 60);
       }, 0);
-      const horasTotales = Math.floor(totalHoras); // Obtener horas completas
-      const minutosTotales = Math.round((totalHoras - horasTotales) * 60); // Obtener minutos totales
-      setHorasVuelo(`${horasTotales} hs ${minutosTotales} min`); // Mostrar como "horas hs minutos min"
+      const horasTotales = Math.floor(totalHoras);
+      const minutosTotales = Math.round((totalHoras - horasTotales) * 60);
+      setHorasVuelo(`${horasTotales} hs ${minutosTotales} min`);
 
-      // Mapear horas por avión en formato horas y minutos
       const horasMap = {};
       horasData.forEach(aeronave => {
         const horas = Math.floor(aeronave.horas_ultimo_mes || 0);
         const minutos = Math.round(((aeronave.horas_ultimo_mes || 0) % 1) * 60);
-        horasMap[aeronave.matricula] = `${horas} hs ${minutos} min`; // Redondear a 2 decimales
+        horasMap[aeronave.matricula] = `${horas} hs ${minutos} min`;
       });
       setHorasPorAvion(horasMap);
 
-      // Obtener aeronaves
       const aeronavesData = await obtenerAeronaves();
       setAeronaves(aeronavesData);
+
+      // Procesar datos para el gráfico
+      const chartData = horasData.map(aeronave => {
+        // Suponiendo que cada aeronave tiene horas por día para el gráfico (modifica según sea necesario)
+        const horasPorDia = aeronave.horas_ultimo_mes / 30; // Promedio de horas por día
+        return {
+          dia: aeronave.matricula, // Aquí podrías usar las fechas reales
+          [aeronave.matricula]: horasPorDia
+        };
+      });
+      setGraficoData(chartData);
     } catch (err) {
       console.error('Error al obtener los datos:', err);
       setError(err.message);
@@ -63,106 +70,24 @@ function GestorDashboard() {
   };
 
   useEffect(() => {
-    fetchData(); // Llamada a la API al montar el componente
-  }, []); // Solo se ejecuta una vez
+    fetchData(); 
+  }, []); 
 
   return (
     <div className="background">
-      {/* Sección de Saldo */}
-      <div className="contenedor-statbox">
-        <div className="statbox">
-          <h3>Saldo</h3>
-          <div className="num-saldo">{`$${saldo}`}</div>
-        </div>
-        <div
-          className="alertas-btn"
-          onClick={() => setDialogVisible(true)} // Al hacer clic, muestra el diálogo
-        >
-          <FontAwesomeIcon icon={faBell} size="lg" /> {/* Ícono de campanita */}
-        </div>
+      {/* Sección KPI*/}
+      <KpiCards />
+      {/* Sección KPI*/}
+      <div className="grid-container">
+      <GraficoAeronaves />
+      <MantenimientoAeronaves />
+     </div>
+     <div className="grid-layout">
+        <IndicadoresCuentas />
+        <TopDeudores />
       </div>
 
-      {/* Sección de Dinero */}
-      <div className="contenedor-statbox">
-        <div className="statbox">
-          <h3>Dinero por cobrar</h3>
-          <div className="num-secundario">{`$${importePorCobrar}`}</div>
-        </div>
-        <div className="statbox">
-          <h3>Dinero adeudado</h3>
-          <div className="num-secundario">{`$${importeAdeudado}`}</div>
-        </div>
-      </div>
-
-      {/* Sección de Horas Voladas */}
-      <div className="contenedor-statbox">
-        <div className="statbox">
-          <h3>Horas voladas ultimos 30 dias</h3>
-          <div className="num-secundario">{horasVuelo}</div>
-        </div>
-      </div>
-
-{/* Sección de Aeronaves */}
-<div className="contenedor-statbox">
-  <div className="statbox avion-container">
-    {aeronaves.length > 0 ? (
-      aeronaves.map(aeronave => {
-        const fechaUltimaInspeccion = new Date(aeronave.ultimo_servicio);
-        const fechaActual = new Date();
-        const diferenciaMilisegundos = fechaActual - fechaUltimaInspeccion;
-
-        // Calcular la diferencia en minutos
-        const diferenciaMinutos = Math.floor(diferenciaMilisegundos / (1000 * 60)); // Total minutos transcurridos
-        const minutosRestantes = Math.max(
-          0,
-          (aeronave.intervalo_para_inspeccion * 60) - diferenciaMinutos
-        ); // Minutos restantes para inspección
-
-        // Convertir los minutos restantes a formato horas y minutos
-        const horasRestantes = Math.floor(minutosRestantes / 60); // Horas completas restantes
-        const minutosRestantesExactos = minutosRestantes % 60; // Minutos restantes exactos
-
-        return (
-          <div className="avion-box" key={aeronave.id_aeronave}>
-            <div className="nombre-avion">{aeronave.matricula || "Sin matrícula"}</div>
-            <div className="imagen-avion">
-              <img src={avionImage} alt="Avion" />
-            </div>
-            <table className="tabla-avion">
-              <tbody>
-                <tr>
-                  <td>Horas último mes:</td>
-                  <td>{horasPorAvion[aeronave.matricula] || "0 hs 00 min"}</td>
-                </tr>
-                <tr>
-                <td>Próxima inspección:</td>
-                <td
-                  className={
-                    horasRestantes === 0 && minutosRestantesExactos === 0
-                      ? "alerta-inspeccion" // Alerta crítica
-                      : horasRestantes < 24
-                      ? "atencion-inspeccion" // Alerta de atención
-                      : ""
-                  }
-                >
-                  {`${horasRestantes} hs ${minutosRestantesExactos} min`}
-                </td>
-              </tr>
-                <tr>
-                  <td>Fecha última inspección:</td>
-                  <td>{aeronave.ultimo_servicio ? fechaUltimaInspeccion.toLocaleDateString() : "No tiene"}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        );
-      })
-    ) : (
-      <p>No hay aeronaves disponibles</p>
-    )}
-  </div>
-</div>
-
+      
     </div>
   );
 }
