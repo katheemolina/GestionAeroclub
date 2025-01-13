@@ -1,0 +1,43 @@
+.debtor-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .debtor-card-header {
+    margin-bottom: 16px;
+  }
+  
+  .debtor-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .debtor-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .debtor-table-head {
+    text-align: left;
+    font-weight: bold;
+    padding: 8px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .debtor-table-cell {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    color: #555;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
