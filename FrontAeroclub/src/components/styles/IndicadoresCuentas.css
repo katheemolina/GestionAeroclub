@@ -1,0 +1,102 @@
+.account-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    width: 100%; /* Ocupa todo el ancho */
+    margin: 0; /* Sin márgenes laterales */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .account-card-header {
+    margin-bottom: 16px;
+  }
+  
+  .account-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .account-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .account-stat {
+    text-align: center;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .recent-accounts {
+    margin-top: 16px;
+  }
+  
+  .recent-accounts-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .recent-accounts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .recent-account-item {
+    font-size: 0.875rem;
+    color: #555;
+  }
+  
+  .account-name {
+    font-weight: bold;
+    color: #222;
+  }
+  
+  .grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 16px; /* Espacio entre columnas */
+  }
+  
+  .totals {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* Totales en dos columnas */
+    gap: 16px;
+  }
+  
+  .recent-accounts {
+    text-align: left; /* Alinea el texto a la izquierda */
+  }
+  
+  .recent-accounts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .recent-accounts-list li {
+    font-size: 1rem; /* Aumenta el tamaño de las letras */
+    letter-spacing: 0.05em; /* Añade espaciado entre palabras */
+    color: #555; /* Mantiene el color o cámbialo según tu preferencia */
+  }
+  
