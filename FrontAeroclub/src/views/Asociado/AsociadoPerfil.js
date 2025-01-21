@@ -322,14 +322,14 @@ const handleSubmit = async (e) => {
       >
         <div className="p-fluid">
           <div className="p-field">
-            <label htmlFor="tipoLicencia">Tipo de licencia</label>
-            <Dropdown
+          <label htmlFor="tipoLicencia" className="label-margin">Tipo de licencia</label>
+          <Dropdown
               id="tipoLicencia"
               value={selectedLicencia}
               options={tiposLicencias}
               onChange={(e) => setSelectedLicencia(e.value)}
               placeholder="Seleccione una licencia"
-              style={{ width: '350px' }} // Cambia el valor según lo necesites
+              style={{ width: '350px', height:'45px' }} // Cambia el valor según lo necesites
             />
           </div>
           <div className="p-field">
@@ -339,8 +339,9 @@ const handleSubmit = async (e) => {
               value={fechaVencimiento}
               onChange={(e) => setFechaVencimiento(e.value)}
               showIcon
-              dateFormat="yy-mm-dd"
+              dateFormat="dd-mm-yy"
               style={{ width: '400px' }}
+              placeholder='-'
             />
           </div>
         </div>

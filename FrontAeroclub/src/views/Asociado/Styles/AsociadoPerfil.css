@@ -77,35 +77,27 @@ button:hover {
 }
 
 
+
 .licencias-section{
   margin-top: 10px;
+}
+
+/* Asegurar que el texto del Dropdown esté bien posicionado */
+.p-dropdown .p-dropdown-label {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  display: flex;
+  align-items: center; /* Centra el texto verticalmente */
+  height: 100%; /* Asegura que el contenido ocupe el contenedor */
+  line-height: normal; /* Evita desplazamiento vertical */
 }
 
 #actualizar-licencias{
   margin-top: 10px;
 }
 
-
-/* Botones de navegación del calendario */
-.p-datepicker-prev,
-.p-datepicker-next {
-  margin: 10px; /* Espaciado consistente */
-}
-
-/* Tabla del calendario */
-.p-datepicker-calendar td span {
-  border-radius: 5px; /* Bordes redondeados para los días */
-}
-
-/* Contenedor del calendario */
-.p-datepicker-calendar-container .p-datepicker-calendar {
-  margin: 20px 0 10px; /* Espaciado superior e inferior */
-}
-
-/* Selector de mes y año */
-.p-monthpicker-month,
-.p-yearpicker-year {
-  padding: 10px; /* Espaciado interno uniforme */
+.p-dialog-content .p-fluid .p-field input {
+  margin-top: 0px !important;
 }
 
 /* Botón de activación del calendario (ícono del calendario) */
@@ -114,10 +106,14 @@ button:hover {
   border: none !important;
   padding: 0 !important; /* Sin relleno */
   color: black;
-  
+  transition: transform 0.2s ease, color 0.2s ease; /* Transición suave para color y escala */
+  cursor: pointer; /* Mostrar un cursor de puntero */
 }
 
-/* Campo de entrada del calendario */
-.p-calendar .p-inputtext {
-  border-radius: 5px; 
+/* Efecto al pasar el cursor */
+.p-calendar .p-datepicker-trigger:hover {
+  color: #007BFF; /* Cambiar el color al pasar el cursor */
+  transform: scale(1.1); /* Escalar ligeramente */
 }
+
+
