@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { obtenerDatosDelUsuario } from "../services/usuariosApi";
 import { useUser } from "../context/UserContext"; // Importar el contexto del usuario
 import "../styles/background.css";
+import { Dialog } from "primereact/dialog";
 import "../styles/bienvenida.css";
 
 function Bienvenida() {
-  const [mostrarCajita, setMostrarCajita] = useState(false); // Estado para controlar la visibilidad
+  const [mostrarDialogo, setMostrarDialogo] = useState(false); // Estado para controlar la visibilidad
+  const [usuario, setUsuario] = useState({}); // Estado para almacenar los datos del usuario
   const { usuarioId } = useUser(); // Obtener usuarioId desde el contexto
   const navigate = useNavigate();
 
@@ -14,8 +16,9 @@ function Bienvenida() {
     const verificarDni = async () => {
       try {
         const usuarioResponse = await obtenerDatosDelUsuario(usuarioId); // Usar usuarioId del contexto
-        const usuario = usuarioResponse[0];
-        setMostrarCajita(!usuario.dni); // Mostrar la cajita si no hay DNI
+        const usuarioData = usuarioResponse[0];
+        setUsuario(usuarioData); // Guardar los datos del usuario en el estado
+        setMostrarDialogo(!usuarioData.dni); // Mostrar el diálogo si no hay DNI
       } catch (error) {
         console.error("Error al obtener datos del usuario:", error);
       }
@@ -27,6 +30,7 @@ function Bienvenida() {
   }, [usuarioId]);
 
   const redirigirCargaDatos = () => {
+    setMostrarDialogo(false); // Cierra el diálogo antes de redirigir
     navigate("/asociado/perfil"); // Cambia al path que apunta a AsociadoPerfil.js
   };
 
@@ -38,14 +42,24 @@ function Bienvenida() {
         </div>
       </div>
 
-      {mostrarCajita && ( // Renderizar condicionalmente la cajita
-        <div className="cajita-cargar-datos">
-          <p className="texto-cargar-datos">¿Nuevo en el sistema? Carga tus datos iniciales:</p>
-          <button className="btn-cargar-datos" onClick={redirigirCargaDatos}>
+      <Dialog
+        visible={mostrarDialogo}
+        onHide={() => setMostrarDialogo(false)} // Cerrar el diálogo al hacer clic fuera
+        className="dialogo-cargar-datos"
+        header={`Bienvenido ${usuario.nombre || ""} ${usuario.apellido || ""}`}
+        closable={false} // Esto elimina la cruz de cierre predeterminada
+
+      >
+        
+        <p className="texto-dialogo">Para comenzar, por favor ingresa tus datos iniciales.</p>
+        <p className="texto-dialogo">Necesarias para gestionar el sistema.</p>
+
+        <div className="button-container">
+          <button className="btn-dialogo" onClick={redirigirCargaDatos}>
             Cargar datos
           </button>
         </div>
-      )}
+      </Dialog>
 
       <img
         className="foto-bienvenida"
