@@ -10,7 +10,7 @@ const datosAeronaves = [
 
 export function MantenimientoAeronaves() {
   return (
-    <div className="card">
+    <div id='mantenimiento-aeronaves' className="card">
       <div className="card-header">
         <h2 className="card-title">Estado de Mantenimiento de Aeronaves</h2>
       </div>

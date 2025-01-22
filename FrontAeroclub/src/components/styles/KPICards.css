@@ -13,7 +13,7 @@
     padding: 0.75rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
-    width: calc(33.33% - 1rem); /* Ocupa un tercio del contenedor menos el espaciado */
+    width: calc(33.33% - 0.5rem); /* Ocupa un tercio del contenedor menos el espaciado */
   }
   
   .kpi-card:nth-child(4) {
@@ -46,6 +46,6 @@
   
   .kpi-card-value {
     font-size: 1.25rem;
-    color: #007bff;
+    color: #237edf;
   }
   

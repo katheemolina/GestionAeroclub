@@ -7,6 +7,10 @@
     margin: 0; /* Sin márgenes laterales */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+
+  .account-card .grid{
+    margin: 0px;
+  }
   
   .account-card-header {
     margin-bottom: 16px;
@@ -27,11 +31,14 @@
   .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 8px;
   }
   
   .account-stat {
     text-align: center;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
   }
   
   .stat-label {
@@ -46,7 +53,8 @@
   }
   
   .recent-accounts {
-    margin-top: 16px;
+    /* margin-top: 16px; */
+    text-align: left; /* Alinea el texto a la izquierda */
   }
   
   .recent-accounts-title {
@@ -64,6 +72,8 @@
   
   .recent-account-item {
     font-size: 0.875rem;
+    padding: 10px 0px;
+    border-bottom: 1px solid #ddd;
     color: #555;
   }
   
@@ -76,6 +86,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
     gap: 16px; /* Espacio entre columnas */
+    padding: 0.5rem;
   }
   
   .totals {
@@ -83,10 +94,7 @@
     grid-template-columns: repeat(1, 1fr); /* Totales en dos columnas */
     gap: 16px;
   }
-  
-  .recent-accounts {
-    text-align: left; /* Alinea el texto a la izquierda */
-  }
+
   
   .recent-accounts-list {
     list-style: none;

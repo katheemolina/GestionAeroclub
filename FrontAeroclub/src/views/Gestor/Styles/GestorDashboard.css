@@ -15,6 +15,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr; /* Asigna 2 partes para el gráfico y 1 parte para el mantenimiento */
   gap: 20px; /* Espacio entre los componentes */
+  padding: 0.5rem;
 }
 
 
