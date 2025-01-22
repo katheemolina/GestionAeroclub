@@ -309,10 +309,11 @@ const handleSubmit = async (e) => {
       </section>
       
       <Dialog
+        className='actualizarLicenciaDialog'
         header="Actualizar Licencia"
         visible={licenciaDialog}
         onHide={() => setLicenciaDialog(false)}
-        style={{ width: '30vw', minwidth: '450px' }}
+        style={{ width: 'min-content', minwidth: '450px' }}
         footer={
           <>
             <Button  label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary gestor-btn-cancelar" />
@@ -322,14 +323,14 @@ const handleSubmit = async (e) => {
       >
         <div className="p-fluid">
           <div className="p-field">
-          <label htmlFor="tipoLicencia" className="label-margin">Tipo de licencia</label>
+          <label style={{  fontWeight: 'bold'}} htmlFor="tipoLicencia" >Tipo de licencia</label>
           <Dropdown
               id="tipoLicencia"
               value={selectedLicencia}
               options={tiposLicencias}
               onChange={(e) => setSelectedLicencia(e.value)}
               placeholder="Seleccione una licencia"
-              style={{ width: '350px', height:'45px' }} // Cambia el valor según lo necesites
+              style={{ width: '100%', height:'45px' }} // Cambia el valor según lo necesites
             />
           </div>
           <div className="p-field">

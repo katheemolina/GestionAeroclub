@@ -116,8 +116,21 @@ button:hover {
   transform: scale(1.1); /* Escalar ligeramente */
 }
 
+.actualizarLicenciaDialog .p-field .p-component{
+  margin-top: 10px;
+}
+
+.actualizarLicenciaDialog .p-datepicker-trigger{
+  margin: 0px !important;
+  border: 2px solid #ddd !important;
+  border-left: 1px solid #ddd !important;
+  border-radius: 0px 6px 6px 0px;
+}
 
 #fechaVencimiento .p-inputtext{
   height: 45px;
   margin-bottom: 0px !important;
+  border-radius: 6px 0px 0px 6px;
+  border: 2px solid #ddd;
+  border-right: none;
 }
