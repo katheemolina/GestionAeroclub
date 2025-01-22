@@ -312,7 +312,7 @@ const handleSubmit = async (e) => {
         header="Actualizar Licencia"
         visible={licenciaDialog}
         onHide={() => setLicenciaDialog(false)}
-        style={{ width: '50vw' }}
+        style={{ width: '30vw', minwidth: '450px' }}
         footer={
           <>
             <Button  label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary gestor-btn-cancelar" />

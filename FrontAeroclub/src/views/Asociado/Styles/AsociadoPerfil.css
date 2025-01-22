@@ -117,3 +117,7 @@ button:hover {
 }
 
 
+#fechaVencimiento .p-inputtext{
+  height: 45px;
+  margin-bottom: 0px !important;
+}

@@ -2,7 +2,7 @@
 .dropdown-container {
     position: relative;
     width: 100%;
-    max-width: 350px;
+    /* max-width: 350px; */
     font-family: Arial, sans-serif;
   }
   
@@ -11,6 +11,7 @@
     border: 2px solid #ccc;
     border-radius: 8px;
     margin: 10px 20px;
+    margin-top: 20px;
     padding: 8px;
     cursor: pointer;
     text-align: center;
