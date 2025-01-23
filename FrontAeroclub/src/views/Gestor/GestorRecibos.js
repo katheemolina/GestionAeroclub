@@ -125,7 +125,7 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
   const handlePreviewAndPrint = (rowData) => {
-    //console.log("Datos seleccionados",rowData)
+    //console.log("Datos del recibo",rowData)
     // Datos del recibo
     const reciboData = {
       recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"

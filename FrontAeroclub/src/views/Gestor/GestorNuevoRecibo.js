@@ -53,9 +53,11 @@ function FormularioGestorRecibos() {
     const [tarifas, setTarifas] = useState([]);
     const [tarifasSeleccionado, setTarifasSeleccionado] = useState(null);
     const [tarifasFiltradasAeronave, setTarifasFiltradasAeronave] = useState([]);
+
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
+            //console.log("Tarifas:", data)
             setTarifas(data.data);
         } catch (error) {
             //console.error('Error fetching tarifas:', error);
@@ -190,6 +192,33 @@ function FormularioGestorRecibos() {
     const handleCheckboxChange = () => {
         setInstruccionSeleccionada(!instruccionSeleccionada); // Cambia el estado del checkbox instrucción
     };
+
+
+    // Calcula el monto total del recibo de VUELOS
+    useEffect(() => {
+        const calcularMontoTotal = () => {
+            if (!tarifasSeleccionado) {
+                setMonto(0); // Si no hay tarifa seleccionada, el monto es 0
+                return;
+            }
+
+            const duracionTotal = calcularDuracionTotal(); // Duración total del viaje
+            const tarifa = parseFloat(tarifasSeleccionado.importe) || 0; // Tarifa base
+            const tarifaInstruccion = parseFloat(tarifasSeleccionado.importe_por_instruccion) || 0; // Tarifa por instrucción
+
+            // Monto base: Duración total * tarifa
+            let montoCalculado = duracionTotal * tarifa;
+
+            // Si aplica instrucción, se suma la tarifa por instrucción
+            if (instruccionSeleccionada) {
+                montoCalculado += duracionTotal * tarifaInstruccion;
+            }
+
+            setMonto(montoCalculado); // Actualizamos el estado del monto
+        };
+
+    calcularMontoTotal();
+}, [tarifasSeleccionado, instruccionSeleccionada, itinerarioData]); // Dependencias que disparan el cálculo
 
     const renderFormularioVuelo = () => (
         <>
@@ -327,6 +356,17 @@ function FormularioGestorRecibos() {
                     onChange={(e) => setObservaciones(e.target.value)}
                     placeholder="Añadir observaciones"
                 ></textarea>
+            </div>
+
+            <div className="form-group">
+                <label className="label-recibo">Monto total:</label>
+                <input
+                    className="input-recibo"
+                    type="text"
+                    value={`$${monto.toFixed(2)}`}
+                    readOnly
+                    disabled
+                />
             </div>
         </>
     );
@@ -573,7 +613,7 @@ function FormularioGestorRecibos() {
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo') {
-            console.log(fechaConHora)
+            //console.log(fechaConHora)
             reciboData = {
                 IdUsuario: asociadosSeleccionado?.id_usuario ?? 0, // Valor predeterminado si es null o undefined
                 TipoRecibo: tipoReciboSeleccionado ?? 'Tipo_Recibo_Predeterminado', // Valor predeterminado
