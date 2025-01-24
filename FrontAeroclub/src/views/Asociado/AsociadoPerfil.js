@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CardComponent from '../../components/CardComponent'; 
+import UploadImage from '../../components/UploadImage'; 
 import "./Styles/AsociadoPerfil.css"
 import { obtenerDatosDelUsuario,actualizarDatosDelUsuario ,obtenerLicenciasPorUsuario, actualizarLicencias} from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
@@ -14,6 +15,7 @@ import { ToastContainer } from 'react-toastify';
 import PantallaCarga from '../../components/PantallaCarga';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/datepicker.css'
+
 
 function AsociadoPerfil() {
   const [cargando, setCargando] = useState(true);
@@ -200,6 +202,9 @@ const handleSubmit = async (e) => {
         telefono={usuario.telefono || "No disponible"}
         licencias={usuario.codigos_licencias || ["No posee licencias"]}
       />
+
+<UploadImage />
+
       <form className="edit-form" onSubmit={handleSubmit}>
         <h2>{editado ? "Editar información:" : "Ingresar información:"}</h2>
         <div className="form-row">
@@ -293,6 +298,8 @@ const handleSubmit = async (e) => {
           <button className="guardar" type="submit">Guardar Cambios</button>
         </div>
       </form>
+
+      
 
       <section className="licencias-section">
         <h3>Licencias</h3>
