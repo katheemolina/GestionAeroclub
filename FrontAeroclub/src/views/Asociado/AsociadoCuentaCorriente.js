@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import PrintIcon from '@mui/icons-material/Print';
 import jsPDF from "jspdf";
 import logo from '../../icon-aeroclub.png';
+import KpiBox from '../../components/KpiBox';
 
 
 function AsociadoCuentaCorriente() {
@@ -31,6 +32,17 @@ function AsociadoCuentaCorriente() {
   const [detalleMovimiento, setDetalleMovimiento] = useState(null);
   const [dataRecibos, setDataRecibos] = useState([])
   //const [usuario, setUsuario] = useState(null);
+
+
+  //Despues pasar estos datos por parametros dinamicos
+  const kpiData = [
+    { title: 'Saldo actual', value: '$ -175.000' },
+    { title: 'Deuda de cuota social', value: '$ -50.00' },
+    { title: 'Deuda por vuelos', value: '$ -125.000' },
+    { title: 'Pagos de cuotas sociales', value: '$ 200.000' },
+    { title: 'Pagos por vuelo', value: '$ 105.000' },
+  ];
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -446,12 +458,18 @@ function AsociadoCuentaCorriente() {
         </header>
       </div>
 
+{/* comento esto para despues borrarlo pero ver como le pasa el saldo al box
+
       <section className="stats-section">
         <div className="stat-box" style={{ maxWidth: '50%' }}>
           <h3>Saldo</h3>
-          <p>{formatoMoneda(saldo)}</p> {/* Muestra el saldo formateado */}
+          <p>{formatoMoneda(saldo)}</p> 
         </div>
-      </section>
+      </section> 
+      */}
+      <div>
+      <KpiBox data={kpiData} />
+      </div>
 
       <DataTable ref={dt} value={mergedData} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
         <Column
