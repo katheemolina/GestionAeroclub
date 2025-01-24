@@ -13,6 +13,7 @@ import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
 import { toast } from 'react-toastify';
 import { Button } from 'primereact/button';
+import KpiBox from '../../components/KpiBox';
 
 function AsociadoLibroVuelo() {
   const [data, setData] = useState([]);
@@ -23,6 +24,17 @@ function AsociadoLibroVuelo() {
   const [aeronaves, setAeronaves] = useState([]);
   const [instruccionFiltro, setInstruccionFiltro] = useState(null);
   const [aeronaveFiltro, setAeronaveFiltro] = useState(null);
+
+  //Esto despues pasarlo dinamico
+  const kpiData = [
+    { title: 'Total horas voladas', value: 150 },
+    { title: 'Horas historicas', value: 125 },
+    { title: 'Horas de vuelo', value: 25 },
+    { title: 'Vuelo en LV-YOH', value: '16 horas' },
+    { title: 'Vuelo en LV-S141', value: '14 horas' },
+    { title: 'Cantidad ultimo mes', value: '6 horas' },
+    { title: 'Vuelos Internacionales', value: null }, // No se mostrará
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -110,6 +122,10 @@ function AsociadoLibroVuelo() {
         </header>
       </div>
       
+      <div>
+      <KpiBox data={kpiData} />
+    </div>
+
       <DataTable
         ref={dt}
         value={data}
