@@ -1,0 +1,48 @@
+.background {
+    text-align: left; /* Asegura alineación izquierda general */
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.notificaciones-list {
+    margin: 0 auto;
+}
+
+.notificacion {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    text-align: left; /* Asegura alineación de cada notificación */
+    transition: transform 0.2s ease, background-color 0.2s ease; /* Suavidad para el hover */
+}
+
+.notificacion:hover {
+    transform: translateY(-2px); /* Desplazamiento sutil hacia arriba */
+    background-color: #e0e0e0; /* Color grisáceo al pasar el mouse */
+}
+
+.mensaje {
+    font-size: 16px;
+    margin: 0 0 5px 0;
+    text-align: left; /* Forzar alineación izquierda */
+}
+
+.fecha {
+    font-size: 12px;
+    color: #777;
+    text-align: left; /* Forzar alineación izquierda */
+}
+
+.no-results {
+    color: #777;
+    text-align: left; /* Asegura alineación izquierda */
+}

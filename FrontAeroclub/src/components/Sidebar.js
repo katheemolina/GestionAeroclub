@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
 import { useLocation } from 'react-router-dom';
-import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends    } from 'react-icons/fa'; // Importando íconos
+import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends  ,FaBell  } from 'react-icons/fa'; // Importando íconos
 import Boton from './Button';
 import BotonesPorRol from './RolesBnts';
 import '../styles/sidebar.css';
@@ -34,7 +34,7 @@ function Sidebar() {
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves', icon: <FaPlane /> },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores', icon: <FaCog /> },
       { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales', icon: <FaRegCalendarCheck  /> },
-     
+      { ruta: '/gestor/notificaciones', texto: 'Notificaciones', icon: <FaBell  /> },
     ],
     Instructor: [
       { ruta: '/instructor/dashboard', texto: 'Inicio', icon: <FaHome />},
