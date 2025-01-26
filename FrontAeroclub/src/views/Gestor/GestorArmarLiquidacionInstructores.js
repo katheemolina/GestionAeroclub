@@ -33,6 +33,7 @@ const GestorArmarLiquidacionInstructores = () => {
             const data = await movimientosNoLiquidadosPorInstructor(); // Fetch instructores
             setMovimientos(data);
         } catch (error) {
+            setMovimientos([]);
             console.error('Error fetching movimientos:', error);
         }
         setLoading(false);
