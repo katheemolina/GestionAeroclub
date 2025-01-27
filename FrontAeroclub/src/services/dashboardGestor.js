@@ -19,3 +19,19 @@ export const obtenerSaldoCuentaCorrienteAeroclub = async () => {
     }
     return response.json();
 };
+
+export const contadoresDeCuentas = async () => {
+    const response = await fetch(`${API_URL}/contadoresDeCuentas`);
+    if (!response.ok) {
+        throw new Error('Error al obtener los indicadores');
+    }
+    return response.json();
+};
+
+export const obtenerUltimasCuentas = async () => {
+    const response = await fetch(`${API_URL}/obtenerUltimasCuentas`);
+    if (!response.ok) {
+        throw new Error('Error al obtener los indicadores');
+    }
+    return response.json();
+};
