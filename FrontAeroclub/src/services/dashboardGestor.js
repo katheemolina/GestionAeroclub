@@ -35,3 +35,12 @@ export const obtenerUltimasCuentas = async () => {
     }
     return response.json();
 };
+
+
+export const obtenerHorasPorDiaAeronaves = async () => {
+    const response = await fetch(`${API_URL}/obtenerHorasPorDiaAeronaves`);
+    if (!response.ok) {
+        throw new Error('Error al obtener la informacion');
+    }
+    return response.json();
+};
