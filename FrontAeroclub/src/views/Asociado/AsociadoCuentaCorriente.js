@@ -49,15 +49,14 @@ function AsociadoCuentaCorriente() {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
-        //console.log("Movimientos de cuenta corriente por usuario:",cuentaCorrienteResponse)
+        console.log("obtenerCuentaCorrientePorUsuario:",cuentaCorrienteResponse)
 
         // Obtener saldo de la cuenta corriente
         const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
         const saldoData = saldoResponse?.[0] || {};  // Accede al primer elemento
         const saldo = parseFloat(saldoData.Saldo) || 0;  // Convertir el saldo a número
-        setSaldo(saldo); // Suponiendo que tienes un estado llamado saldo
 
-              // Obtener todos los recibos
+        // Obtener todos los recibos
         const recibosResponse = await obtenerTodosLosRecibos(usuarioId);
         //console.log("Todos los recibos:", recibosResponse);
 
@@ -88,6 +87,7 @@ function AsociadoCuentaCorriente() {
     setSelectedRowData(rowData);
     try {
       const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
+      //console.log("Detalles cta cte aeroclub x movimiento:", detalles)
       setDetalleMovimiento(detalles);
     } catch (error) {
       toast.error("Error al obtener detalles del movimiento");
@@ -132,6 +132,7 @@ function AsociadoCuentaCorriente() {
 
   const mergedData = data.map((item) => {
     const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === item.id_movimiento);
+    //console.log("Recibo:", recibo)
     return { ...item, recibo }; // Añade los datos del recibo a cada fila
   });
   
@@ -382,7 +383,7 @@ function AsociadoCuentaCorriente() {
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
 
-    } else if (reciboData.tipoRecibo === "cuota_social") {
+    } else if (reciboData.tipoRecibo === "cuota_social" || reciboData.tipoRecibo === null ) {
       let yStart = 74;
 
       // Detalle del recibo
@@ -397,7 +398,7 @@ function AsociadoCuentaCorriente() {
       yStart += 10;
     
       // Observaciones
-      doc.setFont("helvetica", "bold");
+      doc.setFont("helvetica", "normal");
       doc.text("Observaciones:", 20, yStart);
     
       doc.setFont("helvetica", "normal");
@@ -508,7 +509,7 @@ function AsociadoCuentaCorriente() {
               >
                 <SearchIcon />
               </IconButton>
-              {rowData.tipo !== null && ( // Condición para mostrar el ícono solo si tipo no es null
+              {rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
                 <IconButton
                   color="primary"
                   title="Ver Recibo"
@@ -517,6 +518,7 @@ function AsociadoCuentaCorriente() {
                   <PrintIcon />
                 </IconButton>
               )}
+
             </Tooltip>
           </div>
           )}
