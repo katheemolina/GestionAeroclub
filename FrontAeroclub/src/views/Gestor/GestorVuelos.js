@@ -21,6 +21,7 @@ function GestorVuelos(){
         try {
             // Obtener vuelos
             const vuelosResponse = await obtenerTodosLosItinerarios();
+            //console.log("Vuelos:", vuelosResponse)
             setData(vuelosResponse);
             
         } catch (error) {
