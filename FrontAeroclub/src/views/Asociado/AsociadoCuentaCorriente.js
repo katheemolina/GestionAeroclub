@@ -220,7 +220,7 @@ function AsociadoCuentaCorriente() {
           }
   
           xStart = 10;
-          const rowData = [hora_salida, hora_llegada, origen, destino, duracion, aterrizajes];
+          const rowData = [hora_salida, hora_llegada, origen, destino, parseFloat(duracion).toFixed(1), aterrizajes];
           rowData.forEach((data, colIndex) => {
             doc.setFont("helvetica", "normal");
             doc.text(`${data}`, xStart, yStart);
@@ -231,7 +231,6 @@ function AsociadoCuentaCorriente() {
         });
   
          // Observaciones
-      yStart += 10;
       doc.setFont("helvetica", "bold");
       doc.text("Observaciones:", 10, yStart);
       yStart += 6; // Espaciado para el contenido de observaciones

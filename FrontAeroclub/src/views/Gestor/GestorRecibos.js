@@ -125,10 +125,10 @@ function GestorRecibos({ idUsuario = 0 }) {
 
 
   const handlePreviewAndPrint = (rowData) => {
-    //console.log("Datos del recibo",rowData)
+    console.log("Datos del recibo",rowData)
     // Datos del recibo
     const reciboData = {
-      recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo" o "Combustible"
+      recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo", "Combustible" o "Cuota Social"
       asociado: rowData.usuario || "-",
       aeronave: rowData.matricula || "-",
       reciboNo: rowData.numero_recibo || "-",
@@ -196,75 +196,25 @@ function GestorRecibos({ idUsuario = 0 }) {
   
         yStart += 6;
         itinerarios.forEach((itinerario, rowIndex) => {
-          const {
-            hora_salida = "-",
-            hora_llegada = "-",
-            origen = "-",
-            destino = "-",
-            aterrizajes = "-"
-          } = itinerario;
-
-          //Convertidor, mismo que el de nuevo recibo
-          const convertirMinutosAHorasDecimales = (minutos) => {
-            if (minutos >= 1 && minutos <= 2) return 0.0;
-            if (minutos >= 3 && minutos <= 8) return 0.1;
-            if (minutos >= 9 && minutos <= 14) return 0.2;
-            if (minutos >= 15 && minutos <= 20) return 0.3;
-            if (minutos >= 21 && minutos <= 26) return 0.4;
-            if (minutos >= 27 && minutos <= 33) return 0.5;
-            if (minutos >= 34 && minutos <= 39) return 0.6;
-            if (minutos >= 40 && minutos <= 45) return 0.7;
-            if (minutos >= 46 && minutos <= 51) return 0.8;
-            if (minutos >= 52 && minutos <= 57) return 0.9;
-            if (minutos >= 58 && minutos <= 60) return 1.0;
-            return 0.0;
-          };  
-    
-          // Calcular duración por itinerario
-          const calcularDuracion = (horaSalida, horaLlegada) => {
-            if (horaSalida && horaLlegada) {
-              const [horasSalida, minutosSalida] = horaSalida.split(':').map(Number);
-              const [horasLlegada, minutosLlegada] = horaLlegada.split(':').map(Number);
-
-              const salidaEnMinutos = horasSalida * 60 + minutosSalida;
-              const llegadaEnMinutos = horasLlegada * 60 + minutosLlegada;
-
-              // Considerar si la llegada es al día siguiente
-              const duracionEnMinutos = llegadaEnMinutos >= salidaEnMinutos
-                ? llegadaEnMinutos - salidaEnMinutos
-                : 1440 - salidaEnMinutos + llegadaEnMinutos;
-
-              const horas = Math.floor(duracionEnMinutos / 60); // Horas completas
-              const minutos = duracionEnMinutos % 60; // Minutos restantes
-
-              return (horas + convertirMinutosAHorasDecimales(minutos)).toFixed(1);
-            }
-            return "-";
-          };
-
-          const duracion = calcularDuracion(hora_salida, hora_llegada);
-
-              // Alternar fondo de filas
+          const { hora_salida = "-", hora_llegada = "-", origen = "-", destino = "-", duracion = "-", aterrizajes = "-" } = itinerario;
+  
           if (rowIndex % 2 === 0) {
             doc.setFillColor(230, 230, 230);
             doc.rect(10, yStart - 4, 190, 8, "F");
           }
-
-          // Datos de la fila
+  
           xStart = 10;
-          const rowData = [hora_salida, hora_llegada, origen, destino, duracion, aterrizajes];
+          const rowData = [hora_salida, hora_llegada, origen, destino,parseFloat(duracion).toFixed(1), aterrizajes];
           rowData.forEach((data, colIndex) => {
             doc.setFont("helvetica", "normal");
             doc.text(`${data}`, xStart, yStart);
             xStart += colWidths[colIndex];
           });
-
+  
           yStart += 10;
-
         });
   
-         // Observaciones
-      yStart += 10;
+      // Observaciones
       doc.setFont("helvetica", "bold");
       doc.text("Observaciones:", 10, yStart);
       yStart += 6; // Espaciado para el contenido de observaciones
@@ -433,7 +383,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       yStart += 10;
     
       // Observaciones
-      doc.setFont("helvetica", "bold");
+      doc.setFont("helvetica", "normal");
       doc.text("Observaciones:", 20, yStart);
     
       doc.setFont("helvetica", "normal");
