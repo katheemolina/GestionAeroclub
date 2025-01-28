@@ -10,7 +10,8 @@ export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
     const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
-    const [isUserEnabled, setIsUserEnabled] = useState(true); 
+    const [isUserEnabled, setIsUserEnabled] = useState(true);
+    const [PerfilIncompleto, setPerfilIncompleto] = useState(true); 
     const isAuthenticated = !!user;
     
     
@@ -36,8 +37,11 @@ export function UserProvider({ children }) {
                 try {
                     const isEnabled = await obtenerEstadoDelUsuario(usuarioId);
                     setIsUserEnabled(isEnabled.data.estado?.toLowerCase() === "habilitado" ? true : false);
+                    const perfilCompleto = isEnabled.data.FaltanDatos === 0;
+                    setPerfilIncompleto(perfilCompleto);
+                    
                 } catch (error) {
-                    console.error('Earror al obtener el estado del Usuario:', error);
+                    console.error('Error al obtener el estado del Usuario:', error);
                 }
             }
         };
@@ -55,7 +59,7 @@ export function UserProvider({ children }) {
     }, [user]);
 
     return (
-        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId, isAuthenticated, isUserEnabled}}>
+        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId, isAuthenticated, isUserEnabled, PerfilIncompleto}}>
             {children}
         </UserContext.Provider>
     );
