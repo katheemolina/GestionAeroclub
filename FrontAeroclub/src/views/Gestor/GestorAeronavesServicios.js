@@ -165,18 +165,18 @@ const GestorAeronavesServicios = () => {
             </h1>
             
             </header>
-            <Button 
-                className="nuevo" 
-                label="Agregar Servicio" 
-                onClick={() => setMostrarDialog(true)} 
-            />
+            
 
             {loading ? (
                 <PantallaCarga /> // Componente de carga mientras se obtienen los datos
             ) : (
-                <div className="datatable-container">
-                    <DataTable value={servicios} paginator rows={10} rowsPerPageOptions={[5, 10, 25]} 
-                style={{ width: '100%' }} >
+                <div className="datatable-container-servicios">
+                    <Button 
+                className="nuevo" 
+                label="Agregar Servicio" 
+                onClick={() => setMostrarDialog(true)} 
+            />
+                    <DataTable  className="tabla-servicios"value={servicios} paginator rows={10} rowsPerPageOptions={[5, 10, 25]}>
                         <Column sortable field="fecha" header="Fecha" body={plantillaFecha}/>
                         <Column field="horas_anteriores" header="Horas Anteriores" />
                         <Column header="Acciones" 

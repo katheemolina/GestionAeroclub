@@ -42,14 +42,18 @@ const UploadImage = () => {
               &times;
             </button>
             <h2>Cargar Imagen</h2>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <input className="uploadImage-input" type="file" accept="image/*" onChange={handleImageChange} />
             {preview && (
               <div className="preview-container">
                 <img src={preview} alt="Vista previa" />
               </div>
             )}
-            <button onClick={handleUpload}>Guardar</button>
-            <button onClick={handleClose}>Cerrar</button>
+            
+            <div className='uploadImage-footer'>
+            <button onClick={handleClose} className='gestor-btn-cancelar' >Cerrar</button>
+            <button onClick={handleUpload} className='gestor-btn-confirmar'>Guardar</button>
+            </div>
+            
             {message && <p>{message}</p>}
           </div>
         </div>

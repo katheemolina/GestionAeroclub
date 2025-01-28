@@ -28,7 +28,7 @@
   
   /* Vista previa */
   .preview-container {
-    margin-top: 20px;
+    
   }
   
   .preview-container h3 {
@@ -116,7 +116,19 @@
   .preview-container img {
     width: 100%;
     height: auto;
-    margin: 10px 0;
+    margin-bottom: 10px;
     border-radius: 10px;
   }
     
+  .uploadImage-footer{
+    width: 100%;
+    display: flex;
+    justify-content: right;
+  }
+
+  .uploadImage-input{
+    margin: 10px 0px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
