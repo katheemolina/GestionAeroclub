@@ -5,33 +5,66 @@ import { useUser } from "../context/UserContext"; // Importar el contexto del us
 import "../styles/background.css";
 import { Dialog } from "primereact/dialog";
 import "../styles/bienvenida.css";
+import { useRole } from "../context/RoleContext";
+import { toast } from "react-toastify";
 
 function Bienvenida() {
-  const [mostrarDialogo, setMostrarDialogo] = useState(false); // Estado para controlar la visibilidad
-  const [usuario, setUsuario] = useState({}); // Estado para almacenar los datos del usuario
-  const { usuarioId } = useUser(); // Obtener usuarioId desde el contexto
+  const [mostrarDialogo, setMostrarDialogo] = useState(false);
+  const [usuario, setUsuario] = useState({});
+  const { usuarioId } = useUser();
   const navigate = useNavigate();
+
+  
+  const [rol, setRol] = useState(() => localStorage.getItem("role")?.toLowerCase());
+
+  
+  useEffect(() => {
+    const verificarCambioDeRol = () => {
+      const nuevoRol = localStorage.getItem("role")?.toLowerCase();
+      if (nuevoRol !== rol) {
+        setRol(nuevoRol);
+      }
+    };
+
+    
+    window.addEventListener("storage", verificarCambioDeRol);
+
+    
+    const interval = setInterval(verificarCambioDeRol, 500);
+
+    return () => {
+      window.removeEventListener("storage", verificarCambioDeRol);
+      clearInterval(interval);
+    };
+  }, [rol]);
 
   useEffect(() => {
     const verificarDni = async () => {
       try {
-        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId); // Usar usuarioId del contexto
+        const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
         const usuarioData = usuarioResponse[0];
-        setUsuario(usuarioData); // Guardar los datos del usuario en el estado
-        setMostrarDialogo(!usuarioData.dni); // Mostrar el diálogo si no hay DNI
+        setUsuario(usuarioData);
+
+        console.log(`👀 Verificando DNI para rol: ${rol}`);
+
+        if (!usuarioData.dni && (rol === "asociado" || rol === "instructor")) {
+          setMostrarDialogo(true);
+        } else {
+          setMostrarDialogo(false);
+        }
       } catch (error) {
-        console.error("Error al obtener datos del usuario:", error);
+        toast.error("Error al obtener datos del usuario:", error);
       }
     };
 
-    if (usuarioId) {
-      verificarDni(); // Llamar a la función solo si hay un usuarioId disponible
+    if (usuarioId && rol) {
+      verificarDni();
     }
-  }, [usuarioId]);
+  }, [usuarioId, rol]);
 
   const redirigirCargaDatos = () => {
-    setMostrarDialogo(false); // Cierra el diálogo antes de redirigir
-    navigate("/asociado/perfil"); // Cambia al path que apunta a AsociadoPerfil.js
+    setMostrarDialogo(false);
+    navigate(`/${rol}/perfil`);
   };
 
   return (
@@ -69,7 +102,7 @@ function Bienvenida() {
 
       <div className="cuerpo">
         <p className="texto-guia">
-          Selecciona tu rol para acceder a las funcionalidades correspondientes. Si no aparece a la derecha, recarga la página.
+          Selecciona tu rol para acceder a las funcionalidades correspondientes.
         </p>
       </div>
     </div>
@@ -77,3 +110,6 @@ function Bienvenida() {
 }
 
 export default Bienvenida;
+
+
+  
