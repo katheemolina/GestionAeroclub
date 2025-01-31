@@ -13,12 +13,17 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import { useUser } from '../../context/UserContext';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function GestorAsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMovimientos, setSelectedMovimientos] = useState([]); // Almacena los movimientos seleccionados
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
 
   const location = useLocation(); // Hook para obtener el estado de la navegación
@@ -72,11 +77,14 @@ function GestorAsociadoCuentaCorriente() {
   const idUsuarioEvento = useUser();
   // Función para procesar los movimientos seleccionados
   const handleEnviarSeleccionados = async () => {
+
+    setConfirmDialogVisible(false); // Oculta el diálogo de confirmación
+
     const idsMovimientos = selectedMovimientos.map((movimiento) => movimiento.id_movimiento).join(",");
     try {
       // Llamar a la API para procesar los movimientos
       const result = await pagarReciboApi(idsMovimientos, idUsuarioEvento.usuarioId); // Asegúrate de usar el endpoint adecuado
-      alert("Movimientos procesados correctamente.");
+      toast.success("Movimientos procesados correctamente.", { position: "top-right" });
 
       // Limpiar selección
       setSelectedMovimientos([]);
@@ -85,7 +93,7 @@ function GestorAsociadoCuentaCorriente() {
       const updatedData = await obtenerCuentaCorrientePorUsuario(usuarioId);
       setData(updatedData);
     } catch (error) {
-      alert(`Error al procesar los movimientos: ${error.message}`);
+      toast.error(`Error al procesar los movimientos: ${error.message}`, { position: "top-right" });
     }
   };
 
@@ -132,10 +140,24 @@ function GestorAsociadoCuentaCorriente() {
       </header>
       <Button
         label="Procesar movimientos seleccionados"
-        onClick={handleEnviarSeleccionados}
+        onClick={() => setConfirmDialogVisible(true)}
         disabled={selectedMovimientos.length === 0}
         className="procesar-button"
       />
+      <Dialog
+        header="Confirmar procesamiento"
+        visible={confirmDialogVisible}
+        onHide={() => setConfirmDialogVisible(false)}
+        footer={
+          <>
+            <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
+            <Button label="Confirmar" icon="pi pi-check"  onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
+          </>
+        }
+      >
+        <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
+      </Dialog>
+
       <DataTable
       ref={dt}
         value={data}

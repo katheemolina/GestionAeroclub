@@ -27,7 +27,7 @@ const AeronaveCrud = () => {
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves();
-            console.log('Datos de Aeronaves:', data);
+            //console.log('Datos de Aeronaves:', data);
 
             // Modificamos los datos para asegurarnos de que las horas de vuelo sean enteras
             const aeronavesConHorasEnteras = data.map((aeronave) => ({
@@ -47,7 +47,7 @@ const AeronaveCrud = () => {
     const fetchServicios = async (id_aeronave) => {
         try {
             const data = await obtenerServicios(id_aeronave);
-            console.log('Datos de Servicios:', data);
+            //console.log('Datos de Servicios:', data);
             setServicios(data);
         } catch (error) {
             console.error('Error al obtener los servicios:', error);

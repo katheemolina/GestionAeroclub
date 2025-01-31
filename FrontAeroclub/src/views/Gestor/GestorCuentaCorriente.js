@@ -39,7 +39,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
 
         const recibosResponse = await obtenerTodosLosRecibos();
         setDataRecibos(recibosResponse);
-        console.log("Recibos:",recibosResponse)
+        //console.log("Recibos:",recibosResponse)
 
 
       } catch (error) {
@@ -63,7 +63,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     try {
       // console.log(rowData)
       const detalleMovimientoDialog = await obtenerCuentaCorrienteAeroclubDetalle(rowData.referencia_aeroclub);
-      console.log(detalleMovimientoDialog)
+      //console.log(detalleMovimientoDialog)
       setDetailData(detalleMovimientoDialog)
     } catch (error) {
       console.error("Error al obtener detalles del movimiento:", error);
@@ -105,7 +105,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
   const handlePreviewAndPrint = (rowData) => {
     // Buscar el recibo correspondiente en dataRecibos
     const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.referencia_aeroclub);
-    console.log("Datos del recibo", recibo)
+    //console.log("Datos del recibo", recibo)
 
 
      // Datos del recibo
@@ -252,7 +252,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       doc.text("Instrucción:", 10, yStart);
       doc.setFont("helvetica", "normal");
 
-      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
+      if (rowData.instructor && rowData.instructor.trim() !== "") {
         doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
       } else {
         doc.text("-", 35, yStart); // Mostrar un guion si la condición no se cumple

@@ -11,26 +11,27 @@ const AsociadoTarifas = () => {
     const [tarifas, setTarifas] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Filtrar tarifas para mostrar solo las vigentes actualmente con fechas desde y hasta
-const filterVigentes = (tarifas) => {
-    const today = new Date();
-    return tarifas.filter(tarifa => {
-        const fechaVigenciaDesde = new Date(tarifa.fecha_vigencia_desde);
-        const fechaVigenciaHasta = tarifa.fecha_vigencia_hasta ? new Date(tarifa.fecha_vigencia_hasta) : null;
-        
-        // Asegurarse de que ambas fechas existan y estén dentro del rango actual
-        return fechaVigenciaDesde && fechaVigenciaHasta &&
-        fechaVigenciaDesde <= today && fechaVigenciaHasta >= today;
-    });
-};
+    const filterVigentes = (tarifas) => {
+        const today = new Date();
+        return tarifas.filter(tarifa => {
+            const fechaVigenciaDesde = new Date(tarifa.fecha_vigencia_desde);
+            const fechaVigenciaHasta = tarifa.fecha_vigencia_hasta ? new Date(tarifa.fecha_vigencia_hasta) : null;
+    
+            // Si la fecha de inicio es válida y la fecha de fin es nula, significa que sigue vigente.
+            // Si la fecha de fin no es nula, evaluamos que esté dentro del rango actual.
+            return fechaVigenciaDesde <= today && (fechaVigenciaHasta === null || fechaVigenciaHasta >= today);
+        });
+    };
+    
 
 // Fetch tarifas data from the API
 const fetchTarifas = async () => {
     try {
         const data = await obtenerTarifas();
+        //console.log("Tarifas:", data)
         const tarifasFiltradas = filterVigentes(data.data); // Filtra las tarifas vigentes
         setTarifas(tarifasFiltradas);
-        console.log(tarifasFiltradas);
+        //console.log("Tarifas filtradas:", tarifasFiltradas);
     } catch (error) {
         console.error('Error fetching tarifas:', error);
     }

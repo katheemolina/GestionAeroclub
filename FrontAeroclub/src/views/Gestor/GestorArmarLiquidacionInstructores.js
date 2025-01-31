@@ -31,6 +31,7 @@ const GestorArmarLiquidacionInstructores = () => {
         setLoading(true);
         try {
             const data = await movimientosNoLiquidadosPorInstructor(); // Fetch instructores
+            console.log("Movimiento de liquidación:",data)
             setMovimientos(data);
         } catch (error) {
             setMovimientos([]);
@@ -212,30 +213,35 @@ const GestorArmarLiquidacionInstructores = () => {
 
                 {/* Columna de Acciones */}
                 <Column
-                filter
-                showFilterMenu={false}
-                filterElement={
-                  <Button
-                    label="Limpiar"
-                    onClick={clearFilters}
-                    style={{ width: '100%', height: '40px',  padding: '10px'}}
-                  />
-                }
+                    filter
+                    showFilterMenu={false}
+                    filterElement={
+                        <Button
+                        label="Limpiar"
+                        onClick={clearFilters}
+                        style={{ width: '100%', height: '40px', padding: '10px' }}
+                        />
+                    }
                     header="Acciones"
                     body={(rowData) => (
                         <div className="acciones">
-                            <Tooltip title="Ver detalles">
-                                <IconButton
-                                    color="primary"
-                                    aria-label="view-details"
-                                    onClick={() => setSelectedRowData(rowData) && setDialogVisible(true)}
-                                >
-                                    <SearchIcon />
-                                </IconButton>
-                            </Tooltip>
+                        <Tooltip title="Ver detalles">
+                            <IconButton
+                            color="primary"
+                            aria-label="view-details"
+                            onClick={() => {
+                                // Aquí asegúrate de separar las dos acciones
+                                setSelectedRowData(rowData); // Establece la fila seleccionada
+                                setDialogVisible(true); // Abre el diálogo
+                            }}
+                            >
+                            <SearchIcon />
+                            </IconButton>
+                        </Tooltip>
                         </div>
                     )}
                 />
+
             </DataTable>
 
             {/* Diálogo de detalles */}
@@ -248,6 +254,7 @@ const GestorArmarLiquidacionInstructores = () => {
                 {selectedRowData && (
                     <div>
                         <div className="p-fluid details-dialog">
+                            
                             <Card>
                                 <p><strong>Fecha:</strong> {selectedRowData.fecha}</p>
                             </Card>
@@ -257,6 +264,10 @@ const GestorArmarLiquidacionInstructores = () => {
                             <Card>
                                 <p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p>
                             </Card>
+                            <Card>
+                                <p><strong>Observaciones:</strong> {selectedRowData.observaciones || "-"}</p>
+                            </Card>
+
                         </div>
                     </div>
                 )}
