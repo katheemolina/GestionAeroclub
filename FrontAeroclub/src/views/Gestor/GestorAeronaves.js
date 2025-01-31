@@ -72,7 +72,7 @@ const AeronaveCrud = () => {
         try {
             const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
             setAeronaves(data);
-            console.log(data)
+            //console.log(data)
         } catch (error) {
             //console.error('Error fetching aeronaves:', error);
         }
