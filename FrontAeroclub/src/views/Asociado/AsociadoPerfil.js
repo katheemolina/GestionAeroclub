@@ -10,11 +10,13 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { useUser } from '../../context/UserContext';
+import { useRole } from '../../context/RoleContext.js'; // Para obtener el rol del usuario
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import PantallaCarga from '../../components/PantallaCarga';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/datepicker.css'
+import {FaDollarSign} from 'react-icons/fa'; // Importando íconos
 
 
 function AsociadoPerfil() {
@@ -33,9 +35,11 @@ function AsociadoPerfil() {
   });
 
   const { usuarioId } = useUser();
-  //Componente para licencias
+  const { role } = useRole(); // Obtener el rol del usuario desde RoleContext
 
+  //Componente para licencias
   
+
   const [loading, setLoading] = useState(true);
   const [licencias, setLicencias] = useState([]); 
   const [licenciaDialog, setLicenciaDialog] = useState(false); // Controla si el dialog está abierto
@@ -51,6 +55,7 @@ function AsociadoPerfil() {
     { label: 'Piloto de ultraligero', value: 'Piloto de ultraligero' }
   ]);
 
+  const [ aplicaTarifa, setAplicaTarifa ] = useState(false);
 
   const fetchLicencias = async () => {
     try {
@@ -91,6 +96,7 @@ function AsociadoPerfil() {
     try {
       const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
       setUsuario(usuarioResponse[0]);
+      setAplicaTarifa(usuario.tarifa_especial);
       setFormData({
         Telefono: usuarioResponse[0].telefono || '',
         Dni: usuarioResponse[0].dni || '',
@@ -203,7 +209,7 @@ const handleSubmit = async (e) => {
         licencias={usuario.codigos_licencias || ["No posee licencias"]}
       />
 
-<UploadImage />
+    <UploadImage />
 
       <form className="edit-form" onSubmit={handleSubmit}>
         <h2>{editado ? "Editar información:" : "Ingresar información:"}</h2>
@@ -299,7 +305,16 @@ const handleSubmit = async (e) => {
         </div>
       </form>
 
-      
+      {role.includes('Instructor') && (
+        
+        <div className='info-adicional'>
+          <h3>Información adicional:</h3>
+          <div> </div>
+          <span className={"indicador-tarifa-especial"}>
+            <FaDollarSign/> Tarifa especial: <div className={`${aplicaTarifa ? 'aplica' : 'no-aplica'}`}> {aplicaTarifa ? 'Aplica' : 'No aplica'} </div>
+          </span>
+        </div>
+      )}
 
       <section className="licencias-section">
         <h3>Licencias</h3>

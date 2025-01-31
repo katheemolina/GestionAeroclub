@@ -134,3 +134,32 @@ button:hover {
   border: 2px solid #ddd;
   border-right: none;
 }
+
+.info-adicional{
+  height: min-content;
+  width: 100%;
+  margin-top: 10px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dce1e7;
+  padding: 15px;
+}
+
+.indicador-tarifa-especial{
+  padding-top: 10px;
+  border-top: 1px solid #dce1e7;
+  margin: 10px 0px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aplica{
+  font-weight: bold;
+  color: #28a745;
+}
+
+.no-aplica{
+  font-weight: bold;
+  color: rgba(169, 70, 70, 1);
+}
