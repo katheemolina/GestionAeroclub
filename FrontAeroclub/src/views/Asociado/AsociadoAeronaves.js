@@ -1,44 +1,67 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Dialog } from 'primereact/dialog'
+import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
 import PantallaCarga from '../../components/PantallaCarga';
-import { obtenerAeronaves} from '../../services/aeronavesApi'; 
+import { obtenerAeronaves } from '../../services/aeronavesApi';
+import { obtenerServicios } from '../../services/serviciosAeronaves';
 import '../../styles/datatable-style.css';
 import './Styles/GestorAeronaves.css';
-//iconos
+// Iconos y botones
 import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search'; 
+import SearchIcon from '@mui/icons-material/Search';
 import Tooltip from '@mui/material/Tooltip';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 
-
-
 const AeronaveCrud = () => {
+    // Estados
     const [aeronaves, setAeronaves] = useState([]);
+    const [servicios, setServicios] = useState([]);
     const [loading, setLoading] = useState(true);
     const [estadoFiltro, setEstadoFiltro] = useState(null);
+    const [selectedAeronave, setSelectedAeronave] = useState(null); // Aeronave seleccionada
 
-    
-
-    // Fetch aeronaves data from the API
+    // Función para obtener aeronaves
     const fetchAeronaves = async () => {
         try {
-            const data = await obtenerAeronaves(); 
-            setAeronaves(data);
+            const data = await obtenerAeronaves();
+            console.log('Datos de Aeronaves:', data);
+
+            // Modificamos los datos para asegurarnos de que las horas de vuelo sean enteras
+            const aeronavesConHorasEnteras = data.map((aeronave) => ({
+                ...aeronave,
+                horas_vuelo_aeronave: Math.floor(parseFloat(aeronave.horas_vuelo_aeronave)) // Convertir a entero
+            }));
+
+            setAeronaves(aeronavesConHorasEnteras); // Guardamos los datos modificados en el estado
+
         } catch (error) {
             console.error('Error fetching aeronaves:', error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
-
+    // Función para obtener servicios de una aeronave
+    const fetchServicios = async (id_aeronave) => {
+        try {
+            const data = await obtenerServicios(id_aeronave);
+            console.log('Datos de Servicios:', data);
+            setServicios(data);
+        } catch (error) {
+            console.error('Error al obtener los servicios:', error);
+        }
+    };
+    // useEffect para cargar aeronaves
     useEffect(() => {
         fetchAeronaves();
     }, []);
 
-    
+    // useEffect para cargar servicios
+    useEffect(() => {
+        fetchServicios();
+    }, []);
     
     // Para manejo de dialog de vista de detalles
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -87,7 +110,6 @@ const AeronaveCrud = () => {
             dt.current.reset(); // Limpia los filtros de la tabla
         }
     }
-  
 
     if (loading) {
         return <PantallaCarga />
@@ -130,7 +152,28 @@ const AeronaveCrud = () => {
                     showFilterMenu={false}  
                     showClearButton={false} 
                 />
-                
+                <Column
+                    field="horas_vuelo_aeronave"
+                    header="Total horas voladas"
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por horas"
+                    filterMatchMode="equals"
+                    showFilterMenu={false}
+                    showClearButton={false}
+                    body={(rowData) => `${Math.floor(parseFloat(rowData.horas_vuelo_aeronave))} hs.`}
+                    
+                />
+                <Column
+                    field=""
+                    header="Hs próximo service"
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por horas" 
+                    filterMatchMode="contains" 
+                    showFilterMenu={false}  
+                    showClearButton={false} 
+                />
                 <Column 
                     sortable
                     filter
@@ -170,13 +213,10 @@ const AeronaveCrud = () => {
                         </IconButton>
                         </Tooltip>
 
-
                     </div>
                 )}
                 />
             </DataTable>
-
-
 
             <Dialog header="Detalles de la Aeronave" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
                 {selectedRowData && (

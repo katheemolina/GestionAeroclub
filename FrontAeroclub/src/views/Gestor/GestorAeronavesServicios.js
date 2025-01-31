@@ -102,7 +102,7 @@ const GestorAeronavesServicios = () => {
                     // Obtener los servicios de la aeronave seleccionada
                     obtenerServicios(id_aeronave).then((serviciosData) => {
                         setServicios(serviciosData);
-                        console.log(serviciosData);
+                        //console.log("Servicios Data:",serviciosData);
                         setLoading(false); // Cuando los servicios se hayan cargado, cambia el estado de carga
                     }).catch((error) => {
                         setLoading(false);
