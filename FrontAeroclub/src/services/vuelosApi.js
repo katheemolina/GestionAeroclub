@@ -52,3 +52,11 @@ export const obtenerTodosLosItinerarios = async () => {
     }
     return response.json();
 };
+
+export const totalesHorasVueloPorUsuario = async (idUsuario) => {
+    const response = await fetch(`${API_URL}/vuelos/${idUsuario}/indicadores`);
+    if (!response.ok) {
+        throw new Error('Error al obtener indicadores');
+    }
+    return response.json();
+};
