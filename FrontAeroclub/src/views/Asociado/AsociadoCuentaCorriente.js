@@ -30,18 +30,38 @@ function AsociadoCuentaCorriente() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [detalleMovimiento, setDetalleMovimiento] = useState(null);
-  const [dataRecibos, setDataRecibos] = useState([])
+  const [dataRecibos, setDataRecibos] = useState([]);
   //const [usuario, setUsuario] = useState(null);
+  const [kpiData, setKpiData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const kpiResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
+        
+        // Acceder al primer objeto del array
+        const { Saldo, deuda_cuota_social, deuda_vuelos } = kpiResponse[0]; 
+  
+        setKpiData([
+          { title: 'Saldo', value: Saldo },
+          { title: 'Deuda de cuota social', value: deuda_cuota_social },
+          { title: 'Deuda de vuelos', value: deuda_vuelos },
+        ]);
+  
+      } catch (error) {
+        toast.error("Error al obtener datos: " + error);
+      }
+      setLoading(false);
+    };
+    
+    fetchData();
+  }, [usuarioId]);
+  
 
 
-  //Despues pasar estos datos por parametros dinamicos
-  const kpiData = [
-    { title: 'Saldo actual', value: '$ -175.000' },
-    { title: 'Deuda de cuota social', value: '$ -50.00' },
-    { title: 'Deuda por vuelos', value: '$ -125.000' },
-    { title: 'Pagos de cuotas sociales', value: '$ 200.000' },
-    { title: 'Pagos por vuelo', value: '$ 105.000' },
-  ];
+
+
+
 
 
   useEffect(() => {
@@ -70,7 +90,9 @@ function AsociadoCuentaCorriente() {
 
         // Obtener datos del usuario
         //const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
-        //setUsuario(usuarioResponse);  
+        //setUsuario(usuarioResponse); 
+        
+        
 
       } catch (error) {
         toast.error("Error al obtener datos:", error);
@@ -458,19 +480,8 @@ function AsociadoCuentaCorriente() {
           <h1>Cuenta Corriente</h1>
         </header>
       </div>
-
-{/* comento esto para despues borrarlo pero ver como le pasa el saldo al box
-
-      <section className="stats-section">
-        <div className="stat-box" style={{ maxWidth: '50%' }}>
-          <h3>Saldo</h3>
-          <p>{formatoMoneda(saldo)}</p> 
-        </div>
-      </section> 
-      */}
-      <div>
       <KpiBox data={kpiData} />
-      </div>
+      
 
       <DataTable ref={dt} value={mergedData} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
         <Column
