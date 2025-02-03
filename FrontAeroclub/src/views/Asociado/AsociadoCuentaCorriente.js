@@ -164,7 +164,7 @@ function AsociadoCuentaCorriente() {
     // Buscar el recibo correspondiente en dataRecibos
     const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.id_movimiento);
 
-    //console.log('Datos seleccionados:', recibo);
+    console.log('Datos seleccionados:', recibo);
 
     // Datos del recibo
     const reciboData = {
@@ -309,7 +309,7 @@ function AsociadoCuentaCorriente() {
       doc.text("Instrucción:", 10, yStart);
       doc.setFont("helvetica", "normal");
 
-      if (rowData.instructor && rowData.instructor.trim() !== "") {
+      if (recibo.instructor && recibo.instructor.trim() !== "") {
         doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
       } else {
         doc.text("-", 35, yStart); // Mostrar un guion si la condición no se cumple
