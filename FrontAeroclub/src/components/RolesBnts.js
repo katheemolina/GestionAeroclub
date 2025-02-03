@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRole } from '../context/RoleContext';
 import { useUser } from '../context/UserContext';
 import './styles/RolesBnts.css';
@@ -6,20 +6,22 @@ import { obtenerRolPorIdUsuario } from '../services/usuariosApi';
 
 function BotonesPorRol() {
   const { setRole } = useRole();
-  const { usuarioId } = useUser(); // Usamos el usuarioId para obtener los roles
+  const { usuarioId } = useUser();
   const [rolesDisponibles, setRolesDisponibles] = useState([]);
   const [rolActivo, setRolActivo] = useState(null);
-  const [isOpen, setIsOpen] = useState(false); // Controla la apertura del dropdown
+  const [isOpen, setIsOpen] = useState(false);
+
+  const dropdownRef = useRef(null); // Ref para el dropdown
 
   // Simulación de obtener roles desde una API
   const obtenerRolesDelAsociado = async () => {
     try {
-      const response = await obtenerRolPorIdUsuario(usuarioId); // Suponiendo que esta API devuelve los roles del usuario
-      const rolesActivos = response.filter(rol => rol.estado === 'activo');
+      const response = await obtenerRolPorIdUsuario(usuarioId);
+      const rolesActivos = response.filter((rol) => rol.estado === 'activo');
       setRolesDisponibles(rolesActivos);
     } catch (error) {
       console.error('Error obteniendo los roles del asociado', error);
-      setRolesDisponibles([]); // Si hay un error, no mostramos roles
+      setRolesDisponibles([]);
     }
   };
 
@@ -33,17 +35,33 @@ function BotonesPorRol() {
     setRole(rol);
     localStorage.setItem('role', rol);
     setRolActivo(rol);
-    setIsOpen(false); // Cierra el dropdown al seleccionar una opción
+    setIsOpen(false); // Cierra el dropdown al seleccionar un rol
   };
 
+  const handleClickOutside = (event) => {
+    // Verifica si el clic ocurrió fuera del dropdown
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    // Agrega un listener para detectar clics fuera del dropdown
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      // Limpia el listener cuando el componente se desmonta
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="menu-opciones">
+    <div className="menu-opciones" ref={dropdownRef}>
       {rolesDisponibles.length === 0 ? (
         <p>Cargando roles...</p>
       ) : (
         <div className="dropdown-container">
           <div className="dropdown-header" onClick={() => setIsOpen(!isOpen)}>
-            {rolActivo || "Selecciona un rol"}
+            {rolActivo || 'Selecciona un rol'}
           </div>
           {isOpen && (
             <ul className="dropdown-list">
