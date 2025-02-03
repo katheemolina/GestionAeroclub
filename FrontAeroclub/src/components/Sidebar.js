@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useRole } from '../context/RoleContext';
 import { useLocation } from 'react-router-dom';
-import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends  ,FaBell  } from 'react-icons/fa'; // Importando íconos
+import { FaHome, FaUserAlt, FaBook, FaCreditCard, FaPlane, FaCog ,FaDollarSign, FaMoneyBillWave ,FaRegAddressBook ,FaRegCalendarCheck ,FaUserFriends  ,FaBell ,FaUsersCog  } from 'react-icons/fa'; // Importando íconos
 import Boton from './Button';
 import BotonesPorRol from './RolesBnts';
 import '../styles/sidebar.css';
@@ -32,6 +32,7 @@ function Sidebar() {
       { ruta: '/gestor/vuelos', texto: 'Libro de Vuelo', icon: <FaBook />,completarPerfil: true },
       { ruta: '/gestor/cuenta-corriente', texto: 'Cuenta Corriente Aeroclub', icon: <FaCreditCard />,completarPerfil: true },
       { ruta: '/gestor/asociados', texto: 'Asociados', icon: <FaUserFriends   />,completarPerfil: true },
+      { ruta: '/gestor/instructores', texto: 'Instructores', icon: <FaUsersCog    />,completarPerfil: true },
       { ruta: '/gestor/tarifas', texto: 'Tarifas', icon: <FaDollarSign />,completarPerfil: true },
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves', icon: <FaPlane />,completarPerfil: true },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores', icon: <FaCog />,completarPerfil: true },
