@@ -96,7 +96,12 @@ function AsociadoPerfil() {
     try {
       const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
       setUsuario(usuarioResponse[0]);
-      setAplicaTarifa(usuario.tarifa_especial === 1);
+      setAplicaTarifa(
+        usuarioResponse[0].tarifa_especial === 1 ? "Aplica" :
+        usuarioResponse[0].tarifa_especial === 0 ? "No aplica" :
+        "No definido"
+      );
+      
       setFormData({
         Telefono: usuarioResponse[0].telefono || '',
         Dni: usuarioResponse[0].dni || '',
