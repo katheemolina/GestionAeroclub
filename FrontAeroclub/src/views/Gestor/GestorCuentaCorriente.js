@@ -35,7 +35,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrienteAeroclub(idUsuario);
         setData(cuentaCorrienteResponse);
-        console.log("Cuenta corriente Aeroclub: ",cuentaCorrienteResponse);
+        //console.log("Cuenta corriente Aeroclub: ",cuentaCorrienteResponse);
 
         const recibosResponse = await obtenerTodosLosRecibos();
         setDataRecibos(recibosResponse);
@@ -105,7 +105,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
   const handlePreviewAndPrint = (rowData) => {
     // Buscar el recibo correspondiente en dataRecibos
     const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.referencia_aeroclub);
-    //console.log("Datos del recibo", recibo)
+    console.log("Datos del recibo", recibo)
 
 
      // Datos del recibo
@@ -206,7 +206,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
   
       // Detalles de instrucción (condicional)
-      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
+      if (recibo.instructor && recibo.instructor.trim() !== "") {
         yStart += 6; // Espaciado solo si existe un instructor
         doc.text(`Vuelo con instrucción (Instructor: ${reciboData.instructor})`, 20, yStart, { maxWidth: 180 });
       }
@@ -252,7 +252,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       doc.text("Instrucción:", 10, yStart);
       doc.setFont("helvetica", "normal");
 
-      if (rowData.instructor && rowData.instructor.trim() !== "") {
+      if (recibo.instructor && recibo.instructor.trim() !== "") {
         doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
       } else {
         doc.text("-", 35, yStart); // Mostrar un guion si la condición no se cumple
