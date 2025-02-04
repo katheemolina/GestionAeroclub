@@ -300,13 +300,22 @@ function FormularioGestorRecibos() {
                 <div className="form-group">
                     <label className="label-recibo">Instructor:</label>
                     {instructores && instructores.length > 0 ? (
-                    <Dropdown value={instructorSeleccionado}
-                    onChange={(e) => setInstructorSeleccionado(e.value)} 
-                    options={instructores} 
+                    <Dropdown
+                    value={instructorSeleccionado}
+                    onChange={(e) => setInstructorSeleccionado(e.value)}
+                    options={instructores}
                     optionLabel="usuario"
-                    placeholder="Seleciona el instructor"
-                    filter 
-                    className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
+                    placeholder="Selecciona el instructor"
+                    filter
+                    className="w-full md:w-14rem dropdown-generar-recibo"
+                    itemTemplate={(option) => (
+                      <div className="instructor-item">
+                        <span>{option.usuario}</span>
+                        {option.tarifa_especial === 1 && <span className="aplica-tarifa"> (Aplica tarifa especial)</span>}
+                      </div>
+                    )}
+                  />
+                   ) : (
                         <p>Cargando opciones...</p>
                     )}
                 </div>
