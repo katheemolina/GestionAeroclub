@@ -96,7 +96,7 @@ function AsociadoPerfil() {
     try {
       const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
       setUsuario(usuarioResponse[0]);
-      setAplicaTarifa(usuario.tarifa_especial);
+      setAplicaTarifa(usuario.tarifa_especial === 1);
       setFormData({
         Telefono: usuarioResponse[0].telefono || '',
         Dni: usuarioResponse[0].dni || '',
@@ -211,6 +211,17 @@ const handleSubmit = async (e) => {
 
     <UploadImage />
 
+    {role.includes('Instructor') && (
+        
+        <div className='info-adicional'>
+          <h3>Información adicional:</h3>
+          <div> </div>
+          <div className={"indicador-tarifa-especial"}>
+            <FaDollarSign/> Tarifa especial: <div className={`${aplicaTarifa ? 'aplica' : 'no-aplica'}`}> {aplicaTarifa ? 'Aplica' : 'No aplica'} </div>
+          </div>
+        </div>
+    )}
+
       <form className="edit-form" onSubmit={handleSubmit}>
         <h2>{editado ? "Editar información:" : "Ingresar información:"}</h2>
         <div className="form-row">
@@ -304,17 +315,6 @@ const handleSubmit = async (e) => {
           <button className="guardar" type="submit">Guardar Cambios</button>
         </div>
       </form>
-
-      {role.includes('Instructor') && (
-        
-        <div className='info-adicional'>
-          <h3>Información adicional:</h3>
-          <div> </div>
-          <span className={"indicador-tarifa-especial"}>
-            <FaDollarSign/> Tarifa especial: <div className={`${aplicaTarifa ? 'aplica' : 'no-aplica'}`}> {aplicaTarifa ? 'Aplica' : 'No aplica'} </div>
-          </span>
-        </div>
-      )}
 
       <section className="licencias-section">
         <h3>Licencias</h3>
