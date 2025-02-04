@@ -197,3 +197,25 @@ export const movimientosNoLiquidadosPorInstructor = async () => {
     }
     return response.json();
 };
+
+export const tarifaEspecial = async (idUsuario, valor) => {
+    try {
+        const response = await fetch(`${API_URL}/usuario/tarifa-especial`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id_usuario: idUsuario, modifica: valor}), 
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al modificar tarifa especial: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data; 
+    } catch (error) {
+        console.error("Error en modificar la tarifa especial:", error);
+        return { success: false, message: "No se pudo modificar la tarifa" };
+    }
+};
