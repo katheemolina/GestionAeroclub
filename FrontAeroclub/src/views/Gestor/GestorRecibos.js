@@ -224,7 +224,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
   
       // Detalles de instrucción (condicional)
-      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
+      if (rowData.instructor && rowData.instructor.trim() !== "") {
         yStart += 6; // Espaciado solo si existe un instructor
         doc.text(`Vuelo con instrucción (Instructor: ${reciboData.instructor})`, 20, yStart, { maxWidth: 180 });
       }
