@@ -19,7 +19,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import UpdateIcon from '@mui/icons-material/Update'; 
-import SettingsIcon from '@mui/icons-material/Settings'; 
+import SettingsIcon from '@mui/icons-material/Settings';
+import BuildIcon from '@mui/icons-material/Build';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 
@@ -29,6 +30,7 @@ const AeronaveCrud = () => {
     const [aeronaves, setAeronaves] = useState([]);
     const [aeronaveDialog, setAeronaveDialog] = useState(false);
     const [aeronaveData, setAeronaveData] = useState({
+        //id_aeronave: '',
         marca: '',
         modelo: '',
         matricula: '',
@@ -42,7 +44,6 @@ const AeronaveCrud = () => {
         horas_vuelo_aeronave: '',
         horas_vuelo_motor: '',
         estado: 'activo',
-
     });
     const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -72,7 +73,7 @@ const AeronaveCrud = () => {
         try {
             const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
             setAeronaves(data);
-            //console.log(data)
+            console.log("Aeronaves: ",data)
         } catch (error) {
             //console.error('Error fetching aeronaves:', error);
         }
@@ -83,29 +84,67 @@ const AeronaveCrud = () => {
         fetchAeronaves();
     }, []);
 
-    // Handle adding or updating aeronave
-    const handleSave = async () => {
-        try {
-            if (isEdit) {
-                await actualizarAeronave(aeronaveData.id_aeronave, aeronaveData);
-                toast.success("Aeronave actualizada correctamente.");
-            } else {
-                await insertarAeronave(aeronaveData);
-                toast.success("Aeronave insertada correctamente.");
-            }
-            setAeronaveDialog(false);
-            fetchAeronaves(); // Refresh the list
-        } catch (error) {
-            //console.error('Error saving aeronave:', error);
-            toast.error("Error, todos los campos son obligatorios.");
+
+
+    useEffect(() => {
+        console.log("Aeronave seleccionada para actualizar:", aeronaveData);
+    }, [aeronaveData]);
+    
+// Función para guardar una aeronave (insertar o actualizar)
+const handleSave = async () => {
+    try {
+        const dataToSave = {
+            fecha_adquisicion: aeronaveData.fecha_adquisicion,
+            horas_vuelo_aeronave: aeronaveData.horas_vuelo_aeronave,
+            horas_vuelo_motor: aeronaveData.horas_vuelo_motor,
+            ultimo_servicio: aeronaveData.ultimo_servicio,
+            marca: aeronaveData.marca,
+            matricula: aeronaveData.matricula,
+            consumo_por_hora: aeronaveData.consumo_por_hora,
+            modelo: aeronaveData.modelo,
+            clase: aeronaveData.clase,
+            potencia: aeronaveData.potencia,
+            motor: aeronaveData.motor
+        };
+
+        if (isEdit) {
+            // Actualizar aeronave
+            await actualizarAeronave(aeronaveData.id_aeronave, dataToSave);
+            toast.success("Aeronave actualizada correctamente.");
+        } else {
+            // Insertar nueva aeronave
+            await insertarAeronave(aeronaveData);
+            toast.success("Aeronave insertada correctamente.");
         }
-    };
+
+        setAeronaveDialog(false);
+        fetchAeronaves(); // Refrescar la lista
+    } catch (error) {
+        toast.error("Error al guardar la aeronave. Todos los campos son obligatorios.");
+    }
+};
+
+
 
     // Handle edit
     const handleEdit = (aeronave) => {
-        setAeronaveData(aeronave);
+        setAeronaveData({
+            id_aeronave: aeronave.id_aeronave,
+            fecha_adquisicion: aeronave.fecha_adquisicion,
+            horas_vuelo_aeronave: aeronave.horas_vuelo_aeronave,
+            horas_vuelo_motor: aeronave.horas_vuelo_motor,
+            ultimo_servicio: aeronave.ultimo_servicio,
+            marca: aeronave.marca,
+            matricula: aeronave.matricula,
+            consumo_por_hora: aeronave.consumo_por_hora,
+            modelo: aeronave.modelo,
+            clase: aeronave.clase,
+            potencia: aeronave.potencia,
+            motor: aeronave.motor
+        });
         setIsEdit(true);
         setAeronaveDialog(true);
+        //console.log("Actualizando aeronave:", aeronaveData);
     };
 
     // Handle add new aeronave
@@ -184,7 +223,7 @@ const AeronaveCrud = () => {
         if (selectedAeronave) {
             await cambiarEstadoAeronave(selectedAeronave.id_aeronave);
             fetchAeronaves();
-            toast.success("Aeronave eliminada correctamente.");
+            toast.success("Estado de aeronave actualizada correctamente.");
         }
         setEstadoDialog(false);
         //console.log(selectedAeronave.id_aeronave)
@@ -362,9 +401,16 @@ const AeronaveCrud = () => {
                         </Tooltip>
                         <Tooltip title="Actualizar intervalo de inspección">
                             <IconButton color="primary" onClick={() => openIntervaloDialog(rowData)}>
+                                <BuildIcon />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Actualizar datos del Aeronave">
+                            <IconButton color="primary"  label="Actualizar Aeronave" onClick={() => handleEdit(rowData)}>
                                 <SettingsIcon />
                             </IconButton>
                         </Tooltip>
+
                         <Tooltip title="Ver detalles">
                         <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
                             <SearchIcon />
@@ -465,38 +511,44 @@ const AeronaveCrud = () => {
                             placeholder="Consumo por Hora"
                         />
                     </div>
-                
+
+                    {!isEdit && (<>
                     <div className="p-field">
                         <label htmlFor="horas_historicas">Horas Históricas</label>
                         <InputText
                             id="horas_historicas"
                             type="number"
                             min={0}
-                            value={aeronaveData.horas_historicas}
+                            value={aeronaveData.horas_historicas_voladas}
                             onChange={(e) => setAeronaveData({ ...aeronaveData, horas_historicas: e.target.value })}
                             placeholder="Horas Históricas"
                         />
                     </div>
-                    <div className="p-field">
-                        <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
-                        <InputText
-                            id="intervalo_inspeccion"
-                            type="number"
-                            min={0}
-                            value={aeronaveData.intervalo_inspeccion}
-                            onChange={(e) => setAeronaveData({ ...aeronaveData, intervalo_inspeccion: e.target.value })}
-                            placeholder="Horas para inspección"
-                        />
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="ultimo_servicio">Último Servicio</label>
-                        <InputText
-                            id="ultimo_servicio"
-                            type="date"
-                            value={aeronaveData.ultimo_servicio}
-                            onChange={(e) => setAeronaveData({ ...aeronaveData, ultimo_servicio: e.target.value })}
-                        />
-                    </div>
+
+                    
+                        <div className="p-field">
+                            <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
+                            <InputText
+                                id="intervalo_inspeccion"
+                                type="number"
+                                min={0}
+                                value={aeronaveData.intervalo_inspeccion}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, intervalo_inspeccion: e.target.value })}
+                                placeholder="Horas para inspección"
+                            />
+                        </div>
+                        
+                        <div className="p-field">
+                            <label htmlFor="ultimo_servicio">Último Servicio</label>
+                            <InputText
+                                id="ultimo_servicio"
+                                type="date"
+                                value={aeronaveData.ultimo_servicio}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, ultimo_servicio: e.target.value })}
+                            />
+                        </div>
+                        </>
+                    )}
                     <div className="p-field">
                         <label htmlFor="horas_vuelo_aeronave">Horas de Vuelo de Aeronave</label>
                         <InputText
@@ -520,35 +572,40 @@ const AeronaveCrud = () => {
                         />
                     </div>
 
-                    <div className="p-field">
-                    <label htmlFor="aseguradora">Aseguradora</label>
-                    <InputText
-                        id="aseguradora"
-                        value={aeronaveData.aseguradora}
-                        onChange={(e) => setAeronaveData({ ...aeronaveData, aseguradora: e.target.value })}
-                        placeholder="Aseguradora"
-                        maxLength={250}
-                    />
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="numero_poliza">Número de Póliza</label>
+                    {!isEdit && (<>
+                        <div className="p-field">
+                        <label htmlFor="aseguradora">Aseguradora</label>
                         <InputText
-                            id="numero_poliza"
-                            value={aeronaveData.numero_poliza}
-                            onChange={(e) => setAeronaveData({ ...aeronaveData, numero_poliza: e.target.value })}
-                            placeholder="Número de Póliza"
+                            id="aseguradora"
+                            value={aeronaveData.aseguradora}
+                            onChange={(e) => setAeronaveData({ ...aeronaveData, aseguradora: e.target.value })}
+                            placeholder="Aseguradora"
                             maxLength={250}
                         />
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="vencimiento_poliza">Vencimiento de Póliza</label>
-                        <InputText
-                            id="vencimiento_poliza"
-                            type="date"
-                            value={aeronaveData.vencimiento_poliza}
-                            onChange={(e) => setAeronaveData({ ...aeronaveData, vencimiento_poliza: e.target.value })}
-                        />
-                    </div>
+                        </div>
+                        <div className="p-field">
+                            <label htmlFor="numero_poliza">Número de Póliza</label>
+                            <InputText
+                                id="numero_poliza"
+                                value={aeronaveData.numero_poliza}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, numero_poliza: e.target.value })}
+                                placeholder="Número de Póliza"
+                                maxLength={250}
+                            />
+                        </div>
+                        <div className="p-field">
+                            <label htmlFor="vencimiento_poliza">Vencimiento de Póliza</label>
+                            <InputText
+                                id="vencimiento_poliza"
+                                type="date"
+                                value={aeronaveData.vencimiento_poliza}
+                                onChange={(e) => setAeronaveData({ ...aeronaveData, vencimiento_poliza: e.target.value })}
+                            />
+                        </div>
+
+                        </>
+                    )}
+
                     <div className="p-d-flex p-jc-end">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAeronaveDialog(false)} />
                         <Button label="Guardar" icon="pi pi-check" id="btn-guardar" onClick={handleSave} />
@@ -656,7 +713,7 @@ const AeronaveCrud = () => {
                             <p><strong>Motor:</strong> {selectedRowData.motor} </p> 
                             <p><strong>Consumo:</strong> {selectedRowData.consumo_por_hora} L/hs</p>
                             <p><strong>Fecha de adquisición:</strong> {selectedRowData.fecha_adquisicion}</p>
-                            <p><strong>Horas de vuelo historicas:</strong> {selectedRowData.horas_historicas}</p>
+                            <p><strong>Horas de vuelo historicas:</strong> {selectedRowData.horas_historicas_voladas}</p>
 
                         </Card>
                         

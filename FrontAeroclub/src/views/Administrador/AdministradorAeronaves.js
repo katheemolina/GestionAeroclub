@@ -82,7 +82,7 @@ const AeronaveCrud = () => {
         if (selectedAeronave) {
             await cambiarEstadoAeronave(selectedAeronave.id_aeronave);
             fetchAeronaves();
-            toast.success("Aeronave eliminada correctamente.");
+            toast.success("Actualización de estado correcto.");
         }
         setEstadoDialog(false);
         //console.log(selectedAeronave.id_aeronave)
