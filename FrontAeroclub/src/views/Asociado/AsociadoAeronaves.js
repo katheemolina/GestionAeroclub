@@ -18,52 +18,64 @@ import { Dropdown } from 'primereact/dropdown';
 const AeronaveCrud = () => {
     // Estados
     const [aeronaves, setAeronaves] = useState([]);
-    const [servicios, setServicios] = useState([]);
     const [loading, setLoading] = useState(true);
     const [estadoFiltro, setEstadoFiltro] = useState(null);
-    //const [selectedAeronave, setSelectedAeronave] = useState(null); // Aeronave seleccionada
-    const [servicioData, setServicioData] = useState({
-            fecha: '',
-            horas_anteriores: 0,
-            observaciones: '',
-            id_aeronave:'',
-        }); // Estado para los datos del servicio
 
     // Función para obtener aeronaves
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves();
-            //console.log('Datos de Aeronaves:', data);
-            // Modificamos los datos para asegurarnos de que las horas de vuelo sean enteras
-            const aeronavesConHorasEnteras = data.map((aeronave) => ({
-                ...aeronave,
-                horas_vuelo_aeronave: Math.floor(parseFloat(aeronave.horas_vuelo_aeronave)) // Convertir a entero
-            }));
-            setAeronaves(aeronavesConHorasEnteras); // Guardamos los datos modificados en el estado
+            
+            // Transformamos los datos obtenidos añadiendo cálculos adicionales para cada aeronave.
+            const aeronavesConDatosExtras = await Promise.all(
+
+                data.map(async (aeronave) => { // Iteramos sobre cada aeronave de la lista
+                    // Obtenemos los servicios asociados a esta aeronave (probablemente datos de mantenimiento).
+                    const serviciosAeronave = await obtenerServicios(aeronave.id_aeronave);
+                    
+                    // Tomamos el último servicio registrado (el primero en la lista `serviciosAeronave`).
+                    const servicio = serviciosAeronave?.[0];
+
+                    // Calculamos las horas de vuelo actuales de la aeronave convirtiendo el string a número decimal.
+                    const horasActuales = parseFloat(aeronave.horas_vuelo_aeronave);
+
+                    // Obtenemos las horas registradas en el último servicio; si no hay datos, usamos 0 como valor predeterminado.
+                    const horasEnUltimoService = parseFloat(servicio?.horas_anteriores || 0);
+
+                    // Obtenemos el intervalo entre inspecciones (cuántas horas pueden pasar entre servicios).
+                    const intervaloInspeccion = parseFloat(aeronave.intervalo_para_inspeccion || 0);
+
+                    // Calculamos cuántas horas han pasado desde el último servicio.
+                    const horasDesdeUltimoService = horasActuales - horasEnUltimoService;
+
+                    // Calculamos cuántas horas faltan para la próxima inspección.
+                    const horasRestantes = intervaloInspeccion - horasDesdeUltimoService;
+
+                    // Devolvemos un nuevo objeto que incluye los datos originales de la aeronave y los cálculos adicionales.
+                    return {
+                        ...aeronave, // Copiamos todas las propiedades originales de la aeronave.
+                        horas_vuelo_aeronave: Math.floor(horasActuales), // Redondeamos las horas de vuelo actuales al número entero más cercano.
+                        horas_para_inspeccion: horasRestantes > 0 
+                            ? `${Math.floor(horasRestantes)} hs` // Si aún faltan horas, mostramos cuántas con el sufijo "hs".
+                            : 'Inspección requerida' // Si no faltan horas (o son negativas), indicamos que se necesita inspección.
+                    };
+                })
+            );
+
+            // Actualizamos el estado con la lista transformada de aeronaves que incluye los nuevos cálculos.
+            setAeronaves(aeronavesConDatosExtras);
         } catch (error) {
+            // Si ocurre algún error durante el proceso, lo mostramos en la consola.
             console.error('Error fetching aeronaves:', error);
         } finally {
+            // Marcamos que la operación de carga ha finalizado, independientemente de si fue exitosa o fallida.
             setLoading(false);
         }
     };
-    // Función para obtener servicios de una aeronave
-    const fetchServicios = async (id_aeronave) => {
-        try {
-            const data = await obtenerServicios(id_aeronave);
-            //console.log('Datos de Servicios:', data);
-            setServicioData(data);
-        } catch (error) {
-            console.error('Error al obtener los servicios:', error);
-        }
-    };
+
     // useEffect para cargar aeronaves
     useEffect(() => {
         fetchAeronaves();
-    }, []);
-
-    // useEffect para cargar servicios
-    useEffect(() => {
-        fetchServicios();
     }, []);
     
     // Para manejo de dialog de vista de detalles
@@ -122,14 +134,29 @@ const AeronaveCrud = () => {
             <header className="header">
                 <h1>Aeronaves</h1>
             </header>
-            <p>AGREGAR EN LA COLUMNA HORAS DE VUELO TOTAL, HORAS PARA LA PROXIMA INSPECCION</p>
             <DataTable ref={dt} value={aeronaves} paginator rows={10} rowsPerPageOptions={[5, 10, 25]} style={{ width: '100%' }} filterDisplay='row'>
                 <Column header="Aeronave" body={(rowData) => ( <> <strong>{rowData.marca}</strong>  {rowData.modelo}</> )}
                 sortable filter filterPlaceholder="Buscar por Aeronave" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} />
                 <Column field="matricula" header="Matrícula" sortable filter filterPlaceholder="Buscar por Matricula" filterMatchMode="contains" showFilterMenu={false} showClearButton={false} />
-                <Column field="horas_vuelo_aeronave" header="Total horas voladas" sortable filter filterPlaceholder="Buscar por horas" filterMatchMode="equals" showFilterMenu={false} 
-                    showClearButton={false} body={(rowData) => `${Math.floor(parseFloat(rowData.horas_vuelo_aeronave))} hs.`}/>
-                <Column field="" header="Hs próximo service" sortable filter filterPlaceholder="Buscar por horas" filterMatchMode="contains" showFilterMenu={false}  showClearButton={false} />
+                <Column 
+                    field="horas_vuelo_aeronave" 
+                    header="Total horas voladas" 
+                    sortable 
+                    filter 
+                    filterPlaceholder="Buscar por horas" 
+                    filterMatchMode="equals" 
+                    showFilterMenu={false} 
+                    showClearButton={false} 
+                    body={(rowData) => `${rowData.horas_vuelo_aeronave} hs`} 
+                />
+                <Column 
+                    field="horas_para_inspeccion" 
+                    header="Hs próximo service" 
+                    sortable filter filterPlaceholder="Buscar por horas" 
+                    filterMatchMode="contains" 
+                    showFilterMenu={false} 
+                    showClearButton={false} 
+                />
                 <Column sortable filter showFilterMenu={false} field="estado" header="Estado" body={estadoTemplate} filterElement={(options) => (
                     <Dropdown value={estadoFiltro} options={OpcionesEstados} onChange={(e) => onEstadoChange(e, options)} placeholder="Seleccione un estado" 
                         style={{ width: '100%', height: '40px',  padding: '10px'}}/>)}/>

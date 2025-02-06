@@ -73,7 +73,7 @@ const AeronaveCrud = () => {
         try {
             const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
             setAeronaves(data);
-            console.log("Aeronaves: ",data)
+            //console.log("Aeronaves: ",data)
         } catch (error) {
             //console.error('Error fetching aeronaves:', error);
         }
@@ -87,13 +87,13 @@ const AeronaveCrud = () => {
 
 
     useEffect(() => {
-        console.log("Modificaciones de aeronave seleccionada para actualizar:", aeronaveData);
+        //console.log("Modificaciones de aeronave seleccionada para actualizar:", aeronaveData);
     }, [aeronaveData]);
     
 // Función para guardar una aeronave (insertar o actualizar)
 const handleSave = async () => {
     try {
-        console.log("AeronaveData:", aeronaveData)
+        //console.log("AeronaveData:", aeronaveData)
         if (isEdit) {
             // Actualizar aeronave
             await actualizarAeronave(aeronaveData.id_aeronave, aeronaveData);
