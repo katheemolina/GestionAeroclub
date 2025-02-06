@@ -5,11 +5,12 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog'
 import { Card } from 'primereact/card';
 import PantallaCarga from '../../components/PantallaCarga';
-import { obtenerAeronaves,cambiarEstadoAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
+import { obtenerAeronaves, cambiarEstadoAeronave, eliminarAeronave } from '../../services/aeronavesApi'; // Cambia a las APIs de aeronaves
 import '../../styles/datatable-style.css';
 
 //iconos
 import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search'; 
 import Tooltip from '@mui/material/Tooltip';
@@ -21,20 +22,13 @@ import { Dropdown } from 'primereact/dropdown';
 
 const AeronaveCrud = () => {
     const [aeronaves, setAeronaves] = useState([]);
-
-
     const [loading, setLoading] = useState(true);
-
-
     const [estadoDialog, setEstadoDialog] = useState(false);
-
-
     const [selectedAeronave, setSelectedAeronave] = useState(null);
-
-
     const [EstadosFiltro, setEstadosFiltro] = useState(null);
 
-
+    const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+    const [aeronaveToDelete, setAeronaveToDelete] = useState(null);
 
 
     // Fetch aeronaves data from the API
@@ -42,7 +36,7 @@ const AeronaveCrud = () => {
         try {
             const data = await obtenerAeronaves(); // Asumiendo que ya es el array de aeronaves
             setAeronaves(data);
-            console.log(data)
+            //console.log("Aeronaves: ",data)
         } catch (error) {
             //console.error('Error fetching aeronaves:', error);
         }
@@ -52,8 +46,6 @@ const AeronaveCrud = () => {
     useEffect(() => {
         fetchAeronaves();
     }, []);
-
-
     
     // Para manejo de dialog de vista de detalles
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -68,13 +60,11 @@ const AeronaveCrud = () => {
         setDialogVisible(false);
     };
 
-
     // Funciones para manejar los diálogos
     const openEstadoDialog = (aeronave) => {
     setSelectedAeronave(aeronave);
     setEstadoDialog(true);
     };
-
 
     // Funciones para los servicios
     const handleCambiarEstado = async () => {
@@ -92,37 +82,61 @@ const AeronaveCrud = () => {
     }
     };
 
-
     const estadoTemplate = (rowData) => (
         <span
-          style={{
+            style={{
             color: rowData.estado === "activo" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
             fontWeight: "bold",
-          }}
+            }}
         >
-          {rowData.estado === "activo" ? "Operativo" : "No operativo"}
+            {rowData.estado === "activo" ? "Operativo" : "No operativo"}
         </span>
     );
-
 
     const Estados = [
         { label: "Operativo", value: "activo" },
         { label: "No operativo", value: "baja" },
         { label: "Seleccione un estado", value: " "}
-      ]
+    ]
 
     const onEstadosChange = (e, options) => {
         setEstadosFiltro(e.value);
         options.filterApplyCallback(e.value); // Aplica el filtro
-      };
+    };
 
     const dt = useRef(null);
     const clearFilters = () => {
-      if (dt.current) {
+        if (dt.current) {
         dt.current.reset(); // Limpia los filtros de la tabla
         setEstadosFiltro(" ");    
     }
     }
+
+
+    const openDeleteDialog = (aeronave) => {
+        setAeronaveToDelete(aeronave);
+        setDeleteDialogVisible(true);
+    };
+
+    const closeDeleteDialog = () => {
+        setDeleteDialogVisible(false);
+        setAeronaveToDelete(null);
+    };
+    
+    
+    
+    const handleDeleteAeronave = async () => {
+        try {
+            await eliminarAeronave(aeronaveToDelete.id_aeronave); // Llamada a la API
+            toast.success('Aeronave eliminada correctamente');
+            fetchAeronaves(); // Refrescar lista de aeronaves
+        } catch (error) {
+            toast.error('Error al eliminar la aeronave');
+        }
+        closeDeleteDialog();
+    };
+    
+    
 
     if (loading) {
         return <PantallaCarga />
@@ -150,7 +164,6 @@ const AeronaveCrud = () => {
                     )}
                 />
                 <Column field="matricula" header="Matrícula" sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Matrícula'></Column>
-               
                 
                 <Column field="estado" header="Estado" filter sorteable showFilterMenu={false} body={estadoTemplate}
                 filterElement={(options) => (
@@ -161,8 +174,8 @@ const AeronaveCrud = () => {
                     placeholder="Seleccione un Estado"
                     style={{ width: '100%', height: '40px',  padding: '10px'}}
                 />
-              )
-            }
+                )
+                }
                 ></Column>
                 <Column 
                     filter
@@ -181,6 +194,12 @@ const AeronaveCrud = () => {
                         <Tooltip title="Editar estado de la aeronave">
                             <IconButton color="primary" onClick={() => openEstadoDialog(rowData)}>
                                 <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Eliminar aeronave">
+                            <IconButton color="primary"  onClick={() => openDeleteDialog(rowData)}>
+                                <DeleteIcon />
                             </IconButton>
                         </Tooltip>
   
@@ -207,7 +226,31 @@ const AeronaveCrud = () => {
                 } > <p>¿Está seguro de que desea cambiar el estado de esta aeronave?</p>
             </Dialog>
 
-           
+
+            <Dialog
+                header="Confirmación"
+                visible={deleteDialogVisible}
+                onHide={closeDeleteDialog}
+                style={{ width: '400px' }}
+                footer={
+                    <div>
+                        <Button 
+                            label="Cancelar" 
+                            icon="pi pi-times" 
+                            onClick={closeDeleteDialog} 
+                            className="p-button-text gestor-btn-cancelar" 
+                        />
+                        <Button 
+                            label="Eliminar" 
+                            icon="pi pi-check" 
+                            onClick={handleDeleteAeronave} 
+                            className="p-button-danger gestor-btn-confirmar" 
+                        />
+                    </div>
+                }
+            >
+                <p>¿Está seguro de que desea eliminar la aeronave "{aeronaveToDelete?.modelo}"?</p>
+            </Dialog>
 
             <Dialog header="Detalles de la Aeronave" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
                 {selectedRowData && (
