@@ -17,6 +17,10 @@ import PantallaCarga from '../../components/PantallaCarga';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/datepicker.css'
 import {FaDollarSign} from 'react-icons/fa'; // Importando íconos
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 
 
 function AsociadoPerfil() {
@@ -122,8 +126,6 @@ function AsociadoPerfil() {
   useEffect(() => {
     fetchData();
   }, [usuarioId]);
-  
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -132,8 +134,6 @@ function AsociadoPerfil() {
     // Cambia el estado `editado` a true cuando se detecte el primer cambio.
     if (!editado) setEditado(true);
 };
-
-
 
 const validarFormulario = () => {
   const camposFaltantes = [];
@@ -329,10 +329,26 @@ const handleSubmit = async (e) => {
           <Column field="codigos_licencias" header="Codigos de licencias"></Column>
           <Column field="descripcion" header="Descripcion"></Column>
           <Column field="fecha_vigencia" header="Fecha de otorgamiento" body={formatFecha} /> 
+          <Column header="Acciones"
+                  style={{width: '1px'}}
+                  body={() => (
+                    
+                    <div style={{ display: 'flex', gap: '8px'}}>
+                        <Tooltip title="Eliminar">
+                            <IconButton color="primary" aria-label="delete" /*onClick={() => }*/>
+                                 <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Editar">
+                            <IconButton color="primary" aria-label="edit">
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </div>)}
+          ></Column>
           {/* <Column header="Estado" body={calcularEstadoLicencia} /> */}
         </DataTable>
-        <Button className="actualizar" label="Actualizar licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
-      
+        <Button className="actualizar" label="Actualizar Licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
       </section>
       
       <Dialog
