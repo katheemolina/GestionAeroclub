@@ -87,29 +87,16 @@ const AeronaveCrud = () => {
 
 
     useEffect(() => {
-        console.log("Aeronave seleccionada para actualizar:", aeronaveData);
+        console.log("Modificaciones de aeronave seleccionada para actualizar:", aeronaveData);
     }, [aeronaveData]);
     
 // Función para guardar una aeronave (insertar o actualizar)
 const handleSave = async () => {
     try {
-        const dataToSave = {
-            fecha_adquisicion: aeronaveData.fecha_adquisicion,
-            horas_vuelo_aeronave: aeronaveData.horas_vuelo_aeronave,
-            horas_vuelo_motor: aeronaveData.horas_vuelo_motor,
-            ultimo_servicio: aeronaveData.ultimo_servicio,
-            marca: aeronaveData.marca,
-            matricula: aeronaveData.matricula,
-            consumo_por_hora: aeronaveData.consumo_por_hora,
-            modelo: aeronaveData.modelo,
-            clase: aeronaveData.clase,
-            potencia: aeronaveData.potencia,
-            motor: aeronaveData.motor
-        };
-
+        console.log("AeronaveData:", aeronaveData)
         if (isEdit) {
             // Actualizar aeronave
-            await actualizarAeronave(aeronaveData.id_aeronave, dataToSave);
+            await actualizarAeronave(aeronaveData.id_aeronave, aeronaveData);
             toast.success("Aeronave actualizada correctamente.");
         } else {
             // Insertar nueva aeronave
@@ -120,27 +107,32 @@ const handleSave = async () => {
         setAeronaveDialog(false);
         fetchAeronaves(); // Refrescar la lista
     } catch (error) {
+        console.error("Error:", error)
         toast.error("Error al guardar la aeronave. Todos los campos son obligatorios.");
     }
 };
-
-
 
     // Handle edit
     const handleEdit = (aeronave) => {
         setAeronaveData({
             id_aeronave: aeronave.id_aeronave,
-            fecha_adquisicion: aeronave.fecha_adquisicion,
-            horas_vuelo_aeronave: aeronave.horas_vuelo_aeronave,
-            horas_vuelo_motor: aeronave.horas_vuelo_motor,
-            ultimo_servicio: aeronave.ultimo_servicio,
-            marca: aeronave.marca,
-            matricula: aeronave.matricula,
-            consumo_por_hora: aeronave.consumo_por_hora,
-            modelo: aeronave.modelo,
-            clase: aeronave.clase,
-            potencia: aeronave.potencia,
-            motor: aeronave.motor
+            marca: aeronave.marca || "",
+            modelo: aeronave.modelo || "",
+            matricula: aeronave.matricula || "",
+            potencia: aeronave.potencia || 0,
+            clase: aeronave.clase || "",
+            fecha_adquisicion: aeronave.fecha_adquisicion || null,
+            consumo_por_hora: aeronave.consumo_por_hora || 0,
+            estado: aeronave.estado || "",
+            horas_historicas_voladas: aeronave.horas_historicas_voladas || 0,
+            intervalo_para_inspeccion: aeronave.intervalo_para_inspeccion || 0,
+            ultimo_servicio: aeronave.ultimo_servicio || null,
+            horas_vuelo_aeronave: aeronave.horas_vuelo_aeronave || 0,
+            horas_vuelo_motor: aeronave.horas_vuelo_motor || 0,
+            motor: aeronave.motor || "",
+            aseguradora: aeronave.aseguradora || "",
+            numero_poliza: aeronave.numero_poliza || "",
+            vencimiento_poliza: aeronave.vencimiento_poliza || null
         });
         setIsEdit(true);
         setAeronaveDialog(true);
@@ -407,7 +399,7 @@ const handleSave = async () => {
 
                         <Tooltip title="Actualizar datos del Aeronave">
                             <IconButton color="primary"  label="Actualizar Aeronave" onClick={() => handleEdit(rowData)}>
-                                <SettingsIcon />
+                                <EditIcon />
                             </IconButton>
                         </Tooltip>
 
