@@ -61,9 +61,9 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     setDialogVisible(true); 
   
     try {
-      // console.log(rowData)
+      //console.log("rowData",rowData)
       const detalleMovimientoDialog = await obtenerCuentaCorrienteAeroclubDetalle(rowData.referencia_aeroclub);
-      //console.log(detalleMovimientoDialog)
+      //console.log("Detalle Movimiento dialog: ",detalleMovimientoDialog)
       setDetailData(detalleMovimientoDialog)
     } catch (error) {
       console.error("Error al obtener detalles del movimiento:", error);
@@ -102,11 +102,50 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     
   };
 
-  const handlePreviewAndPrint = (rowData) => {
+  //const handlePreviewAndPrint = (rowData) => {
+    //console.log("rowData", rowData)
     // Buscar el recibo correspondiente en dataRecibos
-    const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.referencia_aeroclub);
-    console.log("Datos del recibo", recibo)
+    //const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.referencia_aeroclub);
+    //console.log("Datos del recibo", recibo)
+    
+    const handlePreviewAndPrint = (rowData) => {
 
+      //console.log("rowData", rowData);
+    
+      let recibo;
+    
+      // Si el tipo de recibo no es null
+      if (rowData.tipo !== null) {
+
+        // Buscar el recibo correspondiente en dataRecibos
+        recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.referencia_aeroclub);
+        //console.log("recibo:", recibo)
+
+      } else {
+
+        // Obtener el número de recibo del texto entre paréntesis en descripcion_completa
+        const numeroRecibo = rowData.descripcion_completa.match(/\((\d+)\)/)?.[1];
+
+        //console.log("numero recibo", numeroRecibo)
+    
+        if (numeroRecibo) {
+          
+          // Buscar el recibo por número de recibo en dataRecibos
+          recibo = dataRecibos.find((recibo) => recibo.numero_recibo == numeroRecibo);
+
+        }
+      }
+    
+      // Si no se encuentra el recibo, mostrar un mensaje de error y detener la ejecución
+      if (!recibo) {
+
+        toast.error("No se encontró el recibo asociado.")
+        console.error("No se encontró el recibo asociado.");
+        return;
+
+      }
+    
+      console.log("Recibo encontrado:", recibo);
 
      // Datos del recibo
      const reciboData = {
@@ -501,7 +540,8 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
                 >
                   <SearchIcon />
                 </IconButton>
-                {rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
+ 
+                  { /*- rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
                   <IconButton
                     color="primary"
                     title="Ver Recibo"
@@ -509,7 +549,18 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
                   >
                     <PrintIcon />
                   </IconButton>
-                )}
+                  ) -*/}
+
+                  {rowData.descripcion_completa !== null  && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
+                    <IconButton
+                      color="primary"
+                      title="Ver Recibo"
+                      onClick={() => handlePreviewAndPrint(rowData)}
+                    >
+                      <PrintIcon />
+                    </IconButton>
+                  )}
+
               </Tooltip>
             </div>
           )}

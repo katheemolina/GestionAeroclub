@@ -34,6 +34,8 @@ function AsociadoCuentaCorriente() {
   //const [usuario, setUsuario] = useState(null);
   const [kpiData, setKpiData] = useState([]);
 
+  const [recibosCache, setRecibosCache] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -79,6 +81,7 @@ function AsociadoCuentaCorriente() {
 
         // Obtener todos los recibos
         const recibosResponse = await obtenerTodosLosRecibos(usuarioId);
+        setRecibosCache(recibosResponse);//Para los pdf
         //console.log("Todos los recibos:", recibosResponse);
 
         // Filtrar recibos utilizando un Set para optimizar la búsqueda
@@ -159,12 +162,46 @@ function AsociadoCuentaCorriente() {
     return { ...item, recibo }; // Añade los datos del recibo a cada fila
   });
   
+  //RECIBOS PDF
+  const handlePreviewAndPrint = async (rowData) => {
+    //console.log("rowData", rowData);
   
-  const handlePreviewAndPrint = (rowData) => {
-    // Buscar el recibo correspondiente en dataRecibos
-    const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.id_movimiento);
+    let recibo;
+  
+    // Si el tipo de recibo no es null
+    if (rowData.tipo === "recibo") {
+      // Buscar el recibo correspondiente en dataRecibos
+      recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.id_movimiento);
 
-    console.log('Datos seleccionados:', recibo);
+    } else if (rowData.tipo === "pago") {
+      // Obtener el número de recibo del texto después de "Recibo Nro."
+      const numeroRecibo = rowData.descripcion_completa.match(/Recibo Nro\. (\d+)/)?.[1];
+      //console.log("Número de recibo:", numeroRecibo);
+  
+      if (numeroRecibo) {
+        //Busqueda del recibo de pago por intrucción 
+        recibo = recibosCache.find((recibo) => recibo.numero_recibo == numeroRecibo);
+      }
+    } else {
+      // Obtener el número de recibo del texto entre paréntesis en descripcion_completa
+      const numeroRecibo = rowData.descripcion_completa.match(/\((\d+)\)/)?.[1];
+      //console.log("Número de recibo (paréntesis):", numeroRecibo);
+  
+      if (numeroRecibo) {
+        // Buscar el recibo por número en dataRecibos
+        recibo = dataRecibos.find((recibo) => recibo.numero_recibo == numeroRecibo);
+      }
+    }
+  
+    // Si no se encuentra el recibo, mostrar un mensaje de error
+    if (!recibo) {
+      console.error("No se encontró el recibo asociado.");
+      toast.error("No se encontró el recibo asociado.");
+      return;
+    }
+  
+    console.log("Recibo encontrado:", recibo);
+    
 
     // Datos del recibo
     const reciboData = {
@@ -263,7 +300,7 @@ function AsociadoCuentaCorriente() {
       doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
   
       // Detalles de instrucción (condicional)
-      if (reciboData.instructor && reciboData.instructor.trim() !== "") {
+      if (recibo.instructor && recibo.instructor.trim() !== "") {
         yStart += 6; // Espaciado solo si existe un instructor
         doc.text(`Vuelo con instrucción (Instructor: ${reciboData.instructor})`, 20, yStart, { maxWidth: 180 });
       }
@@ -520,7 +557,18 @@ function AsociadoCuentaCorriente() {
               >
                 <SearchIcon />
               </IconButton>
-              {rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
+
+              { /*- rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
+                <IconButton
+                  color="primary"
+                  title="Ver Recibo"
+                  onClick={() => handlePreviewAndPrint(rowData)}
+                >
+                  <PrintIcon />
+                </IconButton>
+              ) -*/ }
+
+              {rowData.descripcion_completa !== null  && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
                 <IconButton
                   color="primary"
                   title="Ver Recibo"
@@ -529,6 +577,8 @@ function AsociadoCuentaCorriente() {
                   <PrintIcon />
                 </IconButton>
               )}
+
+
 
             </Tooltip>
           </div>
