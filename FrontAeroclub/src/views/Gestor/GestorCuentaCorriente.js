@@ -35,7 +35,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrienteAeroclub(idUsuario);
         setData(cuentaCorrienteResponse);
-        //console.log("Cuenta corriente Aeroclub: ",cuentaCorrienteResponse);
+        console.log("Cuenta corriente Aeroclub: ",cuentaCorrienteResponse);
 
         const recibosResponse = await obtenerTodosLosRecibos();
         setDataRecibos(recibosResponse);
@@ -332,60 +332,66 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
   
     } else if (reciboData.tipoRecibo === "combustible") {
       let yStart = 74;
-    
-      // Detalle del recibo
+      let xTitle = 50; // Ajusta este valor para centrar títulos
+      let xValue = 120; // Ajusta este valor para alinear con el monto
+  
       doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
-    
+  
       // Insumo
-      doc.text("Insumo:", 20, yStart);
+      doc.text("Insumo:", xTitle, yStart);
       doc.setFont("helvetica", "bold");
-      doc.text("Combustible 100LL", 80, yStart);
-    
+      doc.text("Combustible 100LL", xValue, yStart);
+  
       yStart += 10;
-    
+  
       // Cantidad de combustible
       doc.setFont("helvetica", "normal");
-      doc.text("Cantidad de Combustible:", 20, yStart);
+      doc.text("Cantidad de Combustible:", xTitle, yStart);
       doc.setFont("helvetica", "bold");
-      doc.text(`${reciboData.cantidad} litros`, 80, yStart);
-    
+      doc.text(`${reciboData.cantidad} litros`, xValue, yStart);
+  
       yStart += 10;
-    
+  
       // Cálculo de tarifa por litro
-      const tarifaPorLitro = (parseFloat(reciboData.importeTotal) / parseFloat(reciboData.cantidadCombustible)).toFixed(2);
+      const tarifaPorLitro = (parseFloat(reciboData.importeTotal) / parseFloat(reciboData.cantidad)).toFixed(2);
       doc.setFont("helvetica", "normal");
-      doc.text("Tarifa por litro:", 20, yStart);
+      doc.text("Tarifa por litro:", xTitle, yStart);
       doc.setFont("helvetica", "bold");
-      doc.text(`$${tarifaPorLitro}`, 80, yStart);
-    
+      doc.text(`$${tarifaPorLitro}`, xValue, yStart);
+  
       yStart += 10;
-    
-      // Observaciones
-      doc.setFont("helvetica", "bold");
-      doc.text("Observaciones:", 20, yStart);
-    
-      doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observaciones}`, 80, yStart, { maxWidth: 180 });
-    
+    // Observaciones
+    doc.setFont("helvetica", "normal");
+    doc.text("Observaciones:", xTitle, yStart);
+
+    // Ajuste automático del texto largo
+    let observacionesTexto = doc.splitTextToSize(reciboData.observaciones, 70); // 60 es el ancho máximo en px
+    doc.setFont("helvetica", "normal");
+    doc.text(observacionesTexto, xValue, yStart, { align: "left" });
+
+    yStart += 1 + (observacionesTexto.length * 3); // Ajustamos el espaciado dinámicamente
+
+  
       // Línea divisoria
       yStart += 10;
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
-    
+  
       yStart += 8;
-      
+  
       // Total a pagar
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
-      doc.text("Total a pagar:", 80, yStart);
+      doc.text("Total a pagar:", xTitle, yStart);
       doc.setFontSize(16);
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 125, yStart);
-
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, xValue, yStart);
+  
       // Línea divisoria
       yStart += 4;
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
+
 
     } else if (reciboData.tipoRecibo === "cuota_social" || reciboData.tipoRecibo === null ) {
       let yStart = 74;
