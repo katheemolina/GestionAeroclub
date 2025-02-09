@@ -51,7 +51,7 @@ const GestorAsociados  = () => {
                 })
             );
             setAsociados(asociadosWithRoles);
-            console.log(data)
+            //console.log(data)
         } catch (error) {
             console.error('Error fetching asociados or roles:', error);
         }

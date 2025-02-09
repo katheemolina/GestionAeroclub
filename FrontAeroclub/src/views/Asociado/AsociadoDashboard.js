@@ -45,7 +45,7 @@ function Dashboard() {
           obtenerLicenciasPorUsuario(usuarioId)
         ]);
 
-        console.log("Saldo Response:", saldoResponse); // Aquí se registra el saldo.
+        //console.log("Saldo Response:", saldoResponse); // Aquí se registra el saldo.
 
 
         const usuario = usuarioResponse?.[0] || {};

@@ -32,7 +32,7 @@ const GestorAsociados = () => {
         setLoading(true);
         try {
             const response = await listarInstructores();
-            console.log("Instructores", response)
+            //console.log("Instructores", response)
             if (response && response.data) {
                 setInstructores(response.data);
             }

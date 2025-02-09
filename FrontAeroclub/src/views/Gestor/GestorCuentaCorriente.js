@@ -35,7 +35,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrienteAeroclub(idUsuario);
         setData(cuentaCorrienteResponse);
-        console.log("Cuenta corriente Aeroclub: ",cuentaCorrienteResponse);
+        //console.log("Cuenta corriente Aeroclub: ",cuentaCorrienteResponse);
 
         const recibosResponse = await obtenerTodosLosRecibos();
         setDataRecibos(recibosResponse);
@@ -145,7 +145,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
 
       }
     
-      console.log("Recibo encontrado:", recibo);
+      //console.log("Recibo encontrado:", recibo);
 
      // Datos del recibo
      const reciboData = {
@@ -411,8 +411,31 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       doc.setFont("helvetica", "normal");
       doc.text("Observaciones:", 20, yStart);
     
+      // Mapeo de nombres de meses en inglés a español
+      const meses = {
+        "January": "Enero",
+        "February": "Febrero",
+        "March": "Marzo",
+        "April": "Abril",
+        "May": "Mayo",
+        "June": "Junio",
+        "July": "Julio",
+        "August": "Agosto",
+        "September": "Septiembre",
+        "October": "Octubre",
+        "November": "Noviembre",
+        "December": "Diciembre"
+      };
+
+      // Reemplazar el mes en la observación si existe
+      const observacionesLimpias = reciboData.observaciones.replace(
+        /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/g,
+        (match) => meses[match]
+      );
+
       doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observaciones}`, 70, yStart, { maxWidth: 180 });
+      doc.text(observacionesLimpias, 70, yStart, { maxWidth: 180 });
+
 
       // Línea divisoria
       yStart += 10;

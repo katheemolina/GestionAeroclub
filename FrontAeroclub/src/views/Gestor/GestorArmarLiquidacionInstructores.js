@@ -31,7 +31,7 @@ const GestorArmarLiquidacionInstructores = () => {
         setLoading(true);
         try {
             const data = await movimientosNoLiquidadosPorInstructor(); // Fetch instructores
-            console.log("Movimiento de liquidación:",data)
+            //console.log("Movimiento de liquidación:",data)
             setMovimientos(data);
         } catch (error) {
             setMovimientos([]);

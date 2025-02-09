@@ -51,6 +51,7 @@ const TarifaCrud = () => {
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
+            //console.log("Obtener Tarifas:",data)
             setTarifas(data.data);
         } catch (error) {
             console.error('Error fetching tarifas:', error);
@@ -80,7 +81,11 @@ const TarifaCrud = () => {
     // Handle adding or updating tarifa
     const handleSave = async () => {
         try {
-            console.log("Datos a guardar:", tarifaData); // Agrega este console.log
+            if(tarifaData.tipo_tarifa === "Combustible"){
+                tarifaData.importe_por_instruccion = "0"
+                tarifaData.aeronaves="null"
+            }
+            //console.log("Datos a guardar:", tarifaData); // Agrega este console.log
             if (isEdit) {
                 await actualizarTarifa(tarifaData.id_tarifa, tarifaData);
                 toast.success("Tarifa actualizada correctamente.");
@@ -380,13 +385,14 @@ const TarifaCrud = () => {
                 onHide={() => setDeleteDialog(false)}
                 style={{ width: '400px' }}
                 footer={
-                    <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
                         <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
                         <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
                     </div>
                 }>
                 <p>¿Está seguro que desea eliminar esta tarifa?</p>
             </Dialog>
+
 
 
         </div>

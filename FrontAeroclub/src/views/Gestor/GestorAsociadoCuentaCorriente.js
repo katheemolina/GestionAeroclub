@@ -145,18 +145,19 @@ function GestorAsociadoCuentaCorriente() {
         className="procesar-button"
       />
       <Dialog
-        header="Confirmar procesamiento"
-        visible={confirmDialogVisible}
-        onHide={() => setConfirmDialogVisible(false)}
-        footer={
-          <>
-            <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
-            <Button label="Confirmar" icon="pi pi-check"  onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
-          </>
-        }
+          header="Confirmar procesamiento"
+          visible={confirmDialogVisible}
+          onHide={() => setConfirmDialogVisible(false)}
+          footer={
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                  <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
+                  <Button label="Confirmar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
+              </div>
+          }
       >
-        <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
+          <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
       </Dialog>
+
 
       <DataTable
       ref={dt}
