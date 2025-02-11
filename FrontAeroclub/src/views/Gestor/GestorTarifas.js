@@ -175,15 +175,24 @@ const TarifaCrud = () => {
     };
 
     // Column definitions
-    const dateBodyTemplate = (rowData) => {
-        if (!rowData.fecha_vigencia_desde) return ''; // Para manejar valores nulos o indefinidos
-    
-        
-        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        const fechaFormateada = new Date(rowData.fecha_vigencia_desde).toLocaleDateString('es-ES', opciones); // Formatear la fecha a DD/MM/AAAA
-    
-        return <span>{fechaFormateada}</span>;
-    };
+// Formatear la fecha para evitar repetición de código
+const formatDate = (date) => {
+    if (!date) return ''; // Manejar valores nulos o indefinidos
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(date).toLocaleDateString('es-ES', opciones);
+};
+
+// Template para la columna "Fecha Vigencia Desde"
+const dateDesdeBodyTemplate = (rowData) => {
+    return <span>{formatDate(rowData.fecha_vigencia_desde)}</span>;
+};
+
+// Template para la columna "Fecha Vigencia Hasta"
+const dateHastaBodyTemplate = (rowData) => {
+    return <span>{rowData.fecha_vigencia_hasta ? formatDate(rowData.fecha_vigencia_hasta) : "Actualmente vigente"}</span>;
+};
+
+
 
     const amountBodyTemplate = (rowData) => {
         return <span>${rowData.importe}</span>;
@@ -238,7 +247,8 @@ const TarifaCrud = () => {
                 paginator rows={10} 
                 rowsPerPageOptions={[5, 10, 25]} 
                 style={{ width: '100%' }} >
-                <Column field="fecha_vigencia_desde" header="Fecha Vigencia" body={dateBodyTemplate} filter sorteable filterType='date' showFilterMenu={false}></Column>
+                <Column field="fecha_vigencia_desde" header="Vigente desde" body={dateDesdeBodyTemplate} filter sorteable filterType='date' showFilterMenu={false}></Column>
+                <Column field="fecha_vigencia_hasta" header="Vigente hasta" body={dateHastaBodyTemplate} filter sorteable filterType='date' showFilterMenu={false}></Column>
                 <Column field="tipo_tarifa" header="Tipo Tarifa" sortable filter showFilterMenu={false} filterElement={(options) => (
                             <Dropdown
                             value={tarifasFiltro}
