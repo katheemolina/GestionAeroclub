@@ -47,6 +47,8 @@ function Dashboard() {
 
         //console.log("Saldo Response:", saldoResponse); // Aquí se registra el saldo.
 
+        console.log("vuelos response: ", vuelosResponse)
+
 
         const usuario = usuarioResponse?.[0] || {};
         const saldoData = saldoResponse?.[0] || {};
@@ -63,10 +65,11 @@ function Dashboard() {
           saldo: saldoData.Saldo || 0,
           horasVoladas: horasData.TotalHoras || 0,
           cma: cmaData.estado || "Desconocido",
-          fechaVencimiento: cmaData.fecha_vencimiento_cma || "",
+          fechaVencimiento: formatearFecha(cmaData.fecha_vencimiento_cma) || "",
           licencias: formattedLicencias,
           vuelos: vuelosResponse || []
         });
+
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
@@ -75,6 +78,22 @@ function Dashboard() {
 
     fetchData();
   }, [usuarioId]);
+
+  const formatearFecha = (fecha) => {
+    if (!fecha) return "";
+    const [año, mes, dia] = fecha.split("-");
+    return `${dia}-${mes}-${año}`;
+  };
+
+  const formatearFechaUltimosVuelos = (fecha) => {
+    if (!fecha) return "";
+    const [fechaParte, horaParte] = fecha.split(" ");
+    const [año, mes, dia] = fechaParte.split("-");
+    const fechaFormateada = `${dia}-${mes}-${año}`;
+    return `${fechaFormateada} ${horaParte}`;
+  };
+  
+  
 
   const cmaClass = useMemo(() => userData.cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente', [userData.cma]);
 
@@ -128,7 +147,8 @@ function Dashboard() {
             scrollHeight="800px"
           >
             <Column field="matricula" header="Avión" sortable></Column>
-            <Column field="created_at" header="Último vuelo" sortable></Column>
+            <Column field="created_at" header="Último vuelo" sortable   body={(rowData) => formatearFechaUltimosVuelos(rowData.created_at)}
+            ></Column>
             <Column field="tiempo" header="Tiempo" sortable></Column>
             <Column field="aterrizajes" header="Aterrizajes" sortable></Column>
             <Column field="adaptacion" header="Adaptación" sortable></Column>
