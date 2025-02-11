@@ -422,7 +422,17 @@ const handleSave = async () => {
                 )}></Column>
             </DataTable>
 
-            <Dialog header={isEdit ? 'Actualizar Aeronave' : 'Agregar Aeronave'} visible={aeronaveDialog} onHide={() => setAeronaveDialog(false)}>
+            <Dialog 
+                header={isEdit ? 'Actualizar Aeronave' : 'Agregar Aeronave'} 
+                visible={aeronaveDialog} onHide={() => 
+                setAeronaveDialog(false)}
+                footer={
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', paddingTop:'1rem', borderTop: '1px solid #DDD'}}> 
+                    <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary gestor-btn-cancelar" onClick={() => setAeronaveDialog(false)} />
+                    <Button label="Guardar" icon="pi pi-check" id='btn-guardar' style={{marginTop:'0'}} className='gestor-btn-confirmar' onClick={handleSave} />
+                    </div>
+                }
+                >
                 <div className="p-fluid">
                     <div className="p-field">
                         <label htmlFor="marca">Marca</label>
@@ -597,11 +607,6 @@ const handleSave = async () => {
 
                         </>
                     )}
-
-                    <div className="p-d-flex p-jc-end">
-                        <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setAeronaveDialog(false)} />
-                        <Button label="Guardar" icon="pi pi-check" id="btn-guardar" onClick={handleSave} />
-                    </div>
 
                 </div>
             </Dialog>

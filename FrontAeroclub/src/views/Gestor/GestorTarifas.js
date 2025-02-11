@@ -284,10 +284,10 @@ const TarifaCrud = () => {
                     visible={tarifaDialog} 
                     onHide={() => setTarifaDialog(false)}
                     footer= {
-                    <> 
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}> 
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary gestor-btn-cancelar" onClick={() => setTarifaDialog(false)} />
                         <Button label="Guardar" icon="pi pi-check" className="gestor-btn-confirmar" onClick={handleSave} /> 
-                    </>
+                    </div>
                     }
             >
                         
@@ -386,8 +386,8 @@ const TarifaCrud = () => {
                 style={{ width: '400px' }}
                 footer={
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)} className="p-button-text" />
-                        <Button label="Eliminar" icon="pi pi-check" onClick={handleDelete} className="p-button-danger" />
+                        <Button className='gestor-btn-confirmar' label="Cancelar" icon="pi pi-times" onClick={() => setDeleteDialog(false)}/>
+                        <Button className='p-button-secondary gestor-btn-cancelar' style={{marginRight: '0'}} label="Eliminar" icon="pi pi-check" onClick={handleDelete}/>
                     </div>
                 }>
                 <p>¿Está seguro que desea eliminar esta tarifa?</p>

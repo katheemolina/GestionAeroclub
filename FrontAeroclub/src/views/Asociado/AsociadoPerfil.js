@@ -58,7 +58,8 @@ function AsociadoPerfil() {
     { label: 'Instructor de vuelo', value: 'Instructor de vuelo' },
     { label: 'Piloto de ultraligero', value: 'Piloto de ultraligero' }
   ]);
-
+  const [editarDialog, setEditarDialog] = useState(false); // Controla visibilidad del dialog de editar
+  const [eliminarDialog, setEliminarDialog] = useState(false); // Controla la visibilidad del dialog de eliminar
   const [ aplicaTarifa, setAplicaTarifa ] = useState(false);
 
   const fetchLicencias = async () => {
@@ -154,6 +155,12 @@ const validarFormulario = () => {
   return true;
 };
 
+const confirmDelete = (licencia) => {
+  setSelectedLicencia(licencia);
+  setEliminarDialog(true);
+  console.log(licencia);
+}
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -171,14 +178,11 @@ const handleSubmit = async (e) => {
   }
 };
 
-
-
-
-  const formatFecha = (rowData) => {
-    // Extrae solo la fecha de 'fecha_vigencia' (sin hora)
-    const fecha = new Date(rowData.fecha_vigencia).toLocaleDateString();
-    return fecha;
-  };
+const formatFecha = (rowData) => {
+  // Extrae solo la fecha de 'fecha_vigencia' (sin hora)
+  const fecha = new Date(rowData.fecha_vigencia).toLocaleDateString();
+  return fecha;
+};
 
   const calcularEstadoLicencia = (rowData) => {
     const fechaVencimiento = new Date(rowData.fecha_vigencia);
@@ -331,16 +335,16 @@ const handleSubmit = async (e) => {
           <Column field="fecha_vigencia" header="Fecha de otorgamiento" body={formatFecha} /> 
           <Column header="Acciones"
                   style={{width: '1px'}}
-                  body={() => (
+                  body={(rowData) => (
                     
                     <div style={{ display: 'flex', gap: '8px'}}>
                         <Tooltip title="Eliminar">
-                            <IconButton color="primary" aria-label="delete" /*onClick={() => }*/>
+                            <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
                                  <DeleteIcon />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Editar">
-                            <IconButton color="primary" aria-label="edit">
+                            <IconButton color="primary" aria-label="edit" onClick={() => setEditarDialog(true)}>
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
@@ -389,6 +393,36 @@ const handleSubmit = async (e) => {
             />
           </div>
         </div>
+      </Dialog>
+      
+      
+      <Dialog
+        className='eliminarLicenciaDialog'
+        visible={eliminarDialog}
+        onHide={() => setEliminarDialog(false)}
+        style={{ width: '450px'}}
+        header="Eliminar Licencia"
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+            <Button className="gestor-btn-confirmar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setLicenciaDialog(false)}  />
+            <Button className="p-button-secondary gestor-btn-cancelar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} />  {/* onClick{} */}
+          </div>
+        }>
+          <p>¿Está seguro de que desea eliminar esta licencia?</p>
+      </Dialog>
+
+      <Dialog
+        className='EditarLicenciaDialog'
+        visible={editarDialog}
+        onHide={() => setEditarDialog(false)}
+        style={{width: '450px'}}
+        header="Editar información de Licencia"
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+            <Button className="p-button-secondary gestor-btn-cancelar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setLicenciaDialog(false)}  />
+            <Button className="gestor-btn-confirmar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} /> {/* onClick{} */}
+          </div>
+        }>
       </Dialog>
 
       </div>
