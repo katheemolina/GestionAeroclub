@@ -25,6 +25,7 @@ function Dashboard() {
   });
 
   const { usuarioId } = useUser();
+  const rol = localStorage.getItem("role")?.toLowerCase(); // Para links 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,13 +109,13 @@ function Dashboard() {
       </header>
 
       <section className="stats-section">
-        <Link to="/asociado/cuenta-corriente" style={{ textDecoration: 'none', flex: 1 }}>
+        <Link to={`/${rol}/cuenta-corriente`} style={{ textDecoration: 'none', flex: 1 }}>
           <div className="stat-box">
             <h3>Saldo</h3>
             <p>${userData.saldo}</p>
           </div>
         </Link>
-        <Link to="/asociado/libro-vuelo" style={{ textDecoration: 'none', flex: 1 }}>
+        <Link to={`/${rol}/libro-vuelo`} style={{ textDecoration: 'none', flex: 1 }}>
           <div className="stat-box">
             <h3>Horas Voladas</h3>
             <p>{userData.horasVoladas}</p>
@@ -123,13 +124,13 @@ function Dashboard() {
       </section>
 
       <section className="stats-section">
-        <Link to="/asociado/perfil" style={{ textDecoration: 'none', flex: 1 }}>
+        <Link to={`/${rol}/perfil`} style={{ textDecoration: 'none', flex: 1 }}>
           <div className={`stat-box ${cmaClass}`}>
             <h3>CMA</h3>
             <p>{userData.cma}</p>
           </div>
         </Link>
-        <Link to="/asociado/perfil" style={{ textDecoration: 'none', flex: 1 }}>
+        <Link to={`/${rol}/perfil`} style={{ textDecoration: 'none', flex: 1 }}>
           <div className="stat-box">
             <h3>CMA - Fecha de vencimiento</h3>
             <p>{userData.fechaVencimiento}</p>
@@ -166,7 +167,7 @@ function Dashboard() {
           ))}
         </ul>
         <div className="button-container">
-          <Link to="/asociado/perfil" style={{ textDecoration: 'none', flex: 1 }}>
+          <Link to={`/${rol}/perfil`} style={{ textDecoration: 'none', flex: 1 }}>
             <button type="submit">Editar licencias</button>
           </Link>
         </div>

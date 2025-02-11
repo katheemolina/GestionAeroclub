@@ -45,8 +45,6 @@ function Bienvenida() {
         const usuarioData = usuarioResponse[0];
         setUsuario(usuarioData);
 
-        console.log(`👀 Verificando DNI para rol: ${rol}`);
-
         if (!usuarioData.dni && (rol === "asociado" || rol === "instructor")) {
           setMostrarDialogo(true);
         } else {
