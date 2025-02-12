@@ -3,6 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { obtenerSaldoCuentaCorrientePorUsuario } from '../../services/movimientosApi';
 import { listarAsociados, habilitarUsuario,deshabilitarUsuario,actualizarRoles, obtenerRolPorIdUsuario} from '../../services/usuariosApi';
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
@@ -12,6 +13,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import BlockIcon from '@mui/icons-material/Block';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import Tooltip from '@mui/material/Tooltip';
+import CircleIcon from '@mui/icons-material/Circle';
 import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
 import PantallaCarga from '../../components/PantallaCarga';
@@ -43,15 +45,17 @@ const GestorAsociados  = () => {
             const asociadosWithRoles = await Promise.all(
                 data.map(async (asociado) => {
                     const roles = await obtenerRolPorIdUsuario(asociado.id_usuario);
+                    const kpiResponse = await obtenerSaldoCuentaCorrientePorUsuario(asociado.id_usuario);
+                    const { deuda_cuota_social } = kpiResponse[0]; 
                     const activeRoles = roles
                         .filter((role) => role.estado === 'activo')
                         .map((role) => role.descripcion)
                         .join(', '); // Concatenate active role descriptions
-                    return { ...asociado, roles: activeRoles };
+                    return { ...asociado, roles: activeRoles, deuda_cuota_social};
                 })
             );
             setAsociados(asociadosWithRoles);
-            //console.log(data)
+            console.log(asociadosWithRoles)
         } catch (error) {
             console.error('Error fetching asociados or roles:', error);
         }
@@ -149,7 +153,16 @@ const GestorAsociados  = () => {
           {rowData.estado}
         </span>
     );
+
+    const cuotaTemplate = (rowData) => {
+        const iconColor = rowData.deuda_cuota_social !== "0.00" ? 'rgb(169, 70, 70)' : 'rgb(76, 175, 80)'; // Check if deuda_cuota_social is not zero
     
+        return (
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <CircleIcon style={{ color: iconColor }} />
+            </div>
+        );
+    }
     const estadoCMATemplate = (rowData) => {
         const color = rowData.estadoCMA === "Vigente"
           ? "rgb(76, 175, 80)"
@@ -241,13 +254,13 @@ const GestorAsociados  = () => {
                 scrollHeight="800px"
                 style={{ width: '100%' }} >
                 <Column field="usuario" header="Asociado" sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}></Column>
-                <Column field="estado" header="Estado" body={estadoTemplate} sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}
+                <Column field="estado" header="Estado" body={estadoTemplate} sortable filter filterPlaceholder='Estado' showFilterMenu={false}
                         filterElement={(options) => (
                             <Dropdown
                             value={estadoFiltro}
                             options={OpcionesEstados}
                             onChange={(e) => onEstadoChange(e, options)}
-                            placeholder="Seleccione instrucción"
+                            placeholder="Estado"
                             style={{ width: '100%', height: '40px',  padding: '10px'}}
                         />
                       )
@@ -258,19 +271,22 @@ const GestorAsociados  = () => {
                 
                 <Column field="roles" header="Roles Activos" sortable filter filterPlaceholder='Buscar por roles' showFilterMenu={false}></Column> 
                 <Column field="horas_vuelo" header="Horas de vuelo totales" sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}></Column>
-                <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable filter filterPlaceholder='Buscar por estado' showFilterMenu={false}
+                <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable filter filterPlaceholder='Estado CMA' showFilterMenu={false}
                 filterElement={(options) => (
                     <Dropdown
                     value={estadoCMAFiltro}
                     options={OpcionesCMA}
                     onChange={(e) => onEstadoCMAChange(e, options)}
-                    placeholder="Seleccione instrucción"
+                    placeholder="Estado CMA"
                     style={{ width: '100%', height: '40px',  padding: '10px'}}
                     />
                     )
                  }
                 ></Column>
                 <Column field="saldo" header="Saldo" sortable filter filterPlaceholder='Buscar por saldo' showFilterMenu={false}></Column>
+
+                <Column field="cuota_social" header="Cuota social" body={cuotaTemplate}> </Column>
+
                 <Column filter
                     showFilterMenu={false}
                     filterElement={
