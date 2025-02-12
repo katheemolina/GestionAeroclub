@@ -120,6 +120,17 @@ button:hover {
   margin-top: 10px;
 }
 
+.editarLicenciaDialog .p-field .p-component{
+  margin-top: 10px;
+}
+
+.editarLicenciaDialog .p-datepicker-trigger{
+  margin: 0px !important;
+  border: 2px solid #ddd !important;
+  border-left: 1px solid #ddd !important;
+  border-radius: 0px 6px 6px 0px;
+}
+
 .actualizarLicenciaDialog .p-datepicker-trigger{
   margin: 0px !important;
   border: 2px solid #ddd !important;

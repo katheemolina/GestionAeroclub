@@ -18,6 +18,15 @@ export const obtenerEstadoCMA = async (idUsuario) => {
     return response.json();
 };
 
+// Función para obtener los tipos de licencias de la base
+export const obtenerLicencias = async () => {
+    const response = await fetch(`${API_URL}/licencias`)
+    if (!response.ok) {
+        throw new Error('Error al obtener las licencias');
+    }
+    return response.json();
+}
+
 // Función para obtener las licencias de un usuario
 export const obtenerLicenciasPorUsuario = async (idUsuario) => {
     const response = await fetch(`${API_URL}/usuarios/${idUsuario}/licencias`);
@@ -26,6 +35,7 @@ export const obtenerLicenciasPorUsuario = async (idUsuario) => {
     }
     return response.json();
 };
+
 
 // Función para actualizar los datos del usuario
 export const actualizarDatosDelUsuario = async (id, datos) => {
@@ -165,15 +175,15 @@ export async function deshabilitarUsuario(idUsuario) {
     }
 }
 
-export const actualizarLicencias = async (idUsuario, licencias) => {
+export const actualizarLicencias = async (datos) => {
     try {
         // Realizar la solicitud PUT a la API
-        const response = await fetch(`${API_URL}/usuarios/${idUsuario}/licencias`, {
-            method: 'PUT',
+        const response = await fetch(`${API_URL}/licencias/actualizar`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(licencias),  // Convertimos el array de licencias a JSON
+            body: JSON.stringify(datos),  // Convertimos el array que contiene a la licencia a JSON
         });
 
         // Si la respuesta no es exitosa, lanzamos un error
@@ -188,6 +198,30 @@ export const actualizarLicencias = async (idUsuario, licencias) => {
         throw error;  // Lanza el error para que el componente lo maneje
     }
 };
+
+export const eliminarLicencia = async (datos) => {
+    try{
+
+        const response = await fetch(`${API_URL}/licencias/eliminar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datos),  // Convertimos el array que contiene a la licencia a JSON
+        });
+
+        // Si la respuesta no es exitosa, lanzamos un error
+        if (!response.ok) {
+            throw new Error('Error al actualizar las licencias');
+        }
+
+        // Devolvemos la respuesta si la solicitud es exitosa
+        return await response.json();
+    } catch (error) {
+        console.error('Error al eliminar la licencia :', error);
+        throw error;  // Lanza el error para que el componente lo maneje
+    }
+}
 
 // Función listar todos los asociados
 export const movimientosNoLiquidadosPorInstructor = async () => {

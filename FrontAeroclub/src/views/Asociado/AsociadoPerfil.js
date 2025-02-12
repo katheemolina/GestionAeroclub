@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CardComponent from '../../components/CardComponent'; 
 import UploadImage from '../../components/UploadImage'; 
 import "./Styles/AsociadoPerfil.css"
-import { obtenerDatosDelUsuario,actualizarDatosDelUsuario ,obtenerLicenciasPorUsuario, actualizarLicencias} from '../../services/usuariosApi';
+import { obtenerDatosDelUsuario,actualizarDatosDelUsuario ,obtenerLicenciasPorUsuario, actualizarLicencias, eliminarLicencia,   obtenerLicencias} from '../../services/usuariosApi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -43,24 +43,19 @@ function AsociadoPerfil() {
 
   //Componente para licencias
   
-
+  const [tablaTiposLicencias, setTablaTiposLicencias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [licencias, setLicencias] = useState([]); 
   const [licenciaDialog, setLicenciaDialog] = useState(false); // Controla si el dialog está abierto
   const [selectedLicencia, setSelectedLicencia] = useState(null); // Almacena la licencia seleccionada
   const [fechaVencimiento, setFechaVencimiento] = useState(null); // Almacena la fecha de vencimiento
   const [editado, setEditado] = useState(false);
-  const [tiposLicencias] = useState([
-    { label: 'Piloto de planeador', value: 'Piloto de planeador' },
-    { label: 'Piloto privado', value: 'Piloto privado' },
-    { label: 'Piloto comercial', value: 'Piloto comercial' },
-    { label: 'Piloto de transporte de línea aérea', value: 'Piloto de transporte de línea aérea' },
-    { label: 'Instructor de vuelo', value: 'Instructor de vuelo' },
-    { label: 'Piloto de ultraligero', value: 'Piloto de ultraligero' }
+  const [opcionesLicencias, setOpcionesLicencias] = useState([
   ]);
   const [editarDialog, setEditarDialog] = useState(false); // Controla visibilidad del dialog de editar
   const [eliminarDialog, setEliminarDialog] = useState(false); // Controla la visibilidad del dialog de eliminar
   const [ aplicaTarifa, setAplicaTarifa ] = useState(false);
+  const [datosFila, setDatosFila] = useState();
 
   const fetchLicencias = async () => {
     try {
@@ -71,30 +66,96 @@ function AsociadoPerfil() {
     }
   };
 
+  const fetchTiposLicencias = async () => {
+    try {
+      const data = await obtenerLicencias();
+      setTablaTiposLicencias(data);
+    } catch (error) {
+      console.error('Error al buscar los tipos de licencias de la BDD:'. error);
+    }
+  }
+
+  const mapToOpcionesLicencias = (data) => {
+    return data.map((item) => ({
+      label: item.descripcion, // Assuming descripcion is the field you want to use for the label
+      value: item.descripcion, // You can change this to another field if needed
+    }));
+  };
+
   useEffect(() => {
     fetchLicencias();
     setLoading(false);
+    fetchTiposLicencias();
   }, []);
 
+  useEffect(() => {
+    if (tablaTiposLicencias.length > 0) {
+      const mappedData = mapToOpcionesLicencias(tablaTiposLicencias);
+      setOpcionesLicencias(mappedData); // Update opcionesLicencias state
+    }
+  }, [tablaTiposLicencias]);
+
+
   const handleLicenciaUpdate = async () => {
+
     if (!selectedLicencia || !fechaVencimiento) {
       toast.warning("Por favor, seleccione una licencia y una fecha de vencimiento.");
       return;
     }
 
     try {
-      const licenciaData = [
-        { nombreLic: selectedLicencia, fechaVenc: fechaVencimiento.toISOString().split('T')[0] }
-      ];
-      await actualizarLicencias(usuarioId, licenciaData); // Llamada a la API con los datos
+      // Find the licencia object from tablaTiposLicencias that matches the selectedLicencia
+      const licencia = tablaTiposLicencias.find((item) => item.descripcion === selectedLicencia);
+      
+      if (!licencia) {
+        toast.error("Licencia no encontrada.");
+        return;
+      }
+
+      const licenciaData = 
+      {
+        id_usuario: usuarioId, 
+        id_licencia: licencia.id_licencia,  // Get the id_licencia from tablaTiposLicencias
+        fecha_vigencia: fechaVencimiento.toISOString().split('T')[0],  // Format the fecha_vigencia as 'YYYY-MM-DD'
+      };
+
+      await actualizarLicencias(licenciaData); // Llamada a la API con los datos
       toast.success("Licencia actualizada correctamente.");
       setLicenciaDialog(false); // Cierra el diálogo después de la actualización
+      setEditarDialog(false);
       fetchLicencias(); // Vuelve a cargar las licencias actualizadas
     } catch (error) {
       console.error("Error al actualizar licencia:", error);
       toast.error("Error al actualizar licencia.");
     }
   };
+
+  const handleLicenciaDelete = async () => {
+    try {
+
+      const licencia = tablaTiposLicencias.find((item) => item.descripcion === selectedLicencia);
+
+      if (!licencia) {
+        toast.error("Licencia no encontrada.");
+        return;
+      }
+
+      const licenciaData = 
+      {
+        id_usuario: usuarioId, 
+        id_licencia: licencia.id_licencia,  // Get the id_licencia from tablaTiposLicencias
+      };
+
+      await eliminarLicencia(licenciaData);
+      toast.success("Licencia eliminada correctamente.");
+      setEliminarDialog(false);
+      fetchLicencias();
+    } catch (error) {
+      console.error("Error al eliminar licencia:", error);
+      toast.error("Error al eliminar licencia.");
+    }
+  }
+
 
 
   const fetchData = async () => {
@@ -158,7 +219,6 @@ const validarFormulario = () => {
 const confirmDelete = (licencia) => {
   setSelectedLicencia(licencia);
   setEliminarDialog(true);
-  console.log(licencia);
 }
 
 const handleSubmit = async (e) => {
@@ -218,7 +278,7 @@ const formatFecha = (rowData) => {
         licencias={usuario.codigos_licencias || ["No posee licencias"]}
       />
 
-    <UploadImage />
+    {/* <UploadImage /> */}
 
     {role.includes('Instructor') && (
         
@@ -339,12 +399,12 @@ const formatFecha = (rowData) => {
                     
                     <div style={{ display: 'flex', gap: '8px'}}>
                         <Tooltip title="Eliminar">
-                            <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData)}>
+                            <IconButton color="primary" aria-label="delete" onClick={() => confirmDelete(rowData.descripcion)}>
                                  <DeleteIcon />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Editar">
-                            <IconButton color="primary" aria-label="edit" onClick={() => setEditarDialog(true)}>
+                            <IconButton color="primary" aria-label="edit" onClick={() => {setDatosFila(rowData); setSelectedLicencia(rowData.descripcion); setEditarDialog(true)}}>
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
@@ -352,19 +412,19 @@ const formatFecha = (rowData) => {
           ></Column>
           {/* <Column header="Estado" body={calcularEstadoLicencia} /> */}
         </DataTable>
-        <Button className="actualizar" label="Actualizar Licencias" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
+        <Button className="actualizar" label="Agregar Licencia" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
       </section>
       
       <Dialog
         className='actualizarLicenciaDialog'
-        header="Actualizar Licencia"
+        header="Agregar Licencia"
         visible={licenciaDialog}
         onHide={() => setLicenciaDialog(false)}
         style={{ width: 'min-content', minwidth: '450px' }}
         footer={
           <>
-            <Button  label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary gestor-btn-cancelar" />
-            <Button className="gestor-btn-confirmar" label="Actualizar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
+            <Button label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary gestor-btn-cancelar" />
+            <Button className="gestor-btn-confirmar" label="Confirmar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
           </>
         }
       >
@@ -374,7 +434,7 @@ const formatFecha = (rowData) => {
           <Dropdown
               id="tipoLicencia"
               value={selectedLicencia}
-              options={tiposLicencias}
+              options={opcionesLicencias}
               onChange={(e) => setSelectedLicencia(e.value)}
               placeholder="Seleccione una licencia"
               style={{ width: '100%', height:'45px' }} // Cambia el valor según lo necesites
@@ -404,25 +464,41 @@ const formatFecha = (rowData) => {
         header="Eliminar Licencia"
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-            <Button className="gestor-btn-confirmar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setLicenciaDialog(false)}  />
-            <Button className="p-button-secondary gestor-btn-cancelar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} />  {/* onClick{} */}
+            <Button className="gestor-btn-confirmar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setEliminarDialog(false)}  />
+            <Button className="p-button-secondary gestor-btn-cancelar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} onClick={() => handleLicenciaDelete()}/>  
           </div>
         }>
           <p>¿Está seguro de que desea eliminar esta licencia?</p>
       </Dialog>
 
       <Dialog
-        className='EditarLicenciaDialog'
+        className='editarLicenciaDialog'
         visible={editarDialog}
         onHide={() => setEditarDialog(false)}
-        style={{width: '450px'}}
+        style={{ width: 'min-content', minwidth: '450px' }}
         header="Editar información de Licencia"
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-            <Button className="p-button-secondary gestor-btn-cancelar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setLicenciaDialog(false)}  />
-            <Button className="gestor-btn-confirmar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} /> {/* onClick{} */}
+            <Button className="p-button-secondary gestor-btn-cancelar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setEditarDialog(false)}  />
+            <Button className="gestor-btn-confirmar" label="Confirmar" icon="pi pi-check" style={{marginRight: '0'}} onClick={() => {handleLicenciaUpdate()}} /> 
           </div>
         }>
+          {datosFila && 
+          <div className="p-fluid">
+            <div className="p-field">
+              <label htmlFor="fechaVencimiento">Fecha de inicio de vigencia</label>
+              <Calendar
+                id="fechaVencimiento"
+                value={datosFila}
+                onChange={(e) => setFechaVencimiento(e.value)}
+                showIcon
+                dateFormat="dd-mm-yy"
+                style={{ width: '400px' }}
+                placeholder={formatFecha(datosFila)}
+              />
+            </div>
+          </div>
+          }
       </Dialog>
 
       </div>
