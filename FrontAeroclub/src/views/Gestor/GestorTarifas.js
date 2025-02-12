@@ -158,11 +158,15 @@ const TarifaCrud = () => {
 
     const handleImporteChange = (importe) => {
         const updatedData = { ...tarifaData, importe };
-        if (tarifaData.tipo_tarifa === 'Vuelo' && tarifaData.con_instructor) {
+        if (tarifaData.tipo_tarifa === 'Vuelo') {
             updatedData.importe_por_instruccion = (importe * 0.15).toFixed(2);
+        } else {
+            updatedData.importe_por_instruccion = 0;
         }
         setTarifaData(updatedData);
     };
+    
+    
 
     const handleInstructorCheck = (checked) => {
         const updatedData = { ...tarifaData, con_instructor: checked };
@@ -323,32 +327,26 @@ const dateHastaBodyTemplate = (rowData) => {
                         />
                     </div>
                     <div className="p-field">
-                        <label htmlFor="importe">{tarifaData.tipo_tarifa === 'Vuelo' ? 'Importe por hora de vuelo' : 'Importe por litro'}</label>
-                        <InputText
-                            id="importe"
-                            value={tarifaData.importe}
-                            onChange={(e) => handleImporteChange(e.target.value)}
-                            placeholder="Importe"
-                        />
-                    </div>
+    <label htmlFor="importe">{tarifaData.tipo_tarifa === 'Vuelo' ? 'Importe por hora de vuelo' : 'Importe por litro'}</label>
+    <InputText
+        id="importe"
+        value={tarifaData.importe}
+        onChange={(e) => handleImporteChange(e.target.value)}
+        placeholder="Importe"
+    />
+</div>
+{tarifaData.tipo_tarifa === 'Vuelo' && (
+    <div className="p-field">
+        <label>Importe por Instrucción (15%):</label>
+        <span style={{ display: 'block', padding: '8px', fontWeight: 'bold' }}>
+            ${tarifaData.importe_por_instruccion}
+        </span>
+    </div>
+)}
+
                     {tarifaData.tipo_tarifa === 'Vuelo' && (
                         <>
-                            <div className="p-field" id='field-tarifa-con-instructor'>
-                                <Checkbox
-                                    inputId="con_instructor"
-                                    checked={tarifaData.con_instructor}
-                                    onChange={(e) => handleInstructorCheck(e.checked)}
-                                />
-                                <label htmlFor="con_instructor">¿Con Instructor?</label>
-                            </div>
-                            <div className="p-field">
-                                <label htmlFor="importe_por_instruccion">Importe por Instrucción</label>
-                                <InputText
-                                    id="importe_por_instruccion"
-                                    value={tarifaData.importe_por_instruccion}
-                                    
-                                />
-                            </div>
+                           
                             {/* Campos generales del vuelo */}
                             <div className="p-field">
                                 <label>Aeronaves:</label>
@@ -358,7 +356,7 @@ const dateHastaBodyTemplate = (rowData) => {
                                         value={aeronavesSeleccionado}
                                         options={aeronaves}
                                         onChange={(e) => {
-                                            // Extraer solo los id_aeronave seleccionados
+                                            // Extraer saolo los id_aeronave seleccionados
                                             const idsAeronavesSeleccionadas = e.value.map(aeronave => aeronave.id_aeronave);
                                     
                                             // Actualizar el estado con las aeronaves seleccionadas
