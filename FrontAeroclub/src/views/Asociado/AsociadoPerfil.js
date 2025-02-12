@@ -60,6 +60,7 @@ function AsociadoPerfil() {
   const fetchLicencias = async () => {
     try {
       const data = await obtenerLicenciasPorUsuario(usuarioId);
+      //console.log("Licencias: ",data)
       setLicencias(data);
     } catch (error) {
       console.error('Error fetching licencias:', error);
@@ -239,10 +240,10 @@ const handleSubmit = async (e) => {
 };
 
 const formatFecha = (rowData) => {
-  // Extrae solo la fecha de 'fecha_vigencia' (sin hora)
-  const fecha = new Date(rowData.fecha_vigencia).toLocaleDateString();
-  return fecha;
+  const fecha = new Date(rowData.fecha_vigencia + 'T00:00:00'); // Forzar medianoche local
+  return fecha.toLocaleDateString();
 };
+
 
   const calcularEstadoLicencia = (rowData) => {
     const fechaVencimiento = new Date(rowData.fecha_vigencia);
