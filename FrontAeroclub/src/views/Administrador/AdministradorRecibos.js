@@ -34,7 +34,7 @@ function AdministradorRecibos({ idUsuario = 0 }) {
 
   const handleAnularRecibo = async (idRecibo) => {
     const result = await anularRecibo(idRecibo);
-    console.log("Respuesta del backend:", result); // Para depuración
+    //console.log("Respuesta del backend:", result); // Para depuración
 
     if (result.status === "success") { // Cambiado de `success` a `status`
         toast.success("Recibo anulado correctamente.");

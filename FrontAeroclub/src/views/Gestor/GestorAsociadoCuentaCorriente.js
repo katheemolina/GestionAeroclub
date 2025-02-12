@@ -16,6 +16,7 @@ import { useUser } from '../../context/UserContext';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { circularProgressClasses } from '@mui/material';
 
 
 function GestorAsociadoCuentaCorriente() {
@@ -34,6 +35,7 @@ function GestorAsociadoCuentaCorriente() {
     const fetchData = async () => {
       try {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
+        //console.log("Cuenta corriente:", cuentaCorrienteResponse)
         setData(cuentaCorrienteResponse);
       } catch (error) {
         console.error("Error al obtener datos:", error);
@@ -134,124 +136,127 @@ function GestorAsociadoCuentaCorriente() {
   }
 
   return (
-    <div className="background">
-      <header className="header">
-        <h1>Cuenta Corriente de {user.usuario}</h1>
-      </header>
-      <Button
-        label="Procesar movimientos seleccionados"
-        onClick={() => setConfirmDialogVisible(true)}
-        disabled={selectedMovimientos.length === 0}
-        className="procesar-button"
-      />
-      <Dialog
-          header="Confirmar procesamiento"
-          visible={confirmDialogVisible}
-          onHide={() => setConfirmDialogVisible(false)}
-          footer={
-              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-                  <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
-                  <Button label="Confirmar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
-              </div>
-          }
-      >
-          <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
-      </Dialog>
+    <>
+      <ToastContainer />
+      <div className="background">
+        <header className="header">
+          <h1>Cuenta Corriente de {user.usuario}</h1>
+        </header>
+        <Button
+          label="Procesar movimientos seleccionados"
+          onClick={() => setConfirmDialogVisible(true)}
+          disabled={selectedMovimientos.length === 0}
+          className="procesar-button"
+        />
+        <Dialog
+            header="Confirmar procesamiento"
+            visible={confirmDialogVisible}
+            onHide={() => setConfirmDialogVisible(false)}
+            footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
+                    <Button label="Confirmar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
+                </div>
+            }
+        >
+            <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
+        </Dialog>
 
 
-      <DataTable
-      ref={dt}
-        value={data}
-        paginator
-        rows={15}
-        rowsPerPageOptions={[10, 15, 25, 50]}
-        removableSort
-        filterDisplay="row"
-        scrollable
-        scrollHeight="800px"
-      >
-        <Column
-          body={renderCheckbox}
-          header="Seleccionar"
-          className="columna-ancho-min"
-        />
-        <Column
-          field="fecha"
-          header="Fecha"
-          sortable
-          filter
-          filterPlaceholder="Buscar por fecha"
-          filterMatchMode="contains"
-          dataType="date"
-          showFilterMenu={false}
-        />
-        <Column
-          field="descripcion_completa"
-          header="Descripción"
-          sortable
-          filter
-          filterPlaceholder="Buscar por descripción"
-          filterMatchMode="contains"
-          showFilterMenu={false}
-        />
-        <Column
-          field="estado"
-          header="Estado"
-          sortable
-          filter
-          filterPlaceholder="Buscar por estado"
-          filterMatchMode="contains"
-          showFilterMenu={false}
-        />
-        <Column
-          field="importe"
-          header="Importe"
-          sortable
-          filter
-          filterPlaceholder="Buscar por importe"
-          filterMatchMode="contains"
-          body={formatoMoneda}
-          showFilterMenu={false}
-        />
-        <Column
-          header="Acciones"
-          filter
-        showFilterMenu={false}
-        filterElement={
-          <Button
-            label="Limpiar"
-            onClick={clearFilters}
-            style={{ width: '100%', height: '40px',  padding: '10px'}}
+        <DataTable
+        ref={dt}
+          value={data}
+          paginator
+          rows={15}
+          rowsPerPageOptions={[10, 15, 25, 50]}
+          removableSort
+          filterDisplay="row"
+          scrollable
+          scrollHeight="800px"
+        >
+          <Column
+            body={renderCheckbox}
+            header="Seleccionar"
+            className="columna-ancho-min"
           />
-        }
-          body={(rowData) => (
-            <div className="acciones">
-              <Tooltip title="Ver detalles">
-                <IconButton
-                  color="primary"
-                  aria-label="view-details"
-                  onClick={() => openDialog(rowData)}
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Tooltip>
+          <Column
+            field="fecha"
+            header="Fecha"
+            sortable
+            filter
+            filterPlaceholder="Buscar por fecha"
+            filterMatchMode="contains"
+            dataType="date"
+            showFilterMenu={false}
+          />
+          <Column
+            field="descripcion_completa"
+            header="Descripción"
+            sortable
+            filter
+            filterPlaceholder="Buscar por descripción"
+            filterMatchMode="contains"
+            showFilterMenu={false}
+          />
+          <Column
+            field="estado"
+            header="Estado"
+            sortable
+            filter
+            filterPlaceholder="Buscar por estado"
+            filterMatchMode="contains"
+            showFilterMenu={false}
+          />
+          <Column
+            field="importe"
+            header="Importe"
+            sortable
+            filter
+            filterPlaceholder="Buscar por importe"
+            filterMatchMode="contains"
+            body={formatoMoneda}
+            showFilterMenu={false}
+          />
+          <Column
+            header="Acciones"
+            filter
+          showFilterMenu={false}
+          filterElement={
+            <Button
+              label="Limpiar"
+              onClick={clearFilters}
+              style={{ width: '100%', height: '40px',  padding: '10px'}}
+            />
+          }
+            body={(rowData) => (
+              <div className="acciones">
+                <Tooltip title="Ver detalles">
+                  <IconButton
+                    color="primary"
+                    aria-label="view-details"
+                    onClick={() => openDialog(rowData)}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            )}
+          />
+        </DataTable>
+
+        <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '600px' }} onHide={closeDialog}>
+          {selectedRowData && (
+            <div className="p-fluid details-dialog">
+              <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
+              <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo_movimiento}</p></Card>
+              <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
+              <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+              <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
             </div>
           )}
-        />
-      </DataTable>
-
-      <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '600px' }} onHide={closeDialog}>
-        {selectedRowData && (
-          <div className="p-fluid details-dialog">
-            <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
-            <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo_movimiento}</p></Card>
-            <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
-            <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-            <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
-          </div>
-        )}
-      </Dialog>
-    </div>
+        </Dialog>
+      </div>
+    </>
   );
 }
 

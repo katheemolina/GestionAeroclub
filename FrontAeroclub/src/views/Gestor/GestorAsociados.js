@@ -125,7 +125,7 @@ const GestorAsociados  = () => {
                 IdRol: role.id_rol,
                 Estado: selectedRoles.includes(role.id_rol) ? 1 : 0 // 1 si está seleccionado, 0 si no
             }));
-            console.log(selectedUser,updatedRoles);
+            //console.log(selectedUser,updatedRoles);
             // Llamar a la función que realiza la solicitud HTTP
             await actualizarRoles(selectedUser, updatedRoles); 
     

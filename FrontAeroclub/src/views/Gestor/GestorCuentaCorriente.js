@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Button } from 'primereact/button';
 
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import PrintIcon from '@mui/icons-material/Print';
 import jsPDF from "jspdf";
@@ -488,6 +489,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
 
   return (
     <div className="background">
+      <ToastContainer />
       <div className="titulo-btn">
         <header className="header">
           <h1>Cuenta Corriente del Aeroclub</h1>

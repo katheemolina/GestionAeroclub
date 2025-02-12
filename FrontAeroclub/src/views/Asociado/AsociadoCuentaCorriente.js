@@ -15,6 +15,8 @@ import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
 
 import PrintIcon from '@mui/icons-material/Print';
 import jsPDF from "jspdf";
@@ -538,132 +540,136 @@ function AsociadoCuentaCorriente() {
   }
 
   return (
-    <div className="background">
-      <div className="titulo-btn">
-        <header className="header">
-          <h1>Cuenta Corriente</h1>
-        </header>
-      </div>
-      <KpiBox data={kpiData} />
-      
+    <>
+      <ToastContainer />
+      <div className="background">
+        <div className="titulo-btn">
+          <header className="header">
+            <h1>Cuenta Corriente</h1>
+          </header>
+        </div>
+        <KpiBox data={kpiData} />
+        
 
-      <DataTable ref={dt} value={mergedData} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
-        <Column
-          field="fecha"
-          header="Fecha"
-          sortable
-          filter
-          filterPlaceholder="Buscar por fecha"
-          filterMatchMode="contains"
-          dataType="date"
-          showFilterMenu={false}
-          filterType='date'
-          body={plantillaFecha} // Aplica la plantilla personalizada para mostrar el formato deseado
-        />
-        <Column field="descripcion_completa" header="Descripción" sortable filter filterPlaceholder="Buscar por descripción" filterMatchMode="contains" showFilterMenu={false} />
-        <Column field="importe" header="Importe" sortable body={(rowData) => formatoMoneda(rowData.importe)} filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} />
-        <Column
-          header="Acciones"
-          filter
-          showFilterMenu={false}
-          filterElement={
-            <Button
-              label="Limpiar"
-              onClick={clearFilters}
-              style={{ width: '100%', height: '40px', padding: '10px'}}
-            />
-          }
-          body={(rowData) => (
-            <div className="acciones">
-            <Tooltip>
-              <IconButton
-                color="primary"
-                title="Ver detalles"
-                aria-label="view-details"
-                onClick={() => openDialog(rowData)}
-              >
-                <SearchIcon />
-              </IconButton>
-
-              { /*- rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
+        <DataTable ref={dt} value={mergedData} paginator rows={15} rowsPerPageOptions={[10, 15, 25, 50]} scrollable scrollHeight="800px" filterDisplay="row">
+          <Column
+            field="fecha"
+            header="Fecha"
+            sortable
+            filter
+            filterPlaceholder="Buscar por fecha"
+            filterMatchMode="contains"
+            dataType="date"
+            showFilterMenu={false}
+            filterType='date'
+            body={plantillaFecha} // Aplica la plantilla personalizada para mostrar el formato deseado
+          />
+          <Column field="descripcion_completa" header="Descripción" sortable filter filterPlaceholder="Buscar por descripción" filterMatchMode="contains" showFilterMenu={false} />
+          <Column field="importe" header="Importe" sortable body={(rowData) => formatoMoneda(rowData.importe)} filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} />
+          <Column
+            header="Acciones"
+            filter
+            showFilterMenu={false}
+            filterElement={
+              <Button
+                label="Limpiar"
+                onClick={clearFilters}
+                style={{ width: '100%', height: '40px', padding: '10px'}}
+              />
+            }
+            body={(rowData) => (
+              <div className="acciones">
+              <Tooltip>
                 <IconButton
                   color="primary"
-                  title="Ver Recibo"
-                  onClick={() => handlePreviewAndPrint(rowData)}
+                  title="Ver detalles"
+                  aria-label="view-details"
+                  onClick={() => openDialog(rowData)}
                 >
-                  <PrintIcon />
+                  <SearchIcon />
                 </IconButton>
-              ) -*/ }
 
-              {rowData.descripcion_completa !== null  && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
-                <IconButton
-                  color="primary"
-                  title="Ver Recibo"
-                  onClick={() => handlePreviewAndPrint(rowData)}
-                >
-                  <PrintIcon />
-                </IconButton>
-              )}
+                { /*- rowData.tipo !== null && rowData.tipo !== "pago" && ( // Condición para mostrar el ícono solo si tipo no es null y es "pago"
+                  <IconButton
+                    color="primary"
+                    title="Ver Recibo"
+                    onClick={() => handlePreviewAndPrint(rowData)}
+                  >
+                    <PrintIcon />
+                  </IconButton>
+
+                ) -*/ }
+
+                {rowData.descripcion_completa !== null  && ( // && rowData.descripcion_completa !== ("Liquidacion de pago de movimientos.")
+                  <IconButton
+                    color="primary"
+                    title="Ver Recibo"
+                    onClick={() => handlePreviewAndPrint(rowData)}
+                  >
+                    <PrintIcon />
+                  </IconButton>
+                )}
 
 
 
-            </Tooltip>
-          </div>
-          )}
-        />
-      </DataTable>
-
-      <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '450px' }} onHide={closeDialog}>
-        {selectedRowData && (
-          <div>
-            <div className="p-fluid details-dialog">
-              {/*<Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>*/}
-              <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-              <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
-              <Card>  <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p></Card>
-              <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
-              <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones}</p></Card>
-              {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
-                <Card key={index}>
-                  {data.tipo !== null && (
-                    <p><strong>Tipo:</strong> {data.tipo}</p>
-                  )}
-                  {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
-                    <div>
-                      <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
-                      {data.cantidad !== null && (
-                        <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
-                      )}
-                      {data.estado !== null && (
-                        <p><strong>Estado:</strong> {data.estado}</p>
-                      )}
-                      {data.importe !== null && (
-                        <p><strong>Importe:</strong> {data.importe_mov}</p>
-                      )}
-                      {data.observaciones !== null && (
-                        <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
-                      )}
-                      {/*data.observaciones !== null && (
-                        <p><strong>Observaciones:</strong> {data.observaciones}</p>
-                      )*/}
-                      {data.instruccion !== null && (
-                        <p><strong>Instrucción:</strong> {data.instruccion}</p>
-                      )}
-                      {data.instructor !== null && (
-                        <p><strong>Instructor:</strong> {data.instructor}</p>
-                      )}
-                      {data.created_at !== null && (
-                        <p><strong>Fecha del Movimiento:</strong> {formatearFecha(data.fecha_creacion)}</p>
-                      )}
-                    </div>
-                  )}
-                </Card>
-              ))}
+              </Tooltip>
             </div>
-          </div>
-        )}
-      </Dialog>
-    </div>
+            )}
+          />
+        </DataTable>
+
+        <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '450px' }} onHide={closeDialog}>
+          {selectedRowData && (
+            <div>
+              <div className="p-fluid details-dialog">
+                {/*<Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>*/}
+                <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+                <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
+                <Card>  <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p></Card>
+                <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
+                <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones}</p></Card>
+                {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
+                  <Card key={index}>
+                    {data.tipo !== null && (
+                      <p><strong>Tipo:</strong> {data.tipo}</p>
+                    )}
+                    {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
+                      <div>
+                        <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
+                        {data.cantidad !== null && (
+                          <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
+                        )}
+                        {data.estado !== null && (
+                          <p><strong>Estado:</strong> {data.estado}</p>
+                        )}
+                        {data.importe !== null && (
+                          <p><strong>Importe:</strong> {data.importe_mov}</p>
+                        )}
+                        {data.observaciones !== null && (
+                          <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
+                        )}
+                        {/*data.observaciones !== null && (
+                          <p><strong>Observaciones:</strong> {data.observaciones}</p>
+                        )*/}
+                        {data.instruccion !== null && (
+                          <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                        )}
+                        {data.instructor !== null && (
+                          <p><strong>Instructor:</strong> {data.instructor}</p>
+                        )}
+                        {data.created_at !== null && (
+                          <p><strong>Fecha del Movimiento:</strong> {formatearFecha(data.fecha_creacion)}</p>
+                        )}
+                      </div>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+        </Dialog>
+      </div>
+    </>
   );
 }
 

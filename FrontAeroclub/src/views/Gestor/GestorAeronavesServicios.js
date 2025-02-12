@@ -88,7 +88,7 @@ const GestorAeronavesServicios = () => {
             // Obtener el listado de aeronaves y buscar la correspondiente
             obtenerAeronaves().then((aeronaves) => {
                 const aeronaveSeleccionada = aeronaves.find(a => a.id_aeronave === id_aeronave);
-                console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
+                //console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
                 if (aeronaveSeleccionada) {
                     setAeronave(aeronaveSeleccionada); // Establecer la aeronave seleccionada en el estado
                     // Calcular las horas voladas: horas_historicas_voladas + horas_vuelo_aeronave
@@ -103,7 +103,7 @@ const GestorAeronavesServicios = () => {
                     // Obtener los servicios de la aeronave seleccionada
                     obtenerServicios(id_aeronave).then((serviciosData) => {
                         setServicios(serviciosData);
-                        console.log("Servicios Data:",serviciosData);
+                        //console.log("Servicios Data:",serviciosData);
                         setLoading(false); // Cuando los servicios se hayan cargado, cambia el estado de carga
                     }).catch((error) => {
                         setLoading(false);
@@ -113,7 +113,7 @@ const GestorAeronavesServicios = () => {
                     toast.error("No se encontró la aeronave con el ID especificado.");
                 }
             }).catch((error) => {
-                console.log("Hubo un error al cargar las aeronaves.");
+                toast.error("Hubo un error al cargar las aeronaves.");
             });
         }
     }, [id_aeronave, triggerEffect]);

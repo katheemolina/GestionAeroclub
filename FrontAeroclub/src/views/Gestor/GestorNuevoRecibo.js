@@ -107,7 +107,7 @@ function FormularioGestorRecibos() {
     const fetchTarifasCombustible = async () => {
         try {
             const data = await obtenerTarifasCombustible();
-            console.log("Tarifas combustible:",data)
+            //console.log("Tarifas combustible:",data)
             setTarifasCombustible(data.data);
         } catch (error) {
             //console.error('Error fetching tarifas:', error);

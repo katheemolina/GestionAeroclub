@@ -48,7 +48,7 @@ function Dashboard() {
 
         //console.log("Saldo Response:", saldoResponse); // Aquí se registra el saldo.
 
-        console.log("vuelos response: ", vuelosResponse)
+        //console.log("vuelos response: ", vuelosResponse)
 
 
         const usuario = usuarioResponse?.[0] || {};
