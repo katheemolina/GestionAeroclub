@@ -321,7 +321,7 @@ const handleSave = async () => {
             <header className="header">
                 <h1>Aeronaves</h1>
             </header>
-            <Button className="nuevo" label="Agregar Aeronave" onClick={handleAdd} />
+            <Button className="nuevo gestor-btn-confirmar" label="Agregar Aeronave" onClick={handleAdd} />
             <DataTable
                 ref={dt}
                 filterDisplay='row' 
@@ -429,7 +429,7 @@ const handleSave = async () => {
                 footer={
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', paddingTop:'1rem', borderTop: '1px solid #DDD'}}> 
                     <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary gestor-btn-cancelar" onClick={() => setAeronaveDialog(false)} />
-                    <Button label="Guardar" icon="pi pi-check" id='btn-guardar' style={{marginTop:'0'}} className='gestor-btn-confirmar' onClick={handleSave} />
+                    <Button label="Guardar" icon="pi pi-check"  style={{marginTop:'0'}} className='gestor-btn-confirmar' onClick={handleSave} />
                     </div>
                 }
                 >

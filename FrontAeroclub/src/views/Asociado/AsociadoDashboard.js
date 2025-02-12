@@ -160,15 +160,17 @@ function Dashboard() {
       </section>
 
       <section className="licencias-section">
-        <h3>Licencias</h3>
+        <h3 style={{paddingBottom: '14px', borderBottom: '1px solid #DDD'}}>
+          Licencias
+        </h3>
         <ul>
           {userData.licencias.map((licencia, index) => (
             <li key={index}>{`${licencia.codigo} - ${licencia.descripcion}`}</li>
           ))}
         </ul>
-        <div className="button-container">
+        <div style={{paddingTop: '14px', borderTop: '1px solid #DDD'}}>
           <Link to={`/${rol}/perfil`} style={{ textDecoration: 'none', flex: 1 }}>
-            <button type="submit">Editar licencias</button>
+            <button className="gestor-btn-confirmar p-button" type="submit"><span className="p-button-label">Editar licencias</span></button>
           </Link>
         </div>
       </section>

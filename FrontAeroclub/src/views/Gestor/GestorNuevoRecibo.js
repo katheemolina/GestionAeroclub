@@ -715,13 +715,13 @@ function FormularioGestorRecibos() {
                 {tipoReciboSeleccionado === 'Combustible' && renderFormularioCombustible()}
                 <div className="buttons">
                     <button
-                        className="generate-btn"
+                        className="gestor-btn-confirmar p-button p-component"
                         onClick={handleGenerar}
                         disabled={loading} // Deshabilitar cuando loading es true
                     >
                         {loading ? 'Generando...' : 'Generar'}
                     </button>
-                    <button className="cancel-btn" onClick={handleCancelar}>
+                    <button className="p-button p-component" onClick={handleCancelar}>
                         Cancelar
                     </button>
                 </div>

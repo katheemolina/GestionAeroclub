@@ -479,7 +479,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       <header className="header">
         <h1>Recibos</h1>
       </header>
-      <Button className="nuevo" label="Agregar Recibo" onClick={reciboAdd} />
+      <Button className="nuevo gestor-btn-confirmar" label="Agregar Recibo" onClick={reciboAdd} />
       <Button
         className="enviar"
         label="Generar Pago de Recibo/os"

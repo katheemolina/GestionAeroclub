@@ -191,6 +191,7 @@ const AeronaveCrud = () => {
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                         <Tooltip title="Editar estado de la aeronave">
                             <IconButton color="primary" onClick={() => openEstadoDialog(rowData)}>
                                 <EditIcon />
@@ -208,6 +209,7 @@ const AeronaveCrud = () => {
                             <SearchIcon />
                         </IconButton>
                         </Tooltip>
+                        </div>
 
                     </div>
                 )}></Column>
@@ -217,11 +219,11 @@ const AeronaveCrud = () => {
                 header="Confirmación"
                 visible={estadoDialog}
                 onHide={() => setEstadoDialog(false)}
-                style={{ width: '400px' }}
+                style={{ width: '450px' }}
                 footer={
-                    <div>
-                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setEstadoDialog(false)} className="p-button-text gestor-btn-cancelar" />
-                        <Button label="Confirmar" icon="pi pi-check" onClick={handleCambiarEstado} className="p-button-danger gestor-btn-confirmar" />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setEstadoDialog(false)} className="gestor-btn-cancelar" />
+                        <Button label="Confirmar" icon="pi pi-check" onClick={handleCambiarEstado} className="gestor-btn-confirmar" />
                     </div>
                 } > <p>¿Está seguro de que desea cambiar el estado de esta aeronave?</p>
             </Dialog>
@@ -233,18 +235,18 @@ const AeronaveCrud = () => {
                 onHide={closeDeleteDialog}
                 style={{ width: '400px' }}
                 footer={
-                    <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
                         <Button 
                             label="Cancelar" 
                             icon="pi pi-times" 
                             onClick={closeDeleteDialog} 
-                            className="p-button-text gestor-btn-cancelar" 
+                            className="gestor-btn-cancelar" 
                         />
                         <Button 
                             label="Eliminar" 
                             icon="pi pi-check" 
                             onClick={handleDeleteAeronave} 
-                            className="p-button-danger gestor-btn-confirmar" 
+                            className="gestor-btn-confirmar" 
                         />
                     </div>
                 }

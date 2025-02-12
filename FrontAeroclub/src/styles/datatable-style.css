@@ -7,7 +7,7 @@
 }
 
 .p-datatable-thead{
-    background-color: rgba(169, 70, 70, 1);
+    background-color: var(--brand-color);
     color: white;
     text-align: center;
 }
@@ -41,7 +41,7 @@
 .p-paginator-next,
 .p-paginator-last {
   margin-right: 8px; /* Adjust this value as needed */
-  background-color: rgba(169, 70, 70, 1);
+  background-color: var(--brand-color);
   cursor: pointer;
   height: 2rem;
   width: 2rem;
@@ -75,7 +75,7 @@
     border-radius: 5px;
     text-align: center;
     margin-bottom: 3px;
-    background-color: rgba(169, 70, 70, 1);
+    background-color: var(--brand-color);
     color: white;
 }
 
@@ -115,7 +115,7 @@
     border-radius: 5px;
     text-align: center;
     margin-bottom: 3px;
-    background-color: rgba(169, 70, 70, 1);
+    background-color: var(--brand-color);
     color: white;
 }
 
@@ -180,11 +180,6 @@
 
 .p-dialog-content .p-d-flex .p-button{
     margin-right: 10px;
-}
-
-#btn-guardar{
-    background-color: #4CAF50;
-    margin-top: 10px;
 }
 
 .p-dialog-header-icon{

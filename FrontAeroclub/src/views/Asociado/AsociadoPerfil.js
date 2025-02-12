@@ -381,8 +381,8 @@ const formatFecha = (rowData) => {
             />
           </label>
         </div>
-        <div className="button-container">
-          <button className="guardar" type="submit">Guardar Cambios</button>
+        <div style={{width:'100%', display:'flex', justifyContent:'center', marginTop: '20px'}}>
+          <button className=" gestor-btn-confirmar p-component" type="submit"><span className='p-button-label'>Guardar Cambios</span></button>
         </div>
       </form>
 
@@ -413,7 +413,7 @@ const formatFecha = (rowData) => {
           ></Column>
           {/* <Column header="Estado" body={calcularEstadoLicencia} /> */}
         </DataTable>
-        <Button className="actualizar" label="Agregar Licencia" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
+        <Button className="gestor-btn-confirmar p-component" label="Agregar Licencia" icon="pi pi-refresh" id="actualizar-licencias" onClick={() => setLicenciaDialog(true)} />
       </section>
       
       <Dialog

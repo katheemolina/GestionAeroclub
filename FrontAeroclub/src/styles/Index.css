@@ -24,3 +24,21 @@
     padding: 20px;
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);
 }
+
+:root {
+    --brand-color: rgb(169, 70, 70);
+    --brand-color-emphasis: rgb(161, 43, 43);
+    --brand-color-light: rgb(225, 179, 179);
+    --brand-color-dark: rgb(134, 30, 30);
+    --action-positive: rgb(88, 187, 92);
+    --action-positive-hover: rgb(65, 149, 68);
+  } 
+/* 
+  :root {
+    --brand-color: rgb(38, 56, 116);
+    --brand-color-emphasis: rgb(25, 52, 138);
+    --brand-color-light: rgb(192, 201, 231);
+    --brand-color-dark: rgb(18, 32, 78);
+    --action-positive: rgb(255, 127, 41);
+    --action-positive-hover: rgb(233, 76, 29);
+  } */

@@ -243,7 +243,7 @@ const dateHastaBodyTemplate = (rowData) => {
             <header className="header">
                 <h1>Tarifas</h1>
             </header>
-            <Button className="nuevo" label="Agregar Tarifa" onClick={handleAdd} />
+            <Button className="nuevo gestor-btn-confirmar" label="Agregar Tarifa" onClick={handleAdd} />
             <DataTable 
                 ref={dt}
                 filterDisplay='row'

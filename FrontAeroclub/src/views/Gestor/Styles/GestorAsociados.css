@@ -7,11 +7,11 @@
 }
 
 .gestor-btn-confirmar{
-    background-color: #58BB5C;
+    background-color: var(--action-positive);
 }
 
 .gestor-btn-confirmar:hover{
-    background-color: #419544;
+    background-color: var(--action-positive-hover);
 }
 
 .modal-confirmar-habilitacion .p-dialog-content{

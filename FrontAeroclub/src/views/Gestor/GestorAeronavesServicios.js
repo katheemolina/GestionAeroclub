@@ -173,7 +173,7 @@ const GestorAeronavesServicios = () => {
             ) : (
                 <div className="datatable-container-servicios">
                     <Button 
-                className="nuevo" 
+                className="nuevo gestor-btn-confirmar" 
                 label="Agregar Servicio" 
                 onClick={() => setMostrarDialog(true)} 
             />

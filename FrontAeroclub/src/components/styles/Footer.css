@@ -41,7 +41,7 @@
   }
   
   .footer nav ul li a:hover {
-    color: rgba(169, 70, 70, 1);
+    color: var(--brand-color);
   }
   
   

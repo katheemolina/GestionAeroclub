@@ -24,8 +24,8 @@
   }
   
   .dropdown-header:hover {
-    border-color: #ad3333; /* Color del borde cuando se pasa el mouse */
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+    border-color: var(--brand-color); /* Color del borde cuando se pasa el mouse */
+    box-shadow: 0 0 5px var(--brand-color-dark);
   }
   
   /* Crear la flecha hacia abajo */
@@ -62,7 +62,7 @@
   }
   
   .dropdown-item:hover {
-    background-color: rgb(176, 72, 72); /* Color de fondo en hover */
+    background-color: var(--brand-color); /* Color de fondo en hover */
     color: #fff; /* Texto blanco */
   }
   

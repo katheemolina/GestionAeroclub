@@ -53,7 +53,7 @@
   
   .progress-bar {
     height: 8px;
-    background-color: #973131;
+    background-color: var(--brand-color);
     border-radius: 4px;
     position: relative;
   }

@@ -82,13 +82,16 @@ function AdministradorRecibos({ idUsuario = 0 }) {
           header="Acciones"
           className="columna-ancho-min"
           body={(rowData) => (
-            <IconButton
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <IconButton
               color="primary"
               title="Eliminar recibo"
               onClick={() => handleAnularRecibo(rowData.numero_recibo)}
-            >
-              <DeleteIcon />
-            </IconButton>
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>
+            
           )}
         />
       </DataTable>

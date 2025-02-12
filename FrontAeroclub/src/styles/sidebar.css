@@ -22,7 +22,7 @@
     justify-content: space-between; /* Espacio entre el nombre y la flecha */
     align-items: center; /* Alineación vertical */
     padding: 1em; /* Espaciado interno */
-    background-color: rgba(169, 70, 70, 1); /* Color de fondo de la cabecera */
+    background-color: var(--brand-color); /* Color de fondo de la cabecera */
 }
 
 /* Información del usuario y el rol en la cabecera */
@@ -96,13 +96,13 @@
 
 /* Estilo al pasar el ratón sobre un enlace */
 .sidebar-navbar-link:hover {
-    color: rgba(169, 70, 70, 1); 
-    background-color: rgb(225, 179, 179); /* Fondo rojo cuando se pasa el ratón */
+    color: var(--brand-color); 
+    background-color: var(--brand-color-light); /* Fondo rojo cuando se pasa el ratón */
     transform: scale(1.05); /* Agranda el botón un 5% */
 }
 
 .sidebar-navbar-link.active {
-    background-color: rgba(169, 70, 70, 1); /* Color de fondo cuando el botón está activo */
+    background-color: var(--brand-color); /* Color de fondo cuando el botón está activo */
     color: white; /* Color del texto en el botón activo */
     font-weight: bold; /* Opcional: para resaltar más el botón */
 }

@@ -86,8 +86,8 @@ const AdministradorConfiguraciones = () => {
       </header>
       <div className='contenedor-para-centrar'>
         <form className="edit-form" onSubmit={handleSubmit}>
-          <h3>Parametros para adaptacion de aeronave:</h3>
-          <div className="form-row">
+          <h3 style={{paddingBottom:'10px', borderBottom:'1px solid #DDD'}}>Parametros para adaptacion de aeronave:</h3>
+          <div className="form-row" style={{margin: '10px 0px'}}>
             <label>
               Horas de vuelo en el ultimo mes:
               <input
@@ -110,7 +110,7 @@ const AdministradorConfiguraciones = () => {
               />
             </label>
           </div>
-          <div className="form-row">
+          <div className="form-row" style={{margin: '10px 0px'}}>
             <label>
               Días para Vencimiento CMA:
               <input
@@ -122,8 +122,8 @@ const AdministradorConfiguraciones = () => {
               />
             </label>
           </div>
-          <h3>Parámetros Iniciales:</h3>
-          <div className="form-row">
+          <h3 style={{paddingBottom:'10px', borderBottom:'1px solid #DDD', marginTop:'20px'}} >Parámetros Iniciales:</h3>
+          <div className="form-row" style={{margin: '10px 0px'}}>
           <label>
             Saldo Inicial:
             <input
@@ -146,8 +146,8 @@ const AdministradorConfiguraciones = () => {
               />
             </label>
           </div>
-          <div className="button-container">
-            <button className="guardar" type="submit">Guardar Cambios</button>
+          <div style={{width:'100%', display:'flex', justifyContent:'center', marginTop: '20px'}}>
+            <button className="gestor-btn-confirmar p-component" type="submit"><span className='p-button-label'>Guardar Cambios</span></button>
           </div>
         </form>
       </div>

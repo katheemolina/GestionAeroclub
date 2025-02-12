@@ -8,10 +8,11 @@ import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Tooltip from '@mui/material/Tooltip';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+// import Dialog from '@mui/material/Dialog';
+// import DialogActions from '@mui/material/DialogActions';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogTitle from '@mui/material/DialogTitle';
+import { Dialog } from 'primereact/dialog';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { ToastContainer, toast } from 'react-toastify';
@@ -50,10 +51,6 @@ const GestorAsociados = () => {
         setSelectedInstructor(instructor);
         setTarifaChecked(instructor.tarifa_especial === 1);
         setDialogOpen(true);
-    };
-
-    const handleCloseDialog = () => {
-        setDialogOpen(false);
     };
 
     const handleSaveTarifa = async () => {
@@ -146,27 +143,25 @@ const GestorAsociados = () => {
             </DataTable>
 
             <Dialog
-                open={dialogOpen}
-                onClose={handleCloseDialog}
-                PaperProps={{
-                    style: { width: "300px", height: "200px" }, // Cambia el tamaño según tus necesidades
-                }}
+                visible={dialogOpen}
+                onHide={() => setDialogOpen(false)}
+                header="Modificar Tarifa Especial"
+                style={{ width: '450px'}}
+                footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                    <Button onClick={() => setDialogOpen(false)} label="Cancelar"/>
+                    <Button
+                        onClick={handleSaveTarifa}
+                        label="Guardar"
+                        className='gestor-btn-confirmar'
+                    />
+                </div>
+                }
             >
-                <DialogTitle>Modificar Tarifa Especial</DialogTitle>
-                <DialogContent>
                     <FormControlLabel
                         control={<Checkbox checked={tarifaChecked} onChange={(e) => setTarifaChecked(e.target.checked)} />}
                         label="Aplicar tarifa especial"
                     />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} label="Cancelar" />
-                    <Button
-                        onClick={handleSaveTarifa}
-                        label="Guardar"
-                        style={{ backgroundColor: "green", color: "white" }}
-                    />
-                </DialogActions>
             </Dialog>
 
         </div>
