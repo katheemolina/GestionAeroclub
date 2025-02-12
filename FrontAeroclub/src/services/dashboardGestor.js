@@ -44,3 +44,11 @@ export const obtenerHorasPorDiaAeronaves = async () => {
     }
     return response.json();
 };
+
+export const obtenerTopDeudores = async () => {
+    const response = await fetch(`${API_URL}/obtenerTopDeudores`);
+    if (!response.ok) {
+        throw new Error('Error al obtener la informacion de los deudores');
+    }
+    return response.json();
+};
