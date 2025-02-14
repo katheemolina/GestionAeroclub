@@ -16,7 +16,6 @@ function Bienvenida() {
 
   
   const [rol, setRol] = useState(() => localStorage.getItem("role")?.toLowerCase());
-
   
   useEffect(() => {
     const verificarCambioDeRol = () => {
@@ -25,11 +24,7 @@ function Bienvenida() {
         setRol(nuevoRol);
       }
     };
-
-    
     window.addEventListener("storage", verificarCambioDeRol);
-
-    
     const interval = setInterval(verificarCambioDeRol, 500);
 
     return () => {
@@ -44,7 +39,7 @@ function Bienvenida() {
         const usuarioResponse = await obtenerDatosDelUsuario(usuarioId);
         const usuarioData = usuarioResponse[0];
         setUsuario(usuarioData);
-
+        
         if (!usuarioData.dni && (rol === "asociado" || rol === "instructor")) {
           setMostrarDialogo(true);
         } else {
