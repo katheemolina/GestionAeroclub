@@ -9,11 +9,8 @@ export default function UsuarioDeshabilitado() {
       <div className="disabled-container">
         <h1 className="disabled-title">Usuario Deshabilitado</h1>
         <p className="disabled-message">
-          Lo sentimos, su cuenta de usuario está actualmente deshabilitada. Por favor, contacte con un administrador para obtener ayuda.
+        Por favor, contáctese con algún integrante de la Comisión Directiva para obtener ayuda.
         </p>
-        <a href="mailto:admin@example.com" className="disabled-button">
-          Contactar Administrador
-        </a>
         <Boton
              estilos={`disabled-button `}
              texto={'Salir'}
