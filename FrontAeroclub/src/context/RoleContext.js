@@ -5,7 +5,7 @@ import { obtenerRolPorIdUsuario } from '../services/usuariosApi';
 const RoleContext = createContext();
 
 export const RoleProvider = ({ children }) => {
-  const [role, setRole] = useState(localStorage.getItem('role'));
+  const [role, setRole] = useState(localStorage.getItem('role') || 'undefined');
   const { usuarioId } = useUser();
 
   useEffect(() => {
