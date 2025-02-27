@@ -193,6 +193,7 @@ const AeronaveCrud = () => {
                         <Card> 
                             <p><strong>Intervalo para inspección:</strong> {selectedRowData.intervalo_para_inspeccion}</p>
                             <p><strong>Último service:</strong> {selectedRowData.ultimo_servicio}</p>
+                            <p><strong>Fecha de inspeccion Anual:</strong> {/*{selectedRowData.fecha_inspeccion_anual} Comentado hasta que este el SP*/}</p>
                         </Card>
                         <Card> 
                             <p><strong>Aseguradora:</strong> {selectedRowData.aseguradora}</p>

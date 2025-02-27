@@ -539,6 +539,17 @@ const handleSave = async () => {
                                 placeholder="Horas para inspección"
                             />
                         </div>
+
+                        <div className="p-field">
+                            <label htmlFor="intervalo_inspeccion">Fecha Inspeccion anual</label>
+                            <InputText
+                            id="fecha_inspeccion_anual"
+                            type="date"
+                            //value={aeronaveData.fecha_adquisicion} -> AGREGAR DATO POR BASE
+                            //onChange={(e) => setAeronaveData({ ...aeronaveData, fecha_inspeccion_anual: e.target.value })}
+                            placeholder="Fecha Inspeccion anual"
+                        />
+                        </div>
                         
                         <div className="p-field">
                             <label htmlFor="ultimo_servicio">Último Servicio</label>
@@ -717,6 +728,7 @@ const handleSave = async () => {
                         <Card> 
                             <p><strong>Intervalo para inspección:</strong> {selectedRowData.intervalo_para_inspeccion}</p>
                             <p><strong>Último service:</strong> {selectedRowData.ultimo_servicio}</p>
+                            <p><strong>Fecha de inspeccion Anual:</strong> {/*{selectedRowData.fecha_inspeccion_anual} Comentado hasta que este el SP*/}</p>
                         </Card>
                         
                         <Card> 
