@@ -51,7 +51,7 @@ const TarifaCrud = () => {
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
-            //console.log("Obtener Tarifas:",data)
+            console.log("Obtener Tarifas:",data)
             setTarifas(data.data);
         } catch (error) {
             console.error('Error fetching tarifas:', error);
@@ -182,8 +182,9 @@ const TarifaCrud = () => {
 // Formatear la fecha para evitar repetición de código
 const formatDate = (date) => {
     if (!date) return ''; // Manejar valores nulos o indefinidos
+    const fecha = new Date(date + 'T00:00:00'); // Asegurar que se tome en local sin desfase horario
     const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(date).toLocaleDateString('es-ES', opciones);
+    return fecha.toLocaleDateString('es-ES', opciones);
 };
 
 // Template para la columna "Fecha Vigencia Desde"
@@ -264,7 +265,7 @@ const dateHastaBodyTemplate = (rowData) => {
                       )
                     }></Column>
                 <Column field="importe" header="Importe" body={amountBodyTemplate} filterPlaceholder='Buscar por Importe' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
-                <Column field="importe_por_instruccion" header="Importe por instruccion" body={importeInstruccionBodyTemplate} filterPlaceholder='Buscar por Importe' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
+                <Column field="importe_por_instruccion" header="Importe por instrucción" body={importeInstruccionBodyTemplate} filterPlaceholder='Buscar por Importe' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
                 <Column field="AeronavesMatri" header="Aeronaves" filterPlaceholder='Buscar por Aeronave' sorteable filter filterMatchMode='contains' showFilterMenu={false}></Column>
 
                 <Column
