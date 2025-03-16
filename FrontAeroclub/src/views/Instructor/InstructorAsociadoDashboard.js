@@ -98,10 +98,10 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
     <span
       style={{
         fontWeight: "bold",
-        color: rowData.Adaptacion === "Adaptado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+        color: rowData.adaptacion === "Adaptado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
       }}
     >
-      {rowData.Adaptacion}
+      {rowData.adaptacion}
     </span>
   );
 
@@ -155,6 +155,7 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
 
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
+        {console.log(data)} 
         <DataTable 
           value={data} 
           // paginator rows={4} 
@@ -163,11 +164,11 @@ function InstructorAsociadoDashboard({ idUsuario = 1 }) { // Establecer idUsuari
           scrollable
           scrollHeight="800px"
           >
-          <Column field="matricula_aeronave" header="Avión" sortable ></Column>
-          <Column field="fecha_vuelo" header="Último vuelo" sortable ></Column>
-          <Column field="tiempo_vuelo" header="Tiempo" sortable ></Column>
+          <Column field="matricula" header="Avión" sortable ></Column>
+          <Column field="created_at" header="Último vuelo" sortable ></Column>
+          <Column field="tiempo" header="Tiempo" sortable ></Column>
           <Column field="aterrizajes" header="Aterrizajes" sortable></Column>
-          <Column field="Adaptacion" header="Adaptación" body={adaptacionTemplate} sortable></Column>
+          <Column field="adaptacion" header="Adaptación" body={adaptacionTemplate} sortable></Column>
         </DataTable>
 
       </section>
