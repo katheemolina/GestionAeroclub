@@ -24,11 +24,7 @@ export function TopDeudores() {
   return (
     <div className="debtor-card">
       <header className="debtor-card-header">
-<<<<<<< HEAD
         <h2 className="debtor-card-title">Mayores deudores</h2>
-=======
-        <h2 className="debtor-card-title">Mayores Deudores</h2>
->>>>>>> 7a25321f957f6532474930dd80a13f716969bb01
       </header>
       <table className="debtor-table">
         <thead>
