@@ -585,6 +585,10 @@ function FormularioGestorRecibos() {
     const handleGenerar = async () => {
         // Si ya está en proceso, no ejecutar de nuevo
         if (loading) return;
+
+        if (tipoReciboSeleccionado === 'Vuelo' && !validarItinerarios()) {
+            return;
+        }
     
         // Construir el objeto con los datos del formulario
         let reciboData = {};
@@ -689,6 +693,33 @@ function FormularioGestorRecibos() {
             setLoading(false); // Desactivar el estado de carga
         }
     };
+
+
+    const validarItinerarios = () => {
+        if (!itinerarioData || itinerarioData.length === 0) {
+            toast.warning('Debe haber al menos un itinerario.');
+            return false;
+        }
+    
+        for (let i = 0; i < itinerarioData.length; i++) {
+            const { origen, horaSalida, horaLlegada, destino, aterrizajes } = itinerarioData[i];
+    
+            if (!origen || !horaSalida || !horaLlegada || !destino || aterrizajes === '' || aterrizajes < 0) {
+                toast.warning(`Completa todos los datos del vuelo ${i + 1}.`);
+                return false;
+            }
+    
+            // Validar que la hora de salida sea menor a la de llegada
+            //if (horaSalida >= horaLlegada) {
+              //  toast.warning(`La hora de salida debe ser menor a la de llegada en el vuelo ${i + 1}.`);
+              //  return false;
+            //}
+        }
+        
+        return true; // Si todo está correcto
+    };
+    
+
     
     return (
         <div className="background">
@@ -724,6 +755,10 @@ function FormularioGestorRecibos() {
                     >
                         {loading ? 'Generando...' : 'Generar'}
                     </button>
+<<<<<<< HEAD
+=======
+                    
+>>>>>>> 7a25321f957f6532474930dd80a13f716969bb01
                 </div>
             </div>
         </div>
