@@ -755,7 +755,6 @@ function FormularioGestorRecibos() {
                     >
                         {loading ? 'Generando...' : 'Generar'}
                     </button>
-                    
                 </div>
             </div>
         </div>

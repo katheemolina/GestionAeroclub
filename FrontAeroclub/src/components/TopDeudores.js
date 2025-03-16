@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { obtenerTopDeudores } from "../services/dashboardGestor"; // Ajustá la ruta según tu proyecto
 import "./styles/TopDeudores.css";
+import { CleaningServices } from "@mui/icons-material";
 
 export function TopDeudores() {
   const [deudores, setDeudores] = useState([]);
@@ -23,7 +24,7 @@ export function TopDeudores() {
   return (
     <div className="debtor-card">
       <header className="debtor-card-header">
-        <h2 className="debtor-card-title">Mayores Deudores</h2>
+        <h2 className="debtor-card-title">Mayores deudores</h2>
       </header>
       <table className="debtor-table">
         <thead>

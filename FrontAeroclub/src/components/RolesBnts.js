@@ -31,6 +31,14 @@ function BotonesPorRol() {
     }
   }, [usuarioId]);
 
+
+  useEffect(() => {
+    if (rolesDisponibles.length === 1 && !rolActivo) {
+      handleButtonClick(rolesDisponibles[0].descripcion);
+    }
+    
+  }, [rolesDisponibles]);
+
   const handleButtonClick = (rol) => {
     setRole(rol);
     localStorage.setItem('role', rol);
