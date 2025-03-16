@@ -308,7 +308,7 @@ const dateHastaBodyTemplate = (rowData) => {
                         
                 <div className="p-fluid">
                     <div className="p-field">
-                        <label htmlFor="fecha_vigencia">Fecha Vigencia</label>
+                        <label htmlFor="fecha_vigencia">Fecha inicio Vigencia</label>
                         <InputText
                             id="fecha_vigencia"
                             type="date"
@@ -317,7 +317,7 @@ const dateHastaBodyTemplate = (rowData) => {
                         />
                     </div>
                     <div className="p-field">
-                        <label htmlFor="tipo_tarifa">Tipo Tarifa</label>
+                        <label htmlFor="tipo_tarifa">Tipo de Tarifa</label>
                         <Dropdown
                             id="tipo_tarifa"
                             value={tarifaData.tipo_tarifa}
