@@ -544,7 +544,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           header="Importe"
           sortable
           filter
-          filterPlaceholder="Buscar por número"
+          filterPlaceholder="Buscar por importe"
           filterMatchMode="contains"
           body={formatoMoneda}
           showFilterMenu={false}
