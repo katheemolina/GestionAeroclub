@@ -60,8 +60,8 @@ const GestorGenerarCuotasSociales = () => {
         } catch (error) {
             console.error('Error al generar las cuotas sociales:', error);
             setResultado('');  // Limpiar cualquier mensaje de éxito previo
-            setError(error.message || 'Error desconocido');  // Mostrar el error recibido del backend
-            toast.error(error.message); // toast para mostrar error de la base
+            setError('Error al generar las cuotas sociales.');  // Mostrar el error recibido del backend
+            toast.error('Error al generar las cuotas sociales.'); // toast para mostrar error de la base
         } finally {
             setLoading(false); // Desactivar la carga
             
