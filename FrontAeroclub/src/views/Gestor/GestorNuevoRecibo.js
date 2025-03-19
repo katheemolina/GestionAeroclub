@@ -520,8 +520,14 @@ function FormularioGestorRecibos() {
                 {tarifasCombustible && tarifasCombustible.length > 0 ? (
                 <Dropdown value={tarifasCombustibleSeleccionado}
                  onChange={(e) => setTarifasCombustibleSeleccionado(e.value)} 
-                 options={tarifasCombustible} 
-                 optionLabel="importe"
+                 options={tarifasCombustible.map(tarifa => ({
+                    ...tarifa,
+                    importe_fecha: tarifa.importe_fecha.replace(
+                        /\((\d{4})-(\d{2})-(\d{2})\)/, 
+                        (_, año, mes, día) => `(${día}-${mes}-${año})`
+                    )
+                }))} 
+                 optionLabel="importe_fecha"
                  placeholder="Seleciona la tarifa"
                  filter
                  className="w-full md:w-14rem dropdown-generar-recibo" /> ) : (
