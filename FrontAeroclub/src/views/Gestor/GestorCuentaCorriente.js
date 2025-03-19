@@ -18,6 +18,7 @@ import { ToastContainer } from 'react-toastify';
 import PrintIcon from '@mui/icons-material/Print';
 import jsPDF from "jspdf";
 import logo from '../../icon-aeroclub.png';
+import { KpiCards } from "../../components/KpiCards";
 
 
 function GestorCuentaCorriente({ idUsuario = 0 }) {
@@ -30,6 +31,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
   const [detailData, setDetailData] = useState({});
 
   const [dataRecibos, setDataRecibos] = useState([])
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -495,6 +497,10 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
           <h1>Cuenta Corriente del Aeroclub</h1>
         </header>
       </div>
+
+      {/* Sección KPI*/}
+      <KpiCards />
+      {/* Sección KPI*/}
 
       <DataTable
       ref={dt}
