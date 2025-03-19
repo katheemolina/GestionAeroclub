@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { API_URL } from './apiUrl';
 
 export const generarCuotasSociales = async (reciboData) => {
@@ -25,10 +26,10 @@ export const generarCuotasSociales = async (reciboData) => {
         }
 
         // Si la respuesta es exitosa, devolvemos los datos
+        toast.success(`Los datos se han guardado correctamente.`);
         return await response.json();
     } catch (error) {
-        console.error('Error al generar las cuotas sociales:', error.message);
-        // Devolver el error para que pueda ser manejado en el componente
+        toast.error(`Los datos no se han guardado. ${error.message}`);
         throw error;
     }
 };

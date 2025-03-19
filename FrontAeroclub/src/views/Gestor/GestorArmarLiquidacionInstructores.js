@@ -21,7 +21,6 @@ const GestorArmarLiquidacionInstructores = () => {
     const [loading, setLoading] = useState(true);
     const [selectedMovimientos, setSelectedMovimientos] = useState([]);
     const [selectedUsuario, setSelectedUsuario] = useState(null); // Aseguramos que todos los movimientos sean de un mismo usuario
-    const [dialogVisible, setDialogVisible] = useState(false);
     const [selectedRowData, setSelectedRowData] = useState(null);
 
     const idUsuarioEvento = useUser(); // Supongo que este hook devuelve el id del usuario actual.
@@ -186,6 +185,18 @@ const GestorArmarLiquidacionInstructores = () => {
                     body={plantillaFecha}
                 />
 
+                {/* Columna del Instructor */}
+                <Column
+                    field="instructor"
+                    header="Instructor"
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por Instructor"
+                    filterMatchMode="contains"
+                    showFilterMenu={false}
+                    style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                />
+
                 {/* Columna de Descripción */}
                 <Column
                     field="descripcion_completa"
@@ -208,7 +219,7 @@ const GestorArmarLiquidacionInstructores = () => {
                     filterMatchMode="contains"
                     body={formatoMoneda}
                     showFilterMenu={false}
-                    style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}
                 />
 
                 {/* Columna de Acciones */}
@@ -225,32 +236,15 @@ const GestorArmarLiquidacionInstructores = () => {
                     header="Acciones"
                     body={(rowData) => (
                         <div className="acciones">
-                        <Tooltip title="Ver detalles">
-                            <IconButton
-                            color="primary"
-                            aria-label="view-details"
-                            onClick={() => {
-                                // Aquí asegúrate de separar las dos acciones
-                                setSelectedRowData(rowData); // Establece la fila seleccionada
-                                setDialogVisible(true); // Abre el diálogo
-                            }}
-                            >
-                            <SearchIcon />
-                            </IconButton>
-                        </Tooltip>
+             
                         </div>
                     )}
                 />
 
             </DataTable>
 
-            {/* Diálogo de detalles */}
-            <Dialog
-                header="Detalles del Movimiento"
-                visible={dialogVisible}
-                style={{ width: '450px' }}
-                onHide={() => setDialogVisible(false)}
-            >
+
+            
                 {selectedRowData && (
                     <div>
                         <div className="p-fluid details-dialog">
@@ -271,7 +265,7 @@ const GestorArmarLiquidacionInstructores = () => {
                         </div>
                     </div>
                 )}
-            </Dialog>
+
         </div>
     );
 };

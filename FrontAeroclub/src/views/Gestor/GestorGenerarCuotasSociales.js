@@ -19,7 +19,7 @@ const GestorGenerarCuotasSociales = () => {
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [fechaMovimiento, setFechaMovimiento] = useState(new Date().toISOString().split('T')[0]); 
     const [resultado, setResultado] = useState(null);
-    const [error, setError] = useState('');  // Nuevo estado para manejar el error
+    const [errorState, setError] = useState('');  // Nuevo estado para manejar el error
     const { usuarioId } = useUser();
 
     // Opciones de meses
@@ -56,12 +56,10 @@ const GestorGenerarCuotasSociales = () => {
             // Llamamos al backend para generar las cuotas sociales
             const response = await generarCuotasSociales(reciboData);
             setResultado('Cuotas sociales generadas con éxito.');
-            toast.success(resultado)
+            //toast.success(resultado)
         } catch (error) {
-            console.error('Error al generar las cuotas sociales:', error);
             setResultado('');  // Limpiar cualquier mensaje de éxito previo
-            setError('Error al generar las cuotas sociales.');  // Mostrar el error recibido del backend
-            toast.error('Error al generar las cuotas sociales.'); // toast para mostrar error de la base
+            setError(`Los datos no se han guardado. ${error.message}`);  // Mostrar el error recibido del backend
         } finally {
             setLoading(false); // Desactivar la carga
             
