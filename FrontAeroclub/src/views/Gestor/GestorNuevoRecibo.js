@@ -57,7 +57,7 @@ function FormularioGestorRecibos() {
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
-            console.log("Tarifas:", data)
+            // console.log("Tarifas:", data)
             setTarifas(data.data);
         } catch (error) {
             //console.error('Error fetching tarifas:', error);
@@ -107,7 +107,7 @@ function FormularioGestorRecibos() {
     const fetchTarifasCombustible = async () => {
         try {
             const data = await obtenerTarifasCombustible();
-            console.log("Tarifas combustible:",data)
+            // console.log("Tarifas combustible:",data)
             setTarifasCombustible(data.data);
         } catch (error) {
             //console.error('Error fetching tarifas:', error);
@@ -635,7 +635,7 @@ function FormularioGestorRecibos() {
             }
             if (!reciboData.Fecha || !fechaHoraRegex.test(reciboData.Fecha))  {
                 toast.warning('La fecha es inválida. Deah');
-                console.log(reciboData.Fecha);
+                // console.log(reciboData.Fecha);
                 return false;
             }
         } else if (tipoReciboSeleccionado === 'Vuelo') {
