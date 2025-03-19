@@ -40,9 +40,34 @@
     object-fit: cover; /* Evita deformaciones */
     float: right; /* Alinea la imagen a la derecha */
     cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and box-shadow */
 }
 
+.sidebar-header-img:hover{
+    transform: scale(1.1); /* Scale the element by 10% on hover */
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.6); /* Optional: add a shadow to emphasize the growth effect */
+}
 
+.logout-container{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    
+}
+
+.logout-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--brand-color-emphasis);
+    width: 100%;
+}
+
+.logout-button span{
+    height: 24px;
+}
 
 /* Estilo para el separador en la cabecera */
 .divisor-header {

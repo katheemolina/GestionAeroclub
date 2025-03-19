@@ -7,7 +7,9 @@ import Boton from './Button';
 import BotonesPorRol from './RolesBnts';
 import '../styles/sidebar.css';
 import Tooltip from '@mui/material/Tooltip';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PantallaCarga from '../components/PantallaCarga';
+import { Card } from 'primereact/card'
 
 function Sidebar() {
   const { user, PerfilIncompleto  } = useUser();
@@ -84,17 +86,19 @@ function Sidebar() {
             />
           </div>
         </Tooltip>
-        {showLogout && (
-          <div className="logout-button-container">
-            <Boton
-              texto="Cerrar Sesión"
-              estilos="logout-button"
-              logout={true}
-            />
-          </div>
-        )}
-
       </div>
+      {showLogout && (
+      <div className='logout-container'>
+       
+          <Boton
+          icon={<LogoutIcon/>}
+            texto="Cerrar Sesión"
+            estilos="logout-button"
+            logout={true}
+          />
+          
+      </div>
+      )}
        <BotonesPorRol  />
        <div className={`sidebar-navbar`}>
         {enlaces
