@@ -338,12 +338,16 @@ const dateHastaBodyTemplate = (rowData) => {
 </div>
 {tarifaData.tipo_tarifa === 'Vuelo' && (
     <div className="p-field">
-        <label>Importe por Instrucción (15%):</label>
-        <span style={{ display: 'block', padding: '8px', fontWeight: 'bold' }}>
-            ${tarifaData.importe_por_instruccion}
-        </span>
+        <label htmlFor="importe_por_instruccion">Importe por Instrucción (15%):</label>
+        <InputText
+            id="importe_por_instruccion"
+            value={tarifaData.importe_por_instruccion}
+            onChange={(e) => setTarifaData({ ...tarifaData, importe_por_instruccion: e.target.value })}
+            placeholder="Importe por instrucción"
+        />
     </div>
 )}
+
 
                     {tarifaData.tipo_tarifa === 'Vuelo' && (
                         <>
