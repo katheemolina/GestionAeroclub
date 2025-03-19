@@ -21,7 +21,7 @@ function GestorVuelos(){
         try {
             // Obtener vuelos
             const vuelosResponse = await obtenerTodosLosItinerarios();
-            //console.log("Vuelos:", vuelosResponse)
+            console.log("Vuelos:", vuelosResponse)
             setData(vuelosResponse);
             
         } catch (error) {
@@ -50,13 +50,15 @@ function GestorVuelos(){
     // Formatear fecha a DD/MM/AAAA
     const formatearFecha = (fecha) => {
         const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return new Date(fecha).toLocaleDateString('es-ES', opciones);
-      };
-    
-      // Plantilla para mostrar la fecha 
-      const plantillaFecha = (rowData) => {
+        const fechaCorregida = new Date(fecha + "T00:00:00"); // Asegurar que se tome en la zona horaria local
+        return fechaCorregida.toLocaleDateString('es-ES', opciones);
+    };
+
+    // Plantilla para mostrar la fecha 
+    const plantillaFecha = (rowData) => {
         return formatearFecha(rowData.fecha);
-      };
+    };
+
 
     const dt = useRef(null);
     const clearFilters = () => {
@@ -84,7 +86,7 @@ function GestorVuelos(){
             scrollable
             scrollHeight="800px"
             >
-            <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains" dataType="date" filterType='date' showFilterMenu={false} body={plantillaFecha}  ></Column>
+            <Column field="fecha" header="Fecha" sortable filter filterPlaceholder="Buscar por fecha"  filterMatchMode="contains"  filterType='date' showFilterMenu={false} body={plantillaFecha}  ></Column>
             <Column field="matricula" header="Aeronave" sortable filter filterPlaceholder="Busar por aeronave" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="usuario" header="Asociado" sortable filter filterPlaceholder="Buscar por Asociado" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por origen" filterMatchMode="contains" showFilterMenu={false}  ></Column>
@@ -120,7 +122,7 @@ function GestorVuelos(){
                 {selectedRowData && (
                 <div>
                     <div className='p-fluid details-dialog'>
-                        <Card> <p><strong>Fecha:</strong> {selectedRowData.fecha}</p> </Card>
+                        <Card> <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p> </Card>
                         <Card> <p><strong>Aeronave:</strong> {selectedRowData.matricula}</p> </Card>
                         <Card> <p><strong>Asociado:</strong> {selectedRowData.usuario}</p> </Card>
                         <Card><p><strong>Origen:</strong> {selectedRowData.origen}</p> </Card>

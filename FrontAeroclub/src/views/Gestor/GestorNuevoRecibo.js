@@ -57,7 +57,7 @@ function FormularioGestorRecibos() {
     const fetchTarifas = async () => {
         try {
             const data = await obtenerTarifas();
-            //console.log("Tarifas:", data)
+            console.log("Tarifas:", data)
             setTarifas(data.data);
         } catch (error) {
             //console.error('Error fetching tarifas:', error);
@@ -107,7 +107,7 @@ function FormularioGestorRecibos() {
     const fetchTarifasCombustible = async () => {
         try {
             const data = await obtenerTarifasCombustible();
-            //console.log("Tarifas combustible:",data)
+            console.log("Tarifas combustible:",data)
             setTarifasCombustible(data.data);
         } catch (error) {
             //console.error('Error fetching tarifas:', error);
@@ -244,7 +244,13 @@ function FormularioGestorRecibos() {
                 {tarifasFiltradasAeronave && tarifasFiltradasAeronave.length > 0 ? (
                 <Dropdown value={tarifasSeleccionado}
                  onChange={(e) => setTarifasSeleccionado(e.value)} 
-                 options={tarifasFiltradasAeronave} 
+                 options={tarifasFiltradasAeronave.map(tarifa => ({
+                    ...tarifa,
+                    importe_fecha: tarifa.importe_fecha.replace(
+                        /\((\d{4})-(\d{2})-(\d{2})\)/, 
+                        (_, año, mes, día) => `(${día}-${mes}-${año})`
+                    )
+                }))} 
                  optionLabel="importe_fecha"
                  placeholder="Seleciona la tarifa"
                  filter
