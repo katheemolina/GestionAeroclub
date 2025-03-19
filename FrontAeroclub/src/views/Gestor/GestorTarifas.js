@@ -81,11 +81,11 @@ const TarifaCrud = () => {
     // Handle adding or updating tarifa
     const handleSave = async () => {
         try {
-            if(tarifaData.tipo_tarifa === "Combustible"){
-                tarifaData.importe_por_instruccion = "0"
-                tarifaData.aeronaves="null"
+            if (tarifaData.tipo_tarifa === "Combustible") {
+                tarifaData.importe_por_instruccion = "0";
+                tarifaData.aeronaves = "null";
             }
-            //console.log("Datos a guardar:", tarifaData); // Agrega este console.log
+            
             if (isEdit) {
                 await actualizarTarifa(tarifaData.id_tarifa, tarifaData);
                 toast.success("Tarifa actualizada correctamente.");
@@ -93,13 +93,23 @@ const TarifaCrud = () => {
                 await insertarTarifa(tarifaData);
                 toast.success("Tarifa insertada correctamente.");
             }
-            setTarifaDialog(false);
-            fetchTarifas(); // Refresh the list
+            
+            setTarifaDialog(false); // Cierra el diálogo de agregar/editar tarifa
+            setTarifaData({
+                fecha_vigencia_desde: '',
+                tipo_tarifa: '',
+                importe: '',
+                importe_por_instruccion: 0,
+                con_instructor: false,
+                aeronaves: null,
+            }); // Limpiar los datos del formulario
+            fetchTarifas(); // Refresca la lista de tarifas
         } catch (error) {
             console.error('Error saving tarifa:', error);
             toast.error("Error, vuelva a intentar en otro momento.");
         }
     };
+    
 
     // Handle edit
     const handleEdit = (tarifa) => {
