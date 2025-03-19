@@ -62,23 +62,23 @@ export function IndicadoresCuentas() {
           <div className="totals">
             <div className="grid">
               <div className="account-stat">
-                <p className="stat-label">Total Cuentas</p>
+                <p className="stat-label">Cuentas</p>
                 <p className="stat-value">{accountData.totalAccounts}</p>
               </div>
               <div className="account-stat">
-                <p className="stat-label">Total Asociados</p>
+                <p className="stat-label">Asociados</p>
                 <p className="stat-value">{accountData.totalAssociates}</p>
               </div>
               <div className="account-stat">
-                <p className="stat-label">Total Gestores</p>
+                <p className="stat-label">Gestores</p>
                 <p className="stat-value">{accountData.totalManagers}</p>
               </div>
               <div className="account-stat">
-                <p className="stat-label">Total Instructores</p>
+                <p className="stat-label">Instructores</p>
                 <p className="stat-value">{accountData.totalInstructors}</p>
               </div>
               <div className="account-stat">
-                <p className="stat-label">Total Administradores</p>
+                <p className="stat-label">Administradores</p>
                 <p className="stat-value">{accountData.totalAdministrators}</p>
               </div>
               <div className="account-stat">

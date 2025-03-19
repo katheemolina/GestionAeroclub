@@ -10,12 +10,12 @@
   
   .card-header {
     border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 12px;
+    padding-bottom: 4px;
     margin-bottom: 12px;
   }
   
   .card-title {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     font-weight: bold;
   }
   
@@ -37,6 +37,12 @@
   
   .justify-between {
     justify-content: space-between;
+  }
+
+  .border-bottom-gray{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    padding-top: 10px;
   }
   
   .font-medium {

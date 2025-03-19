@@ -29,17 +29,17 @@ export function MantenimientoAeronaves() {
   }, []);
 
   return (
-    <div id='mantenimiento-aeronaves' className="card">
+    <div id='mantenimiento-aeronaves' className="account-card">
       <div className="card-header">
         <h2 className="card-title">Estado de Mantenimiento de Aeronaves</h2>
       </div>
       <div className="card-content">
         <div className="space-y-4">
           {aeronaves.map((aeronave) => (
-            <div key={aeronave.id} className="space-y-2">
+            <div key={aeronave.id} className="space-y-2 border-bottom-gray">
               <div className="flex justify-between">
                 <span className="font-medium">{aeronave.nombre}</span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 ">
                   {aeronave.horasVoladas} / {aeronave.siguienteInspeccion} horas
                 </span>
               </div>
