@@ -37,7 +37,7 @@ function Sidebar() {
       { ruta: '/gestor/aeronaves', texto: 'Aeronaves', icon: <FaPlane />,completarPerfil: true },
       { ruta: '/gestor/liquidarInstrucciones', texto: 'Liquidación para Instructores', icon: <FaCog />,completarPerfil: true },
       { ruta: '/gestor/generarCuotaSocial', texto: 'Generación de Cuotas Sociales', icon: <FaRegCalendarCheck  /> ,completarPerfil: true},
-      { ruta: '/gestor/notificaciones', texto: 'Notificaciones', icon: <FaBell  /> ,completarPerfil: true},
+      /*{ ruta: '/gestor/notificaciones', texto: 'Notificaciones', icon: <FaBell  /> ,completarPerfil: true},*/
     ],
     Instructor: [
       { ruta: '/instructor/dashboard', texto: 'Inicio', icon: <FaHome />,completarPerfil: false},
