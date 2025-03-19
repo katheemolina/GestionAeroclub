@@ -312,6 +312,7 @@ const dateHastaBodyTemplate = (rowData) => {
                         <InputText
                             id="fecha_vigencia"
                             type="date"
+                            min={new Date().toISOString().split("T")[0]} // Restringe fechas menores a hoy
                             value={tarifaData.fecha_vigencia}
                             onChange={(e) => setTarifaData({ ...tarifaData, fecha_vigencia: e.target.value })}
                         />
