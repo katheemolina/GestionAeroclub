@@ -14,6 +14,20 @@ function AsociadoLibroVuelo() {
   const { usuarioId } = useUser();
   const [kpiData, setKpiData] = useState([]);
 
+
+   // Formatear fecha a DD/MM/AAAA
+   const formatearFecha = (fecha) => {
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const fechaCorregida = new Date(fecha + "T00:00:00"); // Asegurar que se tome en la zona horaria local
+    return fechaCorregida.toLocaleDateString('es-ES', opciones);
+  };
+
+  // Plantilla para mostrar la fecha 
+  const plantillaFecha = (rowData) => {
+      return formatearFecha(rowData.fecha);
+  };
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,7 +67,7 @@ function AsociadoLibroVuelo() {
       </header>
       <KpiBox data={kpiData} />
       <DataTable value={data} paginator rows={15} scrollable scrollHeight="800px">
-        <Column field="fecha" header="Fecha" sortable />
+        <Column field="fecha" header="Fecha" sortable body={plantillaFecha}/>
         <Column field="matricula" header="Aeronave" sortable />
         <Column field="origen" header="Origen" sortable />
         <Column field="destino" header="Destino" sortable />
