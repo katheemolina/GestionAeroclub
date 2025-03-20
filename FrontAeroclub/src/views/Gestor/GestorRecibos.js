@@ -35,7 +35,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       try {
         const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
         setData(recibosResponse);
-        //console.log("Recibos:",recibosResponse)
+        console.log(recibosResponse);
       } catch (error) {
         //console.error("Error al obtener datos:", error);
       }
@@ -537,15 +537,27 @@ function GestorRecibos({ idUsuario = 0 }) {
           className="columna-ancho-min"
         />
         <Column
-          field="tipo_recibo"
-          header="Tipo de recibo"
-          sortable
-          filter
-          filterPlaceholder="Buscar por tipo"
-          filterMatchMode="contains"
-          showFilterMenu={false}
-          className="columna-ancho-min"
-        />
+        field="tipo_recibo"
+        header="Tipo de recibo"
+        sortable
+        filter
+        filterPlaceholder="Buscar por tipo"
+        filterMatchMode="contains"
+        showFilterMenu={false}
+        className="columna-ancho-min"
+        body={(rowData) => {
+          if (rowData.tipo_recibo === 'cuota_social') {
+            return 'Cuota Social';
+          }
+          if (rowData.tipo_recibo === 'vuelo') {
+            return 'Vuelo';
+          }
+          if (rowData.tipo_recibo === 'combustible') {
+            return 'Combustible';
+          }
+          return rowData.tipo_recibo;
+        }}
+      />
         <Column
       field="estado"
       header="Estado"
