@@ -627,42 +627,37 @@ function AsociadoCuentaCorriente() {
                 <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
                 <Card>  <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p></Card>
                 <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
-                <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones}</p></Card>
-                {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento.map((data, index) => (
-                  <Card key={index}>
-                    {data.tipo !== null && (
-                      <p><strong>Tipo:</strong> {data.tipo}</p>
-                    )}
-                    {data.tipo_recibo !== null && data.tipo_recibo === 'vuelo' && (
-                      <div>
-                        <p><strong>Tipo de recibo:</strong> {data.tipo_recibo}</p>
-                        {data.cantidad !== null && (
-                          <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
-                        )}
-                        {data.estado !== null && (
-                          <p><strong>Estado:</strong> {data.estado}</p>
-                        )}
-                        {data.importe !== null && (
-                          <p><strong>Importe:</strong> {data.importe_mov}</p>
-                        )}
-                        {data.observaciones !== null && (
-                          <p><strong>Detalle:</strong> {data.observaciones_mov}</p>
-                        )}
-                        {/*data.observaciones !== null && (
-                          <p><strong>Observaciones:</strong> {data.observaciones}</p>
-                        )*/}
-                        {data.instruccion !== null && (
-                          <p><strong>Instrucción:</strong> {data.instruccion}</p>
-                        )}
-                        {data.instructor !== null && (
-                          <p><strong>Instructor:</strong> {data.instructor}</p>
-                        )}
-                        {data.created_at !== null && (
-                          <p><strong>Fecha del Movimiento:</strong> {formatearFecha(data.fecha_creacion)}</p>
-                        )}
-                      </div>
-                    )}
-                  </Card>
+                <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones ?? "Ninguna"}</p></Card>
+                {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento .filter(data => data.tipo_recibo === 'vuelo') 
+                .map((data, index) => (
+                <Card key={index}>
+                    <div>
+                      {/* Título según la posición del índice */}
+                      <h4 style={{ textAlign: "center", marginBottom: "2%" }}>
+                        <strong>{index === 0 ? "Detalles del vuelo" : "Detalles de instrucción"}</strong>
+                      </h4>
+
+                      {data.estado !== null && (
+                        <p><strong>Estado:</strong> {data.estado}</p>
+                      )}
+                      {data.importe !== null && (
+                        <p><strong>Importe:</strong> {data.importe_mov}</p>
+                      )}
+                      {index === 0 && data.cantidad !== null && (
+                        <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
+                      )}
+                      {index === 0 && (
+                        <p><strong>Observaciones:</strong> {data.observaciones !== null ? data.observaciones : "Ninguna"}</p>
+                      )}
+
+                      {(index === 0 || (index === 1 && data.instruccion?.includes("No"))) && (
+                        <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                      )}
+                      {index > 0 && data.instructor !== null && (
+                        <p><strong>Instructor:</strong> {data.instructor}</p>
+                      )}
+                    </div>
+                </Card>
                 ))}
               </div>
             </div>
