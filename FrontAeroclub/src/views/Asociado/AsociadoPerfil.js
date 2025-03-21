@@ -207,7 +207,7 @@ const validarFormulario = () => {
   if (!formData.Direccion) camposFaltantes.push("Dirección");
   if (!formData.FechaNacimiento) camposFaltantes.push("Fecha de Nacimiento");
   if (!formData.FechaVencCMA) camposFaltantes.push("Fecha de Vencimiento CMA");
-  if (!formData.CantHorasVuelo) camposFaltantes.push("Cantidad de Horas de Vuelo");
+  if (!formData.CantHorasVuelo) camposFaltantes.push("Tiempo de vuelo");
   if (!formData.CantAterrizajes) camposFaltantes.push("Cantidad de Aterrizajes");
 
   if (camposFaltantes.length > 0) {
@@ -361,7 +361,7 @@ const formatFecha = (rowData) => {
         <h2>Datos historicos:</h2>
         <div className="form-row">
           <label>
-            Cantidad de Horas de Vuelo:
+            Tiempo de Vuelo:
             <input
               type="number"
               name="CantHorasVuelo"

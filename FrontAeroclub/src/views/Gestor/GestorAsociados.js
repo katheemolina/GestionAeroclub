@@ -270,7 +270,7 @@ const GestorAsociados  = () => {
                 
                 
                 <Column field="roles" header="Roles Activos" sortable filter filterPlaceholder='Buscar por roles' showFilterMenu={false}></Column> 
-                <Column field="horas_vuelo" header="Horas de vuelo totales" sortable filter filterPlaceholder='Buscar por asociado' showFilterMenu={false}></Column>
+                <Column field="horas_vuelo" header="Tiempo de vuelo total" sortable filter filterPlaceholder='Buscar por tiempo' showFilterMenu={false}></Column>
                 <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable filter filterPlaceholder='Estado CMA' showFilterMenu={false}
                 filterElement={(options) => (
                     <Dropdown

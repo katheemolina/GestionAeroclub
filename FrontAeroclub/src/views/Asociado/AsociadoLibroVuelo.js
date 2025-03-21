@@ -38,12 +38,12 @@ function AsociadoLibroVuelo() {
         if (kpiResponse && kpiResponse.length > 0) {
           const primerElemento = kpiResponse[0];
           setKpiData([
-            { title: 'Total horas voladas', value: primerElemento.total_horas_voladas },
-            { title: 'Horas históricas', value: primerElemento.horas_historicas },
-            { title: 'Horas voladas último mes', value: primerElemento.horas_voladas_ultimo_mes },
+            { title: 'Total tiempo de vuelo', value: primerElemento.total_horas_voladas },
+            { title: 'Tiempo histórico', value: primerElemento.horas_historicas },
+            { title: 'Último mes', value: primerElemento.horas_voladas_ultimo_mes },
             ...kpiResponse.map(item => ({
-              title: `Vuelo en ${item.matricula}`,
-              value: `${item.tiempo} horas`
+              title: `Volado en ${item.matricula}`,
+              value: `${item.tiempo}`
             }))
           ]);
         }

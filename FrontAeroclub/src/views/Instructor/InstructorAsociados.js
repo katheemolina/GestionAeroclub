@@ -134,7 +134,7 @@ function InstructorAsociados({idUsuario = 0}){
                         />
                       )
                     }></Column>
-                <Column field="horas_vuelo" header="Horas de vuelo totales" sortable filter filterPlaceholder='Buscar por Horas' showFilterMenu={false}></Column>
+                <Column field="horas_vuelo" header="Tiempo de vuelo total" sortable filter filterPlaceholder='Buscar por tiempo' showFilterMenu={false}></Column>
                 <Column field="estadoCMA" header="Estado del CMA" body={estadoCMATemplate} sortable filter filterPlaceholder='Buscar por CMA' showFilterMenu={false}
                 filterElement={(options) => (
                     <Dropdown
