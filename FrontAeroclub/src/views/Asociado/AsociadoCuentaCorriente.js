@@ -74,7 +74,7 @@ function AsociadoCuentaCorriente() {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         setData(cuentaCorrienteResponse);
         
-        //console.log("obtenerCuentaCorrientePorUsuario:",cuentaCorrienteResponse)
+        console.log("obtenerCuentaCorrientePorUsuario:",cuentaCorrienteResponse)
 
         // Obtener saldo de la cuenta corriente
         const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(usuarioId);
@@ -113,15 +113,22 @@ function AsociadoCuentaCorriente() {
 
   const openDialog = async (rowData) => {
     setSelectedRowData(rowData);
-    try {
-      const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
-      //console.log("Detalles cta cte aeroclub x movimiento:", detalles)
-      setDetalleMovimiento(detalles);
-    } catch (error) {
-      toast.error("Error al obtener detalles del movimiento");
+  
+    if (rowData.tipo !== "pago") {
+      try {
+        const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
+        console.log("Detalles cta cte aeroclub x movimiento:", detalles);
+        setDetalleMovimiento(detalles);
+      } catch (error) {
+        toast.error("Error al obtener detalles del movimiento");
+      }
+    } else {
+      setDetalleMovimiento(null);
     }
+  
     setDialogVisible(true);
   };
+  
   
 
   const closeDialog = () => {
