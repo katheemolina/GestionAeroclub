@@ -123,7 +123,9 @@ const AeronaveCrud = () => {
         const clearFilters = () => {
         if (dt.current) {
             dt.current.reset(); // Limpia los filtros de la tabla
+            
         }
+        setEstadoFiltro('');
     }
 
     if (loading) {
