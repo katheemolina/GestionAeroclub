@@ -72,7 +72,7 @@ const GestorAsociados = () => {
             if (rowData.tarifa_especial === 0) {
                 return "No aplica";
             } else if (rowData.tarifa_especial === 1) {
-                return "Aplica";
+                return <span style={{ color: 'rgb(76, 175, 80)', fontWeight: 'bold' }}>Aplica</span>;
             } else {
                 return "No definido";
             }
