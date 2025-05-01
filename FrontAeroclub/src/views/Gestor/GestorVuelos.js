@@ -118,25 +118,69 @@ function GestorVuelos(){
             />
         </DataTable>
 
-        <Dialog header="Detalles del Vuelo" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>
-                {selectedRowData && (
-                <div>
-                    <div className='p-fluid details-dialog'>
-                        <Card> <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p> </Card>
-                        <Card> <p><strong>Aeronave:</strong> {selectedRowData.matricula}</p> </Card>
-                        <Card> <p><strong>Asociado:</strong> {selectedRowData.usuario}</p> </Card>
-                        <Card><p><strong>Origen:</strong> {selectedRowData.origen}</p> </Card>
-                        <Card> <p><strong>Destino:</strong> {selectedRowData.destino}</p> </Card>
-                        <Card> <p><strong>Hora de salida:</strong> {selectedRowData.hora_salida}</p> </Card>
-                        <Card> <p><strong>Hora de llegada:</strong> {selectedRowData.hora_llegada}</p> </Card>
-                        <Card><p><strong>Tiempo de vuelo:</strong> {selectedRowData.tiempo_vuelo}</p> </Card>
-                        <Card> <p><strong>Finalidad:</strong> {selectedRowData.finalidad}</p> </Card>
-                        <Card> <p><strong>Instrucción:</strong> {selectedRowData.instruccion}</p> </Card>
-                        <Card> <p><strong>Cantidad de aterrizajes:</strong> {selectedRowData.aterrizajes}</p> </Card> 
-                    </div>
+        <Dialog 
+          header="Detalles del Vuelo" 
+          visible={dialogVisible} 
+          style={{ width: '500px' }} 
+          onHide={closeDialog}
+          className="flight-details-dialog"
+        >
+          {selectedRowData && (
+            <div className="flight-details-container">
+              <div className="flight-details-header">
+                <div className="flight-info-main">
+                  <div className="user-info">
+                    <span className="detail-label">Asociado</span>
+                    <h3>{selectedRowData.usuario}</h3>
+                  </div>
+                  <span className="flight-date">{formatearFecha(selectedRowData.fecha)}</span>
                 </div>
-                )}
-            </Dialog>
+                <div className="flight-route">
+                  <div className="route-point">
+                    <span className="point-label">Origen</span>
+                    <span className="point-value">{selectedRowData.origen}</span>
+                  </div>
+                  <div className="route-arrow">→</div>
+                  <div className="route-point">
+                    <span className="point-label">Destino</span>
+                    <span className="point-value">{selectedRowData.destino}</span>
+                  </div>
+                </div>
+                <div className="aircraft-info">
+                  <span className="detail-label">Aeronave</span>
+                  <span className="aircraft-value">{selectedRowData.matricula}</span>
+                </div>
+              </div>
+
+              <div className="flight-details-grid">
+                <div className="detail-card">
+                  <span className="detail-label">Hora Salida</span>
+                  <span className="detail-value">{selectedRowData.hora_salida}</span>
+                </div>
+                <div className="detail-card">
+                  <span className="detail-label">Hora Llegada</span>
+                  <span className="detail-value">{selectedRowData.hora_llegada}</span>
+                </div>
+                <div className="detail-card">
+                  <span className="detail-label">Tiempo de Vuelo</span>
+                  <span className="detail-value">{selectedRowData.tiempo_vuelo}</span>
+                </div>
+                <div className="detail-card">
+                  <span className="detail-label">Finalidad</span>
+                  <span className="detail-value">{selectedRowData.finalidad}</span>
+                </div>
+                <div className="detail-card">
+                  <span className="detail-label">Instrucción</span>
+                  <span className="detail-value">{selectedRowData.instruccion}</span>
+                </div>
+                <div className="detail-card">
+                  <span className="detail-label">Aterrizajes</span>
+                  <span className="detail-value">{selectedRowData.aterrizajes}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </Dialog>
 
     </div>
 
