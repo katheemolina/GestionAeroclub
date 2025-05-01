@@ -48,6 +48,8 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("ID Usuario recibido:", idUsuario);
+        
         // Obtener datos del usuario
         const usuarioResponse = await obtenerDatosDelUsuario(idUsuario);
         const usuarioData = usuarioResponse[0]; 
@@ -55,48 +57,55 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
         
         // Obtener saldo
         const saldoResponse = await obtenerSaldoCuentaCorrientePorUsuario(idUsuario);
-        const saldoData = saldoResponse[0]; // Accedemos al primer objeto
+        const saldoData = saldoResponse[0];
         setSaldo(saldoData.Saldo);
         
         // Obtener horas voladas
         const horasResponse = await horasVoladasPorUsuario(idUsuario);
-        const horasData = horasResponse[0]; // Accedemos al primer objeto
+        const horasData = horasResponse[0];
         setHorasVoladas(horasData.TotalHoras);
         
         // Obtener estado del CMA
         const cmaResponse = await obtenerEstadoCMA(idUsuario);
-        const cmaData = cmaResponse[0]; // Accedemos al primer objeto
+        const cmaData = cmaResponse[0];
         setCma(cmaData.estado);
         setFechaVencimiento(cmaData.fecha_vencimiento_cma);
         
         // Obtener últimos vuelos
+        console.log("Intentando obtener últimos vuelos para ID:", idUsuario);
         const vuelosResponse = await ultimosVuelosPorUsuario(idUsuario);
-        setData(vuelosResponse); // Suponiendo que los datos son directamente utilizables
+        console.log("Respuesta de vuelos:", vuelosResponse);
+        setData(vuelosResponse);
 
         // Obtener licencias
         const licenciasResponse = await obtenerLicenciasPorUsuario(idUsuario);
         const formattedLicencias = licenciasResponse.map(licencia => (
           { codigo: licencia.codigos_licencias, descripcion: licencia.descripcion }
         ));
-        setLicencias(formattedLicencias); // Mapeamos para obtener solo la información necesaria
+        setLicencias(formattedLicencias);
 
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
-      setLoading(false); // Cambia el estado de carga
+      setLoading(false);
     };
 
     fetchData();
   }, [idUsuario]);
 
+  // Agregar un efecto para monitorear cambios en data
+  useEffect(() => {
+    console.log("Estado actual de data:", data);
+  }, [data]);
+
   const adaptacionTemplate = (rowData) => (
     <span
       style={{
         fontWeight: "bold",
-        color: rowData.Adaptacion === "Adaptado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
+        color: rowData.adaptacion === "Adaptado" ? "rgb(76, 175, 80)" : "rgb(169, 70, 70)",
       }}
     >
-      {rowData.Adaptacion}
+      {rowData.adaptacion}
     </span>
   );
 
@@ -166,9 +175,9 @@ function GestorAsociadoDashboard() { // Establecer idUsuario para traer su infor
       <section className="table-section">
         <h3>Registro de Vuelos</h3>
         <DataTable value={data}>  
-            <Column field="matricula_aeronave" header="Avión"></Column>
-            <Column field="fecha_vuelo" header="Último vuelo"></Column>
-            <Column field="Adaptacion" header="Adaptación" body={adaptacionTemplate}></Column>
+            <Column field="matricula" header="Avión"></Column>
+            <Column field="created_at" header="Último vuelo"></Column>
+            <Column field="adaptacion" header="Adaptación" body={adaptacionTemplate}></Column>
         </DataTable>
       </section>
 
