@@ -201,11 +201,19 @@ const handleSave = async () => {
 
     const openPolizaDialog = (aeronave) => {
     setSelectedAeronave(aeronave);
+    setNuevaPoliza({
+        aseguradora: aeronave.aseguradora || '',
+        numero_poliza: aeronave.numero_poliza || '',
+        vencimiento_poliza: aeronave.vencimiento_poliza || ''
+    });
     setPolizaDialog(true);
     };
 
     const openIntervaloDialog = (aeronave) => {
     setSelectedAeronave(aeronave);
+    setNuevoIntervalo({
+        intervalo_inspeccion: aeronave.intervalo_para_inspeccion || ''
+    });
     setIntervaloDialog(true);
     };
 
