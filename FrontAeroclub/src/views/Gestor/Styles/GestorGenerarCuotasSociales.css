@@ -1,4 +1,3 @@
-
 .contenedor-para-centrar{
     display: flex;
     width: 100%;
@@ -22,11 +21,16 @@
     margin-bottom: 20px;
     flex-direction: column;
     display: flex;
-    
     gap: 5px;
     width: 100%;
     margin-right: 0px;
     align-items: center;
+}
+
+.contenedor-generar-cuotas label strong {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
 }
 
 .contenedor-generar-cuotas label input{
@@ -40,6 +44,8 @@
 #btn-generar-cuotas{
     width: 100% !important;
     margin-top: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 #btn-generar-cuotas:hover{
