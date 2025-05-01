@@ -617,23 +617,38 @@ function GestorRecibos({ idUsuario = 0 }) {
         />
       </DataTable>
 
-      <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
-                <>
-                    <Button label="Cancelar" 
-                      className="p-button-text gestor-btn-cancelar" 
-                      icon="pi pi-times" 
-                      onClick={() => setShowConfirmDialog(false)}/>
-                    <Button label="Confirmar" 
-                      className="gestor-btn-confirmar" 
-                        icon="pi pi-check"
-                        onClick={() => {
-                          handleEnviarSeleccionados();
-                          setShowConfirmDialog(false);
-                        }} autoFocus />
-                </>
-            } onHide={() => setShowConfirmDialog(false)}>
-                <p>¿Está seguro de que desea generar el pago de la/los recibos seleccionados?</p>
-      </Dialog>
+      <Dialog
+  header="Confirmar"
+  className="modal-confirmar-habilitacion"
+  visible={showConfirmDialog}
+  style={{ width: '350px' }}
+  modal
+  footer={
+    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+      <Button
+        label="Cancelar"
+        className="gestor-btn-cancelar"
+        icon="pi pi-times"
+        style={{ marginRight: '10px' }}
+        onClick={() => setShowConfirmDialog(false)}
+      />
+      <Button
+        label="Confirmar"
+        className="p-button-secondary gestor-btn-confirmar"
+        icon="pi pi-check"
+        onClick={() => {
+          handleEnviarSeleccionados();
+          setShowConfirmDialog(false);
+        }}
+        autoFocus
+      />
+    </div>
+  }
+  onHide={() => setShowConfirmDialog(false)}
+>
+  <p>¿Está seguro de que desea realizar el pago de los recibos seleccionados?</p>
+</Dialog>
+
     
     </div>
     
