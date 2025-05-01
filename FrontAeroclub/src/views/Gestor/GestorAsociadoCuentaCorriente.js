@@ -5,7 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import PantallaCarga from '../../components/PantallaCarga';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { pagarReciboApi } from '../../services/generarReciboApi';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { circularProgressClasses } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 function GestorAsociadoCuentaCorriente() {
@@ -30,6 +31,11 @@ function GestorAsociadoCuentaCorriente() {
   const location = useLocation(); // Hook para obtener el estado de la navegación
   const { user } = location.state || {}; // Accedemos al estado pasado
   const usuarioId = user.id_usuario;
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate('/gestor/Asociados'); // Redirige a la ruta deseada
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,6 +146,16 @@ function GestorAsociadoCuentaCorriente() {
       <ToastContainer />
       <div className="background">
         <header className="header">
+          <Tooltip title="Ver Asociados">
+            <IconButton 
+              color="primary" 
+              aria-label="Atras" 
+              className="back-button" 
+              onClick={handleBackClick}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          </Tooltip>
           <h1>Cuenta Corriente de {user.usuario}</h1>
         </header>
         <Button
