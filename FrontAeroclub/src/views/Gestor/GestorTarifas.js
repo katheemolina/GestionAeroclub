@@ -204,7 +204,7 @@ const dateDesdeBodyTemplate = (rowData) => {
 
 // Template para la columna "Fecha Vigencia Hasta"
 const dateHastaBodyTemplate = (rowData) => {
-    return <span>{rowData.fecha_vigencia_hasta ? formatDate(rowData.fecha_vigencia_hasta) : "Actualmente vigente"}</span>;
+    return <span>{rowData.fecha_vigencia_hasta ? formatDate(rowData.fecha_vigencia_hasta) : ""}</span>;
 };
 
 
