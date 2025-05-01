@@ -10,29 +10,36 @@ export const RoleProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchRole = async () => {
+      const roleEnLocalStorage = localStorage.getItem('role');
+      
+      // Si ya hay un rol guardado, lo usamos y no pisamos
+      if (roleEnLocalStorage) {
+        setRole(roleEnLocalStorage);
+        return;
+      }
+  
       if (usuarioId) {
         try {
           const roles = await obtenerRolPorIdUsuario(usuarioId);
-          // Filtrar roles activos
           const activeRoles = roles.filter(role => role.estado === 'activo');
-          // Si hay roles activos, asignamos el primero; si no, se asigna 'asociado'
           if (activeRoles.length > 0) {
             setRole(activeRoles[0].descripcion);
             localStorage.setItem('role', activeRoles[0].descripcion);
           } else {
-            setRole('asociado'); 
+            setRole('asociado');
             localStorage.setItem('role', 'asociado');
           }
         } catch (error) {
           console.error('Error al obtener el rol del usuario:', error);
-          setRole('asociado'); 
+          setRole('asociado');
           localStorage.setItem('role', 'asociado');
         }
       }
     };
-
+  
     fetchRole();
-  }, [usuarioId]); // Solo se ejecuta cuando usuarioId cambia
+  }, [usuarioId]);
+  
 
   return (
     <RoleContext.Provider value={{ role, setRole }}>

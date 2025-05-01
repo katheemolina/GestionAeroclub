@@ -42,8 +42,11 @@ const GestorAsociados  = () => {
         setLoading(true);
         try {
             const data = await listarAsociados(); // Fetch asociados data
+
+            const dataFiltrada = data.filter(asociado => asociado.id_usuario !== 2);
+
             const asociadosWithRoles = await Promise.all(
-                data.map(async (asociado) => {
+                dataFiltrada.map(async (asociado) => {
                     const roles = await obtenerRolPorIdUsuario(asociado.id_usuario);
                     const kpiResponse = await obtenerSaldoCuentaCorrientePorUsuario(asociado.id_usuario);
                     const { deuda_cuota_social } = kpiResponse[0]; 
@@ -55,7 +58,7 @@ const GestorAsociados  = () => {
                 })
             );
             setAsociados(asociadosWithRoles);
-            console.log(asociadosWithRoles)
+            //console.log(asociadosWithRoles)
         } catch (error) {
             console.error('Error fetching asociados or roles:', error);
         }
