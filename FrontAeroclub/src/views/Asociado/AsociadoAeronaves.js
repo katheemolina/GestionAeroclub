@@ -25,6 +25,7 @@ const AeronaveCrud = () => {
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves();
+            console.log(data);
             
             // Transformamos los datos obtenidos añadiendo cálculos adicionales para cada aeronave.
             const aeronavesConDatosExtras = await Promise.all(
@@ -190,7 +191,7 @@ const AeronaveCrud = () => {
                             <p><strong>Motor:</strong> {selectedRowData.motor} </p> 
                             <p><strong>Consumo:</strong> {selectedRowData.consumo_por_hora} L/hs</p>
                             <p><strong>Fecha de adquisición:</strong> {selectedRowData.fecha_adquisicion}</p>
-                            <p><strong>Horas de vuelo historicas:</strong> {selectedRowData.horas_historicas}</p>
+                            <p><strong>Horas de vuelo historicas:</strong> {selectedRowData.horas_historicas_voladas}</p>
                         </Card>
                         <Card> 
                             <p><strong>Intervalo para inspección:</strong> {selectedRowData.intervalo_para_inspeccion}</p>
