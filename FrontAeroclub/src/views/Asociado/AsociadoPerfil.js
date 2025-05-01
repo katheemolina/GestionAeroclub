@@ -381,7 +381,7 @@ const formatFecha = (rowData) => {
             />
           </label>
         </div>
-        <div style={{width:'100%', display:'flex', justifyContent:'center', marginTop: '20px'}}>
+        <div style={{width:'100%', display:'flex', marginTop: '20px'}}>
           <button className=" gestor-btn-confirmar p-component" type="submit"><span className='p-button-label'>Guardar Cambios</span></button>
         </div>
       </form>
@@ -423,10 +423,10 @@ const formatFecha = (rowData) => {
         onHide={() => setLicenciaDialog(false)}
         style={{ width: 'min-content', minwidth: '450px' }}
         footer={
-          <>
-            <Button label="Cancelar" icon="pi pi-times" onClick={() => setLicenciaDialog(false)} className="p-button-secondary gestor-btn-cancelar" />
-            <Button className="gestor-btn-confirmar" label="Confirmar" icon="pi pi-check" onClick={handleLicenciaUpdate} />
-          </>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+            <Button className="gestor-btn-cancelar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setLicenciaDialog(false)} />
+            <Button className="p-button-secondary gestor-btn-confirmar" label="Agregar" icon="pi pi-check" style={{marginRight: '0'}}  onClick={handleLicenciaUpdate} />
+          </div>
         }
       >
         <div className="p-fluid">
@@ -465,8 +465,8 @@ const formatFecha = (rowData) => {
         header="Eliminar Licencia"
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-            <Button className="gestor-btn-confirmar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setEliminarDialog(false)}  />
-            <Button className="p-button-secondary gestor-btn-cancelar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} onClick={() => handleLicenciaDelete()}/>  
+            <Button className="gestor-btn-cancelar" label="Cancelar" icon="pi pi-times" style={{marginRight: '10px'}} onClick={() => setEliminarDialog(false)}  />
+            <Button className="p-button-secondary gestor-btn-confirmar" label="Eliminar" icon="pi pi-check" style={{marginRight: '0'}} onClick={() => handleLicenciaDelete()}/>  
           </div>
         }>
           <p>¿Está seguro de que desea eliminar esta licencia?</p>

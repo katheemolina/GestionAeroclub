@@ -1,82 +1,97 @@
 .edit-form {
   margin-top: 10px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  padding: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  gap: 20px;
 }
 
 .edit-form label {
   flex: 1;
   margin-right: 10px;
+  color: #333;
+  font-weight: 500;
 }
 
 .edit-form h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
 }
 
 .edit-form input {
   width: calc(100% - 10px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-top: 5px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-top: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.edit-form input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+  outline: none;
 }
 
 .button-container {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  justify-content: flex-start;
+  margin-top: 30px;
 }
 
-
 button {
-  padding: 12px 20px;
-  background-color: rgba(169, 70, 70, 1);
+  padding: 12px 24px;
+  background-color: #4a90e2;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-  background-color: rgba(169, 70, 70, 1);
+  background-color: #357abd;
+  transform: translateY(-1px);
 }
-
-
 
 /* Estilo para el botón "Guardar Cambios" */
 .guardar, .actualizar {
-  background-color: #28a745; /* Fondo verde */
-  color: white; /* Color del texto */
-  border: 1px solid #28a745; /* Borde del mismo verde */
-  padding: 10px 20px; /* Relleno en el botón */
-  border-radius: 5px; /* Bordes redondeados */
-  font-size: 16px; /* Tamaño de la fuente */
-  cursor: pointer; /* Cambiar el cursor cuando pase por encima */
-  transition: background-color 0.3s, border-color 0.3s; /* Animación suave */
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Efecto hover cuando el usuario pasa el ratón por encima */
 .guardar:hover, .actualizar:hover {
-  background-color: #218838; /* Verde más oscuro */
-  border-color: #218838; /* Borde más oscuro */
+  background-color: #357abd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Efecto focus cuando el botón es seleccionado */
 .guardar:focus, .actualizar:focus {
-  outline: none; /* Eliminar el contorno predeterminado */
-  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.5); /* Sombra verde */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
 }
-
-
 
 .licencias-section{
   margin-top: 10px;
