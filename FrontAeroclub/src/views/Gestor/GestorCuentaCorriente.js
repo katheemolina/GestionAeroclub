@@ -104,12 +104,6 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     }
     
   };
-
-  //const handlePreviewAndPrint = (rowData) => {
-    //console.log("rowData", rowData)
-    // Buscar el recibo correspondiente en dataRecibos
-    //const recibo = dataRecibos.find((recibo) => recibo.id_movimiento === rowData.referencia_aeroclub);
-    //console.log("Datos del recibo", recibo)
     
     const handlePreviewAndPrint = (rowData) => {
 
@@ -158,6 +152,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       numeroRecibo: recibo.numero_recibo || "-",
       fecha: recibo.fecha || new Date().toLocaleDateString(),
       observaciones: recibo.observaciones || "Sin observaciones",
+      observacionesCuotaSocial: rowData.descripcion_completa || "-",
       tarifa: recibo.importe_tarifa || "-",
       fechaVigenciaTarifa: recibo.fecha_vigencia_tarifa || "-",
       instructor: recibo.instructor || "-",
@@ -413,32 +408,8 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
       // Observaciones
       doc.setFont("helvetica", "normal");
       doc.text("Observaciones:", 20, yStart);
-    
-      // Mapeo de nombres de meses en inglés a español
-      const meses = {
-        "January": "Enero",
-        "February": "Febrero",
-        "March": "Marzo",
-        "April": "Abril",
-        "May": "Mayo",
-        "June": "Junio",
-        "July": "Julio",
-        "August": "Agosto",
-        "September": "Septiembre",
-        "October": "Octubre",
-        "November": "Noviembre",
-        "December": "Diciembre"
-      };
-
-      // Reemplazar el mes en la observación si existe
-      const observacionesLimpias = reciboData.observaciones.replace(
-        /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/g,
-        (match) => meses[match]
-      );
-
       doc.setFont("helvetica", "normal");
-      doc.text(observacionesLimpias, 70, yStart, { maxWidth: 180 });
-
+      doc.text(reciboData.observacionesCuotaSocial, 70, yStart, { maxWidth: 180 });
 
       // Línea divisoria
       yStart += 10;

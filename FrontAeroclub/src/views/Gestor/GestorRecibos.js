@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Styles/GestorRecibos.css";
-import { obtenerTodosLosRecibos } from "../../services/recibosApi";
+import { obtenerTodosLosRecibos} from "../../services/recibosApi";
+import { obtenerCuentaCorrientePorUsuario, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import "../../styles/datatable-style.css"; // Estilado para la tabla
@@ -36,6 +37,7 @@ function GestorRecibos({ idUsuario = 0 }) {
         const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
         setData(recibosResponse);
         console.log(recibosResponse);
+        
       } catch (error) {
         //console.error("Error al obtener datos:", error);
       }
@@ -74,6 +76,7 @@ function GestorRecibos({ idUsuario = 0 }) {
   const idUsuarioEvento = useUser();
 
   const handleEnviarSeleccionados = async () => {
+    
     const idsMovimientos = selectedRecibos.map((recibo) => recibo.id_movimiento).join(",");
     
     try {
@@ -126,8 +129,21 @@ function GestorRecibos({ idUsuario = 0 }) {
   };
 
 
-  const handlePreviewAndPrint = (rowData) => {
+  const handlePreviewAndPrint = async (rowData) => {
     //console.log("Datos del recibo",rowData)
+
+    //Medio raro, pero busco la descripción de una cuota social (q en obtenerTodosLosRecibos no se encuentra) en obtenerCuentaCorrienteAeroclubDetalle
+    let descripcionCuotaSocial = "-";
+
+    if (rowData.tipo_recibo === "cuota_social") {
+      try {
+        const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
+        descripcionCuotaSocial = detalles.find(mov => mov.id_ref === rowData.numero_recibo)?.descripcion_mov || "-";
+      } catch {
+        toast.error("No se encontró la descripción de la cuota.");
+      }
+    }
+
     // Datos del recibo
     const reciboData = {
       recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo", "Combustible" o "Cuota Social"
@@ -136,6 +152,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       reciboNo: rowData.numero_recibo || "-",
       fecha: rowData.fecha || new Date().toLocaleDateString(),
       observaciones: rowData.observaciones || "Sin observaciones",
+      observacionesCuotaSocial: descripcionCuotaSocial,
       tarifa: rowData.importe_tarifa || "-",
       fechaVigenciaTarifa: rowData.fecha_vigencia_tarifa || "-",
       instructor: rowData.instructor || "-",
@@ -392,7 +409,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       doc.text("Observaciones:", 20, yStart);
     
       doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observaciones}`, 70, yStart, { maxWidth: 180 });
+      doc.text(`${reciboData.observacionesCuotaSocial}`, 70, yStart, { maxWidth: 180 });
 
       // Línea divisoria
       yStart += 10;
