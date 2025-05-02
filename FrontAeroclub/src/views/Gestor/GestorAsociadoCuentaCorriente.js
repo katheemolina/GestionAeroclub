@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "./Styles/AsociadoCuentaCorriente.css";
-import { obtenerCuentaCorrientePorUsuario } from '../../services/movimientosApi';
+import { obtenerCuentaCorrientePorUsuario, obtenerSaldoCuentaCorrientePorUsuario, obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
+import { obtenerTodosLosRecibos } from "../../services/recibosApi";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -19,6 +20,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { circularProgressClasses } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import PrintIcon from '@mui/icons-material/Print';
+import { generarReciboPDF } from "../generarRecibosPDF";
+
 
 function GestorAsociadoCuentaCorriente() {
   const [data, setData] = useState([]);
@@ -27,11 +31,15 @@ function GestorAsociadoCuentaCorriente() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [detalleMovimiento, setDetalleMovimiento] = useState(null);
 
   const location = useLocation(); // Hook para obtener el estado de la navegación
   const { user } = location.state || {}; // Accedemos al estado pasado
   const usuarioId = user.id_usuario;
   const navigate = useNavigate();
+
+  const [dataRecibo, setDataRecibo] = useState([]);
+  const [recibosTodos, setRecibosTodos] = useState([]);
 
   const handleBackClick = () => {
     navigate('/gestor/Asociados'); // Redirige a la ruta deseada
@@ -43,6 +51,20 @@ function GestorAsociadoCuentaCorriente() {
         const cuentaCorrienteResponse = await obtenerCuentaCorrientePorUsuario(usuarioId);
         //console.log("Cuenta corriente:", cuentaCorrienteResponse)
         setData(cuentaCorrienteResponse);
+
+
+        // Obtener todos los recibos
+          const recibosResponse = await obtenerTodosLosRecibos(usuarioId);
+          setRecibosTodos(recibosResponse);//Para los pdf
+          //console.log("Todos los recibos:", recibosResponse);
+  
+          // Filtrar recibos utilizando un Set para optimizar la búsqueda
+          const movimientosIds = new Set(cuentaCorrienteResponse.map((movimiento) => movimiento.id_movimiento));
+          const filteredRecibos = recibosResponse.filter((recibo) => movimientosIds.has(recibo.id_movimiento));
+          
+          setDataRecibo(filteredRecibos);
+          //console.log("Recibos filtrados:", filteredRecibos);
+
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
@@ -70,16 +92,30 @@ function GestorAsociadoCuentaCorriente() {
     }
   };
 
-  // Función para abrir el diálogo de detalles
-  const openDialog = (rowData) => {
+  const openDialog = async (rowData) => {
     setSelectedRowData(rowData);
+  
+    if (rowData.tipo !== "pago") {
+      try {
+        const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
+        //console.log("Detalles cta cte aeroclub x movimiento:", detalles);
+        setDetalleMovimiento(detalles);
+      } catch (error) {
+        toast.error("Error al obtener detalles del movimiento");
+      }
+    } else {
+      setDetalleMovimiento(null);
+    }
+  
     setDialogVisible(true);
   };
+  
+  
 
-  // Función para cerrar el diálogo
   const closeDialog = () => {
     setDialogVisible(false);
     setSelectedRowData(null);
+    setDetalleMovimiento(null);
   };
 
   const idUsuarioEvento = useUser();
@@ -136,6 +172,28 @@ function GestorAsociadoCuentaCorriente() {
     }
     
   };
+
+
+  //RECIBOS PDF - Importo datos necesarios
+  const handlePreviewAndPrint = (rowData) => {
+    generarReciboPDF(rowData, dataRecibo, recibosTodos);
+    //console.log ("Info de entrada, rowData:",rowData)
+    //console.log ("Recibo filtrado, dataRecibo:",dataRecibo)
+    //console.log ("Todos los recibos, recibosTodos",recibosTodos)
+  };
+
+
+    // Formatear fecha a DD/MM/AAAA HH:MM:SS
+    const formatearFecha = (fecha) => {
+      const date = new Date(fecha);
+      const dia = String(date.getDate()).padStart(2, '0');
+      const mes = String(date.getMonth() + 1).padStart(2, '0');
+      const año = date.getFullYear();
+      const horas = String(date.getHours()).padStart(2, '0');
+      const minutos = String(date.getMinutes()).padStart(2, '0');
+      const segundos = String(date.getSeconds()).padStart(2, '0');
+      return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
+    };
 
   if (loading) {
     return <PantallaCarga />;
@@ -255,22 +313,67 @@ function GestorAsociadoCuentaCorriente() {
                     <SearchIcon />
                   </IconButton>
                 </Tooltip>
+
+                {rowData.descripcion_completa !== null  && (
+                  <IconButton
+                    color="primary"
+                    title="Ver Recibo"
+                    onClick={() => handlePreviewAndPrint(rowData)}
+                  >
+                    <PrintIcon />
+                  </IconButton>
+                )}
+
               </div>
             )}
           />
         </DataTable>
 
-        <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '600px' }} onHide={closeDialog}>
-          {selectedRowData && (
-            <div className="p-fluid details-dialog">
-              <Card><p><strong>Fecha:</strong> {selectedRowData.fecha}</p></Card>
-              <Card><p><strong>Tipo de movimiento:</strong> {selectedRowData.tipo_movimiento}</p></Card>
-              <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p></Card>
-              <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-              <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
-            </div>
-          )}
-        </Dialog>
+        <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '450px' }} onHide={closeDialog}>
+                  {selectedRowData && (
+                    <div>
+                      <div className="p-fluid details-dialog">
+                        {/*<Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>*/}
+                        <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
+                        <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
+                        <Card>  <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p></Card>
+                        <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
+                        <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones ?? "Ninguna"}</p></Card>
+                        {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento .filter(data => data.tipo_recibo === 'vuelo') 
+                        .map((data, index) => (
+                        <Card key={index}>
+                            <div>
+                              {/* Título según la posición del índice */}
+                              <h4 style={{ textAlign: "center", marginBottom: "2%" }}>
+                                <strong>{index === 0 ? "Detalles del vuelo" : "Detalles de instrucción"}</strong>
+                              </h4>
+        
+                              {data.estado !== null && (
+                                <p><strong>Estado:</strong> {data.estado}</p>
+                              )}
+                              {data.importe !== null && (
+                                <p><strong>Importe:</strong> {data.importe_mov}</p>
+                              )}
+                              {index === 0 && data.cantidad !== null && (
+                                <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
+                              )}
+                              {index === 0 && (
+                                <p><strong>Observaciones:</strong> {data.observaciones !== null ? data.observaciones : "Ninguna"}</p>
+                              )}
+        
+                              {(index === 0 || (index === 1 && data.instruccion?.includes("No"))) && (
+                                <p><strong>Instrucción:</strong> {data.instruccion}</p>
+                              )}
+                              {index > 0 && data.instructor !== null && (
+                                <p><strong>Instructor:</strong> {data.instructor}</p>
+                              )}
+                            </div>
+                        </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </Dialog>
       </div>
     </>
   );

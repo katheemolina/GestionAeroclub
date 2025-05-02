@@ -21,6 +21,7 @@ import jsPDF from "jspdf";
 import logo from '../../icon-aeroclub.png'; // Ajusta la ruta según tu estructura
 import { useUser } from "../../context/UserContext";
 
+import { generarReciboPDF } from "../generarRecibosPDF";
 
 function GestorRecibos({ idUsuario = 0 }) {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ function GestorRecibos({ idUsuario = 0 }) {
       try {
         const recibosResponse = await obtenerTodosLosRecibos(idUsuario);
         setData(recibosResponse);
-        console.log(recibosResponse);
+        //console.log(recibosResponse);
         
       } catch (error) {
         //console.error("Error al obtener datos:", error);
@@ -128,330 +129,35 @@ function GestorRecibos({ idUsuario = 0 }) {
     options.filterApplyCallback(e.value); // Aplica el filtro
   };
 
-
+//IMPRIMIR RECIBO
   const handlePreviewAndPrint = async (rowData) => {
-    //console.log("Datos del recibo",rowData)
-
-    //Medio raro, pero busco la descripción de una cuota social (q en obtenerTodosLosRecibos no se encuentra) en obtenerCuentaCorrienteAeroclubDetalle
+    // Variable para guardar la descripción de la cuota social (si aplica)
     let descripcionCuotaSocial = "-";
 
+    // Solo si el tipo de recibo es 'cuota_social', se intenta obtener la descripción detallada
     if (rowData.tipo_recibo === "cuota_social") {
-      try {
-        const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
-        descripcionCuotaSocial = detalles.find(mov => mov.id_ref === rowData.numero_recibo)?.descripcion_mov || "-";
-      } catch {
-        toast.error("No se encontró la descripción de la cuota.");
-      }
+        try {
+            // Se obtiene el detalle de movimientos del Aeroclub usando el ID del movimiento
+            const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
+
+            // Se busca dentro de los detalles el movimiento cuyo id_ref coincida con el número del recibo
+            // y se extrae su descripción (si existe)
+            descripcionCuotaSocial = detalles.find(mov => mov.id_ref === rowData.numero_recibo)?.descripcion_mov || "-";
+        } catch {
+            // Si ocurre algún error (por ejemplo, fallo en la API), se muestra un mensaje al usuario
+            toast.error("No se encontró la descripción de la cuota.");
+        }
     }
 
-    // Datos del recibo
-    const reciboData = {
-      recibo: rowData.tipo_recibo || "-", // Tipo de recibo: "Vuelo", "Combustible" o "Cuota Social"
-      asociado: rowData.usuario || "-",
-      aeronave: rowData.matricula || "-",
-      reciboNo: rowData.numero_recibo || "-",
-      fecha: rowData.fecha || new Date().toLocaleDateString(),
-      observaciones: rowData.observaciones || "Sin observaciones",
-      observacionesCuotaSocial: descripcionCuotaSocial,
-      tarifa: rowData.importe_tarifa || "-",
-      fechaVigenciaTarifa: rowData.fecha_vigencia_tarifa || "-",
-      instructor: rowData.instructor || "-",
-      importePorInstruccion: rowData.importe_por_instruccion || "-",
-      importeTotal: rowData.importe_total || "-",
-      cantidad: rowData.cantidad || "-",
-    };
-  
-    // Parsear itinerarios (solo para recibos de vuelo)
-    const itinerarios = JSON.parse(rowData.datos_itinerarios || "[]");
-  
-    // Crear el documento PDF
-    const doc = new jsPDF();
-  
-    const img = new Image();
-    img.onload = () => {
-      // Cabecera general
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.text("Aero Club Lincoln", 52, 20, { align: "center" });
-      doc.setFontSize(12);
-      doc.text("Lincoln - Buenos Aires", 52, 28, { align: "center" });
-      doc.text("Fundado el 22 de Mayo de 1945", 52, 34, { align: "center" });
-      doc.addImage(img, "PNG", 110, 10, 80, 30);
+    // Se añade la descripción encontrada (o "-") directamente al objeto rowData
+    // Así, la función de generación de PDF ya recibe todo listo sin necesidad de más lógica
+    rowData.descripcionCuotaSocial = descripcionCuotaSocial;
 
-      // Datos básicos (asociado, recibo, fecha)
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-      doc.text(`Asociado: ${reciboData.asociado}`, 20, 50);
-      // Mostrar "Aeronave" solo si el tipo de recibo es "Vuelo"
-      if (reciboData.recibo === "vuelo") {
-        doc.text(`Aeronave: ${reciboData.aeronave}`, 20, 58);
-      }
-      doc.setFont("helvetica", "bold");
-      doc.text(`Recibo Nº: ${reciboData.reciboNo}`, 120, 50);
-      doc.setFont("helvetica", "normal");
-      doc.text(`Fecha: ${reciboData.fecha}`, 120, 58);
-      doc.setLineWidth(0.3);
-      doc.line(10, 66, 200, 66);
-  
+    // Se llama a la función que genera el PDF, en modo directo (true),
+    // lo que evita buscar en dataRecibo o recibosTodos
+    generarReciboPDF(rowData, null, null, true);
+};
 
-      // Lógica para recibo de "Vuelo"
-      if (reciboData.recibo === "vuelo") {
-        // Encabezado de itinerarios
-        doc.setFont("helvetica", "bold");
-        doc.text("Itinerarios", 10, 74);
-        doc.setFontSize(10);
-  
-        // Tabla de itinerarios
-        const tableHeaders = ["Hora Salida", "Hora Llegada", "Origen", "Destino", "Duración", "Aterrizajes"];
-        let xStart = 10;
-        let yStart = 80;
-        const colWidths = [30, 30, 40, 40, 30, 30];
-  
-        tableHeaders.forEach((header, index) => {
-          doc.setFont("helvetica", "bold");
-          doc.text(header, xStart, yStart);
-          xStart += colWidths[index];
-        });
-  
-        yStart += 6;
-        itinerarios.forEach((itinerario, rowIndex) => {
-          const { hora_salida = "-", hora_llegada = "-", origen = "-", destino = "-", duracion = "-", aterrizajes = "-" } = itinerario;
-  
-          if (rowIndex % 2 === 0) {
-            doc.setFillColor(230, 230, 230);
-            doc.rect(10, yStart - 4, 190, 8, "F");
-          }
-  
-          xStart = 10;
-          const rowData = [hora_salida, hora_llegada, origen, destino,parseFloat(duracion).toFixed(1), aterrizajes];
-          rowData.forEach((data, colIndex) => {
-            doc.setFont("helvetica", "normal");
-            doc.text(`${data}`, xStart, yStart);
-            xStart += colWidths[colIndex];
-          });
-  
-          yStart += 10;
-        });
-  
-      // Observaciones
-      doc.setFont("helvetica", "bold");
-      doc.text("Observaciones:", 10, yStart);
-      yStart += 6; // Espaciado para el contenido de observaciones
-      doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observaciones}`, 20, yStart, { maxWidth: 180 });
-      yStart += 6;
-      doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
-  
-      // Detalles de instrucción (condicional)
-      if (rowData.instructor && rowData.instructor.trim() !== "") {
-        yStart += 6; // Espaciado solo si existe un instructor
-        doc.text(`Vuelo con instrucción (Instructor: ${reciboData.instructor})`, 20, yStart, { maxWidth: 180 });
-      }
-  
-      // Nueva línea divisoria
-      yStart += 10;
-      doc.setLineWidth(0.3);
-      doc.line(10, yStart, 200, yStart);
-  
-      // Calcular la duración total
-      //const duracionTotal = itinerarios.reduce((suma, itinerario) => {
-      //const duracion = parseFloat(itinerario.duracion) || 0; // Convertir a número flotante, si no es válido usa 0
-      //return suma + duracion;
-      //}, 0);
-
-      // Calcular importe e importe de instrucción
-      const tarifa = parseFloat(reciboData.tarifa) || 0; // Convertir tarifa a número flotante
-      //const importePorInstruccion = parseFloat(reciboData.importePorInstruccion) || 0; // Usar la propiedad correcta del objeto reciboData
-
-      // Importe total (sin instrucción)
-      const importe = tarifa * reciboData.cantidad; 
-
-      // Importe por instrucción (si aplica)
-      const instruccionImporte = reciboData.importePorInstruccion * reciboData.cantidad; // Multiplicar por la duración total
-
-      // Calcular el total de aterrizajes
-      const totalAterrizajes = itinerarios.reduce((suma, itinerario) => {
-        const aterrizajes = parseInt(itinerario.aterrizajes, 10) || 0; // Convertir a número entero, si no es válido usa 0
-        return suma + aterrizajes;
-      }, 0);
-
-      // Cuadro de importes en el PDF
-      yStart += 10;
-
-      // Importe e Instrucción (uno debajo del otro, a la izquierda)
-      doc.setFont("helvetica", "bold");
-      doc.text("Importe:", 10, yStart);
-      doc.setFont("helvetica", "normal");
-      doc.text(`$${importe.toFixed(2)}`, 35, yStart); // Valor del importe
-
-      yStart += 6; // Espaciado para la siguiente línea
-      doc.setFont("helvetica", "bold");
-      doc.text("Instrucción:", 10, yStart);
-      doc.setFont("helvetica", "normal");
-
-      if (rowData.instructor && rowData.instructor.trim() !== "") {
-        doc.text(`$${instruccionImporte.toFixed(2)}`, 35, yStart); // Valor de instrucción
-      } else {
-        doc.text("-", 35, yStart); // Mostrar un guion si la condición no se cumple
-      }
-
-      // Duración total y Aterrizajes (alineados a la derecha)
-      yStart -= 6; // Reposicionar para que estén a la misma altura que "Importe"
-      doc.setFont("helvetica", "bold");
-      doc.text("Duración total:", 120, yStart);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${parseFloat(reciboData.cantidad).toFixed(1)}`, 155, yStart, { align: "right" });
-
-      yStart += 6; // Espaciado para la siguiente línea
-      doc.setFont("helvetica", "bold");
-      doc.text("Aterrizajes:", 120, yStart);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${totalAterrizajes}`, 155, yStart, { align: "right" }); // Valor de aterrizajes
-
-      // Línea divisoria
-      yStart += 10;
-      doc.setLineWidth(0.5);
-      doc.line(10, yStart, 200, yStart);
-
-      // Total a pagar (centrado y destacado al final)
-      yStart += 10;
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14); // Tamaño más grande para destacar
-      doc.text("Total a pagar:", 105, yStart, { align: "center" });
-      doc.setFont("helvetica", "normal");
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 150, yStart, { align: "center" });
-
-      // Línea divisoria
-      yStart += 6;
-      doc.setLineWidth(0.5);
-      doc.line(10, yStart, 200, yStart);
-
-
-  
-    } else if (reciboData.recibo === "combustible") {
-      let yStart = 74;
-      let xTitle = 50; // Ajusta este valor para centrar títulos
-      let xValue = 120; // Ajusta este valor para alinear con el monto
-  
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-  
-      // Insumo
-      doc.text("Insumo:", xTitle, yStart);
-      doc.setFont("helvetica", "bold");
-      doc.text("Combustible 100LL", xValue, yStart);
-  
-      yStart += 10;
-  
-      // Cantidad de combustible
-      doc.setFont("helvetica", "normal");
-      doc.text("Cantidad de Combustible:", xTitle, yStart);
-      doc.setFont("helvetica", "bold");
-      doc.text(`${reciboData.cantidad} litros`, xValue, yStart);
-  
-      yStart += 10;
-  
-      // Cálculo de tarifa por litro
-      const tarifaPorLitro = (parseFloat(reciboData.importeTotal) / parseFloat(reciboData.cantidad)).toFixed(2);
-      doc.setFont("helvetica", "normal");
-      doc.text("Tarifa por litro:", xTitle, yStart);
-      doc.setFont("helvetica", "bold");
-      doc.text(`$${tarifaPorLitro}`, xValue, yStart);
-  
-      yStart += 10;
-    // Observaciones
-    doc.setFont("helvetica", "normal");
-    doc.text("Observaciones:", xTitle, yStart);
-
-    // Ajuste automático del texto largo
-    let observacionesTexto = doc.splitTextToSize(reciboData.observaciones, 70); // 60 es el ancho máximo en px
-    doc.setFont("helvetica", "normal");
-    doc.text(observacionesTexto, xValue, yStart, { align: "left" });
-
-    yStart += 1 + (observacionesTexto.length * 3); // Ajustamos el espaciado dinámicamente
-
-  
-      // Línea divisoria
-      yStart += 10;
-      doc.setLineWidth(0.5);
-      doc.line(10, yStart, 200, yStart);
-  
-      yStart += 8;
-  
-      // Total a pagar
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.text("Total a pagar:", xTitle, yStart);
-      doc.setFontSize(16);
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, xValue, yStart);
-  
-      // Línea divisoria
-      yStart += 4;
-      doc.setLineWidth(0.5);
-      doc.line(10, yStart, 200, yStart);
-
-    } else if (reciboData.recibo === "cuota_social") {
-      let yStart = 74;
-
-      // Detalle del recibo
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-    
-      // recibo
-      doc.text("Recibo:", 20, yStart);
-      doc.setFont("helvetica", "bold");
-      doc.text("Cuota social", 70, yStart);
-    
-      yStart += 10;
-    
-      // Observaciones
-      doc.setFont("helvetica", "normal");
-      doc.text("Observaciones:", 20, yStart);
-    
-      doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observacionesCuotaSocial}`, 70, yStart, { maxWidth: 180 });
-
-      // Línea divisoria
-      yStart += 10;
-      doc.setLineWidth(0.5);
-      doc.line(10, yStart, 200, yStart);
-    
-      yStart += 8;
-      
-      // Total a pagar
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.text("Total a pagar:", 80, yStart);
-      doc.setFontSize(16);
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 125, yStart);
-
-      // Línea divisoria
-      yStart += 4;
-      doc.setLineWidth(0.5);
-      doc.line(10, yStart, 200, yStart);
-
-    }
-  
-      // Crear la previsualización
-      const pdfOutput = doc.output("bloburl");
-      const newWindow = window.open();
-
-      if (!newWindow) {
-        toast.error("Popup bloqueado o fallo al abrir la ventana");
-        return;
-      }
-
-      newWindow.document.write(`
-        <style>
-          body, html { margin: 0; padding: 0; height: 100%; width: 100%; }
-          iframe { border: none; width: 100%; height: 100%; margin: 0; padding: 0; }
-        </style>
-        <iframe src="${pdfOutput}"></iframe>
-      `);
-    };
-  
-    img.src = logo; // Cambia esto por la ruta de tu logo
-  };
   
   const plantillaFecha = (rowData) => {
     const fecha = new Date(rowData.fecha);
