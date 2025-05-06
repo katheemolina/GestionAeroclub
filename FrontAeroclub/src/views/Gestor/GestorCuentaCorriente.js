@@ -162,6 +162,16 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
 
     // Función auxiliar para renderizar el estado
     const renderEstado = (estado, descripcion) => {
+      // Si el estado viene directamente del recibo, usarlo tal cual
+      if (estado === 'Pago' || estado === 'Pendiente') {
+        return (
+          <span className={`estado-badge ${estado === 'Pago' ? 'estado-pago' : 'estado-impago'}`}>
+            {estado}
+          </span>
+        );
+      }
+      
+      // Si no, usar la lógica anterior como fallback
       const esPago = estado?.toLowerCase() === 'pago' || descripcion?.toLowerCase().includes('pago');
       const estadoNormalizado = esPago ? 'Pago' : 'Pendiente';
       return (
@@ -243,7 +253,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Estado</span>
-                  <span className="detail-value">{renderEstado(movimiento.estado, movimiento.descripcion_completa)}</span>
+                  <span className="detail-value">{renderEstado(recibo.estado, movimiento.descripcion_completa)}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Fecha</span>
@@ -274,7 +284,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
               <div className="vuelo-info">
                 <div className="detail-item">
                   <span className="detail-label">Estado</span>
-                  <span className="detail-value">{renderEstado(movimiento.estado, movimiento.descripcion_completa)}</span>
+                  <span className="detail-value">{renderEstado(recibo.estado, movimiento.descripcion_completa)}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Fecha</span>
@@ -373,7 +383,7 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
               <div className="details-grid">
                 <div className="detail-item">
                   <span className="detail-label">Estado</span>
-                  <span className="detail-value">{renderEstado(movimiento.estado, movimiento.descripcion_completa)}</span>
+                  <span className="detail-value">{renderEstado(recibo.estado, movimiento.descripcion_completa)}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Fecha</span>
