@@ -14,7 +14,7 @@ function Footer() {
             <li><a href="https://www.linkedin.com/in/juanigpunte/" target='blank'>Juan Ignacio Punte</a></li>
             <li><a href="https://www.linkedin.com/in/katherineluzmolinategaldi/" target='blank'>Katherine Molina</a></li>
             <li><a href="https://github.com/Renn4" target='blank'>Martín Peralta</a></li>
-            <li><a href="https://www.linkedin.com/in/eric-andy-arias" target='blank'>Eric Andy Arias</a></li>
+            <li><a href="https://www.linkedin.com/in/ericandyarias" target='blank'>Eric Andy Arias</a></li>
           </ul>
         </nav>
         <p>&copy; 2025 All rights reserved.</p>
