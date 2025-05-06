@@ -12,16 +12,17 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'primereact/card';
-import { Button } from 'primereact/button'; // Asegúrate de que tienes el componente Button de PrimeReact
-import { useUser } from '../../context/UserContext'; // Contexto de usuario, si es necesario para la API
+import { Button } from 'primereact/button'; 
+import { useUser } from '../../context/UserContext'; 
 import { armarLiquidacionApi } from '../../services/generarReciboApi';
 
 const GestorArmarLiquidacionInstructores = () => {
     const [movimientos, setMovimientos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedMovimientos, setSelectedMovimientos] = useState([]);
-    const [selectedUsuario, setSelectedUsuario] = useState(null); // Aseguramos que todos los movimientos sean de un mismo usuario
+    const [selectedUsuario, setSelectedUsuario] = useState(null); 
     const [selectedRowData, setSelectedRowData] = useState(null);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
     const idUsuarioEvento = useUser(); // Supongo que este hook devuelve el id del usuario actual.
 
@@ -142,7 +143,7 @@ const GestorArmarLiquidacionInstructores = () => {
 
     return (
         <div className="background">
-            <ToastContainer />
+            
             <div className="titulo-btn">
                 <header className="header">
                     <h1>Liquidación para Instructores</h1>
@@ -153,7 +154,7 @@ const GestorArmarLiquidacionInstructores = () => {
             <Button
                 className="enviar"
                 label="Generar Liquidación"
-                onClick={handleEnviarSeleccionados} 
+                onClick={() => setShowConfirmDialog(true)} 
                 disabled={selectedMovimientos.length === 0} // Deshabilitar si no hay movimientos seleccionados
             />
 
@@ -266,6 +267,37 @@ const GestorArmarLiquidacionInstructores = () => {
                     </div>
                 )}
 
+            <Dialog
+                header="Confirmar"
+                className="modal-confirmar-habilitacion"
+                visible={showConfirmDialog}
+                style={{ width: '350px' }}
+                modal
+                footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                    <Button
+                    label="Cancelar"
+                    className="gestor-btn-cancelar"
+                    icon="pi pi-times"
+                    style={{ marginRight: '10px' }}
+                    onClick={() => setShowConfirmDialog(false)}
+                    />
+                    <Button
+                    label="Confirmar"
+                    className="p-button-secondary gestor-btn-confirmar"
+                    icon="pi pi-check"
+                    onClick={() => {
+                        handleEnviarSeleccionados();
+                        setShowConfirmDialog(false);
+                    }}
+                    autoFocus
+                    />
+                </div>
+                }
+                onHide={() => setShowConfirmDialog(false)}
+            >
+                <p>¿Está seguro de que desea ejecutar las liquidaciones indicadas?</p>
+            </Dialog>
         </div>
     );
 };
