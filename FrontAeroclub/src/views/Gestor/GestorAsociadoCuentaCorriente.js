@@ -98,7 +98,11 @@ function GestorAsociadoCuentaCorriente() {
     if (rowData.tipo !== "pago") {
       try {
         const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
-        //console.log("Detalles cta cte aeroclub x movimiento:", detalles);
+        // Buscar el recibo correspondiente
+        const reciboEncontrado = dataRecibo.find(recibo => recibo.id_movimiento === rowData.id_movimiento);
+        if (reciboEncontrado) {
+          setSelectedRowData({...rowData, recibo: reciboEncontrado});
+        }
         setDetalleMovimiento(detalles);
       } catch (error) {
         toast.error("Error al obtener detalles del movimiento");
@@ -142,8 +146,9 @@ function GestorAsociadoCuentaCorriente() {
   };
 
   // Formato de importe como moneda
-  const formatoMoneda = (rowData) => {
-    return `$ ${parseFloat(rowData.importe).toFixed(2)}`;
+  const formatoMoneda = (valor) => {
+    if (valor === null || valor === undefined || isNaN(valor)) return '$ 0.00';
+    return `$ ${parseFloat(valor).toFixed(2)}`;
   };
 
   // Renderizar checkbox en cada fila
@@ -195,6 +200,239 @@ function GestorAsociadoCuentaCorriente() {
       return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
     };
 
+  const renderDetalleMovimiento = (movimiento, recibo) => {
+    if (!movimiento) return null;
+
+    // Función auxiliar para extraer números de recibo de la descripción
+    const extraerNumerosRecibo = (descripcion) => {
+      const match = descripcion.match(/\((\d+)\)/);
+      return match ? match[1] : null;
+    };
+
+    // Función auxiliar para renderizar el estado
+    const renderEstado = (estado) => (
+      <span className={`estado-badge ${estado === 'Pago' ? 'estado-pago' : 'estado-impago'}`}>
+        {estado}
+      </span>
+    );
+
+    // Si es un pago, buscar los recibos relacionados
+    if (movimiento.descripcion_completa?.includes("Pago de recibos:")) {
+      const numerosRecibo = extraerNumerosRecibo(movimiento.descripcion_completa);
+      const recibosPagados = recibosTodos.filter(r => r.numero_recibo.toString() === numerosRecibo);
+
+      return (
+        <div className="details-dialog">
+          <div className="details-section">
+            <h3>Pago de recibos: ({numerosRecibo})</h3>
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="detail-label">Estado</span>
+                <span className="detail-value">{renderEstado(movimiento.estado)}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Fecha</span>
+                <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Importe total</span>
+                <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+              </div>
+            </div>
+            <div className="observaciones-section">
+              <span className="observaciones-label">Observaciones</span>
+              <p className="observaciones-value">{movimiento.observaciones || "Ninguna"}</p>
+            </div>
+          </div>
+
+          {recibosPagados.map((reciboPagado, index) => (
+            <div key={index} className="recibo-pagado">
+              <h4>Recibo pagado Nro. {reciboPagado.numero_recibo}</h4>
+              {renderDetalleMovimiento(
+                { 
+                  ...movimiento, 
+                  descripcion_completa: `Generacion de Recibo Nro. ${reciboPagado.numero_recibo}`,
+                  importe: reciboPagado.importe_total,
+                  estado: reciboPagado.estado,
+                  fecha: reciboPagado.fecha
+                },
+                reciboPagado
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Si no es un pago, mostrar según el tipo de recibo
+    if (!recibo) {
+      // Si no hay recibo, intentar buscarlo en dataRecibo
+      const reciboEncontrado = dataRecibo.find(r => r.id_movimiento === movimiento.id_movimiento);
+      if (reciboEncontrado) {
+        recibo = reciboEncontrado;
+      } else {
+        return null;
+      }
+    }
+
+    switch (recibo.tipo_recibo) {
+      case "cuota_social":
+        return (
+          <div className="details-dialog">
+            <div className="details-section">
+              <h3>Recibo de cuota social del mes: {movimiento.descripcion_completa.split("mes:")[1]?.trim()}</h3>
+              <div className="cuota-info">
+                <div className="detail-item">
+                  <span className="detail-label">Número de recibo</span>
+                  <span className="detail-value">{recibo.numero_recibo}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Estado</span>
+                  <span className="detail-value">{renderEstado(movimiento.estado)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Fecha</span>
+                  <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Importe</span>
+                  <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+                </div>
+              </div>
+              <div className="observaciones-section">
+                <span className="observaciones-label">Observaciones</span>
+                <p className="observaciones-value">{movimiento.observaciones || "Ninguna"}</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "vuelo":
+        const itinerarios = JSON.parse(recibo.datos_itinerarios || "[]");
+        return (
+          <div className="details-dialog">
+            <div className="details-section">
+              <h3>Recibo de vuelo Nro. {recibo.numero_recibo}</h3>
+              <div className="vuelo-info">
+                <div className="detail-item">
+                  <span className="detail-label">Estado</span>
+                  <span className="detail-value">{renderEstado(movimiento.estado)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Fecha</span>
+                  <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Importe</span>
+                  <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Matrícula</span>
+                  <span className="detail-value">{recibo.matricula}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Horas de vuelo</span>
+                  <span className="detail-value">{recibo.cantidad}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Tarifa por hora</span>
+                  <span className="detail-value">{formatoMoneda(recibo.importe_tarifa)}</span>
+                </div>
+                {recibo.instructor && (
+                  <div className="detail-item">
+                    <span className="detail-label">Instructor</span>
+                    <span className="detail-value">{recibo.instructor}</span>
+                  </div>
+                )}
+              </div>
+
+              {itinerarios.length > 0 && (
+                <div className="vuelo-details">
+                  <h4>Itinerarios</h4>
+                  {itinerarios.map((itinerario, index) => (
+                    <div key={index} className="itinerario-section">
+                      <div className="details-grid">
+                        <div className="detail-item">
+                          <span className="detail-label">Origen</span>
+                          <span className="detail-value">{itinerario.origen}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Destino</span>
+                          <span className="detail-value">{itinerario.destino}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Hora salida</span>
+                          <span className="detail-value">{itinerario.hora_salida}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Hora llegada</span>
+                          <span className="detail-value">{itinerario.hora_llegada}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Aterrizajes</span>
+                          <span className="detail-value">{itinerario.aterrizajes}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-label">Duración</span>
+                          <span className="detail-value">{itinerario.duracion} horas</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="observaciones-section">
+                <span className="observaciones-label">Observaciones</span>
+                <p className="observaciones-value">{movimiento.observaciones || "Ninguna"}</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "combustible":
+        const tarifaPorLitro = recibo.cantidad ? (parseFloat(recibo.importe_total) / parseFloat(recibo.cantidad)).toFixed(2) : 0;
+        return (
+          <div className="details-dialog">
+            <div className="details-section">
+              <h3>Recibo por compra de combustible Nro. {recibo.numero_recibo}</h3>
+              <div className="details-grid">
+                <div className="detail-item">
+                  <span className="detail-label">Estado</span>
+                  <span className="detail-value">{renderEstado(movimiento.estado)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Fecha</span>
+                  <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Importe</span>
+                  <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+                </div>
+              </div>
+              <div className="combustible-info">
+                <div className="detail-item">
+                  <span className="detail-label">Cantidad de litros</span>
+                  <span className="detail-value combustible-value">{recibo.cantidad}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Tarifa por litro</span>
+                  <span className="detail-value combustible-value">{formatoMoneda(tarifaPorLitro)}</span>
+                </div>
+              </div>
+              <div className="observaciones-section">
+                <span className="observaciones-label">Observaciones</span>
+                <p className="observaciones-value">{movimiento.observaciones || "Ninguna"}</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   if (loading) {
     return <PantallaCarga />;
   }
@@ -223,22 +461,21 @@ function GestorAsociadoCuentaCorriente() {
           className="procesar-button"
         />
         <Dialog
-            header="Confirmar procesamiento"
-            visible={confirmDialogVisible}
-            onHide={() => setConfirmDialogVisible(false)}
-            footer={
-                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
-                    <Button label="Confirmar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
-                </div>
-            }
+          header="Confirmar procesamiento"
+          visible={confirmDialogVisible}
+          onHide={() => setConfirmDialogVisible(false)}
+          footer={
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+              <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
+              <Button label="Confirmar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
+            </div>
+          }
         >
-            <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
+          <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
         </Dialog>
 
-
         <DataTable
-        ref={dt}
+          ref={dt}
           value={data}
           paginator
           rows={15}
@@ -288,92 +525,56 @@ function GestorAsociadoCuentaCorriente() {
             filter
             filterPlaceholder="Buscar por importe"
             filterMatchMode="contains"
-            body={formatoMoneda}
+            body={(rowData) => formatoMoneda(rowData.importe)}
             showFilterMenu={false}
           />
           <Column
             header="Acciones"
             filter
-          showFilterMenu={false}
-          filterElement={
-            <Button
-              label="Limpiar"
-              onClick={clearFilters}
-              style={{ width: '100%', height: '40px',  padding: '10px'}}
-            />
-          }
+            showFilterMenu={false}
+            filterElement={
+              <Button
+                label="Limpiar"
+                onClick={clearFilters}
+                style={{ width: '100%', height: '40px', padding: '10px'}}
+              />
+            }
             body={(rowData) => (
               <div className="acciones">
-                <Tooltip title="Ver detalles">
+                <Tooltip>
                   <IconButton
                     color="primary"
+                    title="Ver detalles"
                     aria-label="view-details"
                     onClick={() => openDialog(rowData)}
                   >
                     <SearchIcon />
                   </IconButton>
+
+                  {rowData.descripcion_completa !== null && (
+                    <IconButton
+                      color="primary"
+                      title="Ver Recibo"
+                      onClick={() => handlePreviewAndPrint(rowData)}
+                    >
+                      <PrintIcon />
+                    </IconButton>
+                  )}
                 </Tooltip>
-
-                {rowData.descripcion_completa !== null  && (
-                  <IconButton
-                    color="primary"
-                    title="Ver Recibo"
-                    onClick={() => handlePreviewAndPrint(rowData)}
-                  >
-                    <PrintIcon />
-                  </IconButton>
-                )}
-
               </div>
             )}
           />
         </DataTable>
 
-        <Dialog header="Detalles del Movimiento" visible={dialogVisible} style={{ width: '450px' }} onHide={closeDialog}>
-                  {selectedRowData && (
-                    <div>
-                      <div className="p-fluid details-dialog">
-                        {/*<Card><p><strong>Asociado:</strong> {selectedRowData.asociado}</p></Card>*/}
-                        <Card><p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p></Card>
-                        <Card><p><strong>Estado:</strong> {selectedRowData.estado}</p></Card>
-                        <Card>  <p><strong>Fecha:</strong> {formatearFecha(selectedRowData.fecha)}</p></Card>
-                        <Card><p><strong>Importe:</strong> {formatoMoneda(selectedRowData.importe)}</p></Card>
-                        <Card><p><strong>Observaciones:</strong> {selectedRowData.observaciones ?? "Ninguna"}</p></Card>
-                        {detalleMovimiento && detalleMovimiento.length > 0 && detalleMovimiento .filter(data => data.tipo_recibo === 'vuelo') 
-                        .map((data, index) => (
-                        <Card key={index}>
-                            <div>
-                              {/* Título según la posición del índice */}
-                              <h4 style={{ textAlign: "center", marginBottom: "2%" }}>
-                                <strong>{index === 0 ? "Detalles del vuelo" : "Detalles de instrucción"}</strong>
-                              </h4>
-        
-                              {data.estado !== null && (
-                                <p><strong>Estado:</strong> {data.estado}</p>
-                              )}
-                              {data.importe !== null && (
-                                <p><strong>Importe:</strong> {data.importe_mov}</p>
-                              )}
-                              {index === 0 && data.cantidad !== null && (
-                                <p><strong>Horas de vuelo:</strong> {data.cantidad}</p>
-                              )}
-                              {index === 0 && (
-                                <p><strong>Observaciones:</strong> {data.observaciones !== null ? data.observaciones : "Ninguna"}</p>
-                              )}
-        
-                              {(index === 0 || (index === 1 && data.instruccion?.includes("No"))) && (
-                                <p><strong>Instrucción:</strong> {data.instruccion}</p>
-                              )}
-                              {index > 0 && data.instructor !== null && (
-                                <p><strong>Instructor:</strong> {data.instructor}</p>
-                              )}
-                            </div>
-                        </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </Dialog>
+        <Dialog 
+          header="Detalles del Movimiento" 
+          visible={dialogVisible} 
+          style={{ width: '700px' }} 
+          onHide={closeDialog}
+          className="custom-dialog"
+        >
+          {selectedRowData && renderDetalleMovimiento(selectedRowData, selectedRowData.recibo)}
+        </Dialog>
       </div>
     </>
   );

@@ -1,0 +1,218 @@
+.details-dialog {
+  padding: 1rem;
+}
+
+.details-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.details-section h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.details-section h4 {
+  color: #34495e;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.importe-value {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.combustible-value {
+  color: #e67e22;
+  font-weight: 600;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.estado-pago {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.estado-impago {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.observaciones-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.observaciones-label {
+  display: block;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.observaciones-value {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.vuelo-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.vuelo-details {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.itinerario-section {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.recibo-pagado {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.cuota-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.combustible-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.custom-dialog .p-dialog-content {
+  padding: 0;
+}
+
+.custom-dialog .p-dialog-header {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-dialog .p-dialog-header .p-dialog-title {
+  font-size: 1.25rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Estilos para la tabla */
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.columna-ancho-min {
+  width: 100px;
+  text-align: center;
+}
+
+/* Estilos para el botón de procesar */
+.procesar-button {
+  margin: 1rem 0;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.procesar-button:hover {
+  background-color: #45a049;
+}
+
+.procesar-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Estilos para el header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.75rem;
+}
+
+.back-button {
+  color: #2c3e50;
+}
+
+/* Estilos para el fondo */
+.background {
+  padding: 2rem;
+  background-color: #f5f6fa;
+  min-height: 100vh;
+}
