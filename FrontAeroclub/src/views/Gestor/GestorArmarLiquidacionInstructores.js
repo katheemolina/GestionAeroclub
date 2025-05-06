@@ -15,6 +15,7 @@ import { Card } from 'primereact/card';
 import { Button } from 'primereact/button'; 
 import { useUser } from '../../context/UserContext'; 
 import { armarLiquidacionApi } from '../../services/generarReciboApi';
+import { Toast } from 'primereact/toast';
 
 const GestorArmarLiquidacionInstructores = () => {
     const [movimientos, setMovimientos] = useState([]);
@@ -143,7 +144,7 @@ const GestorArmarLiquidacionInstructores = () => {
 
     return (
         <div className="background">
-            
+            <ToastContainer/>
             <div className="titulo-btn">
                 <header className="header">
                     <h1>Liquidación para Instructores</h1>
