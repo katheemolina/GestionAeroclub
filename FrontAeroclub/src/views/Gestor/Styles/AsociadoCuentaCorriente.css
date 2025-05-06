@@ -216,3 +216,47 @@
   background-color: #f5f6fa;
   min-height: 100vh;
 }
+
+.importes-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.importes-section h4 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+
+.total-importe {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #e9ecef;
+}
+
+.total-importe .detail-label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.total-importe .importe-value {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1em;
+}
+
+.importes-section .detail-item {
+  margin-bottom: 8px;
+}
+
+.importes-section .detail-label {
+  color: #6c757d;
+}
+
+.importes-section .importe-value {
+  color: #2c3e50;
+  font-weight: 500;
+}
