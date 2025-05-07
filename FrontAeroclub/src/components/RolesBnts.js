@@ -33,10 +33,15 @@ function BotonesPorRol() {
 
 
   useEffect(() => {
-    if (rolesDisponibles.length === 1 && !rolActivo) {
+
+    const rolEnUso = localStorage.getItem('role')
+    if (rolEnUso) {
+      handleButtonClick(rolEnUso)
+    }
+    else if (rolesDisponibles.length === 1 && !rolActivo) {
       handleButtonClick(rolesDisponibles[0].descripcion);
     }
-    
+
   }, [rolesDisponibles]);
 
   const handleButtonClick = (rol) => {
