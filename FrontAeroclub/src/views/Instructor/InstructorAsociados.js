@@ -23,7 +23,10 @@ function InstructorAsociados({idUsuario = 0}){
         try {
             // Obtener vuelos
             const asociadosResponse = await listarAsociados(idUsuario);
-            setData(asociadosResponse);
+
+            const asociadosFiltro = asociadosResponse.filter(asociado => asociado.id_usuario !== 2)
+            
+            setData(asociadosFiltro);
         } catch (error) {
             console.error("Error al obtener datos:", error);
         }
