@@ -9,12 +9,15 @@ import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Dialog } from 'primereact/dialog';
 
 function AdministradorRecibos({ idUsuario = 0 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtroEstado, setFiltroEstado] = useState(null);
    const [estadoFiltro, setEstadoFiltro] = useState(null);
+   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+   const [selectedRecibo, setselectedRecibo] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,18 +36,25 @@ function AdministradorRecibos({ idUsuario = 0 }) {
     fetchData();
   }, [idUsuario]);
 
-  const handleAnularRecibo = async (idRecibo) => {
-    const result = await anularRecibo(idRecibo);
-    //console.log("Respuesta del backend:", result); // Para depuración
+  const handleAnularRecibo = async () => {
+    try {
+      if(selectedRecibo){
 
-    if (result.status === "success") { // Cambiado de `success` a `status`
-        toast.success("Recibo anulado correctamente.");
-        setData((prevData) =>
-            prevData.filter((recibo) => recibo.numero_recibo !== idRecibo)
-        );
-    } else {
-        toast.error("No se pudo anular el recibo.");
-    }
+        await anularRecibo(selectedRecibo);
+      }
+
+    }catch(error){
+      toast.error("No se pudo anular el recibo.");
+    
+  } finally {
+    setShowConfirmDialog(false);
+    setselectedRecibo(null);
+    setData((prevData) =>
+      prevData.filter((recibo) => recibo.numero_recibo !== selectedRecibo)
+  );
+  toast.success("Recibo anulado con exito");
+}
+  
 };
 
 const dt = useRef(null);
@@ -82,6 +92,11 @@ const dt = useRef(null);
       setEstadoFiltro(e.value);
       options.filterApplyCallback(e.value); // Aplica el filtro
   };
+
+  const confirmAnularRecibo = (idRecibo) => {
+    setselectedRecibo(idRecibo);
+    setShowConfirmDialog(true);
+};
 
   if (loading) {
     return <p>Cargando...</p>;
@@ -140,7 +155,7 @@ const dt = useRef(null);
               <IconButton
               color="primary"
               title="Eliminar recibo"
-              onClick={() => handleAnularRecibo(rowData.numero_recibo)}
+              onClick={() => confirmAnularRecibo(rowData.numero_recibo)}
               >
                 <DeleteIcon />
               </IconButton>
@@ -149,6 +164,14 @@ const dt = useRef(null);
           )}
         />
       </DataTable>
+      <Dialog header="Confirmar"  className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
+                      <>
+                          <Button label="Cancelar" className="p-button-text gestor-btn-cancelar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} />
+                          <Button label="Confirmar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleAnularRecibo} autoFocus />
+                      </>
+                  } onHide={() => setShowConfirmDialog(false)}>
+                      <p>¿Está seguro de que desea anular este recibo?</p>
+                  </Dialog>
     </div>
   );
 }
