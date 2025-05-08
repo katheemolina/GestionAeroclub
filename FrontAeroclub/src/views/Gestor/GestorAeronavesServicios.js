@@ -35,7 +35,7 @@ const GestorAeronavesServicios = () => {
         id_aeronave: id_aeronave,
     }); // Estado para los datos del servicio
 
-    const [horasVoladas, setHorasVoladas] = useState(0); 
+    const [horasVoladas, setHorasVoladas] = useState(''); 
 
     const navigate = useNavigate(); 
 
@@ -99,7 +99,7 @@ const GestorAeronavesServicios = () => {
                     // Calcular el total correctamente
                     const totalHorasVoladas = horasHistoricas + horasVuelo;
                     setHorasVoladas(totalHorasVoladas);
-
+                    
                     // Obtener los servicios de la aeronave seleccionada
                     obtenerServicios(id_aeronave).then((serviciosData) => {
                         setServicios(serviciosData);
@@ -134,14 +134,27 @@ const GestorAeronavesServicios = () => {
      const handleSubmit = () => {
         insertarServicio(servicioData)
             .then((newServicio) => {
-                setServicios([...servicios, newServicio]); // Agregar el nuevo servicio a la lista
+                const servicioConFecha = {
+                    ...newServicio,
+                    fecha: newServicio.fecha || servicioData.fecha,
+                };
+    
+                setServicios([...servicios, servicioConFecha]);
+    
+                setSelectedRowData(servicioConFecha);
+    
                 toast.success("Servicio agregado correctamente.");
-                setMostrarDialog(false); // Cerrar el dialog
+
+                setTriggerEffect(!triggerEffect);  // Esto cambia el valor y dispara el useEffect
+
+                setMostrarDialog(false);
             })
             .catch((error) => {
                 toast.error("Error al agregar el servicio.");
             });
     };
+    
+    
 
 
     return (
@@ -184,7 +197,7 @@ const GestorAeronavesServicios = () => {
                     style={{width: '1px'}}
                     body={(rowData) => (
                     <div className='acciones'>
-                        <Tooltip title="Editar servicio">
+                        <Tooltip title="Observaciones">
                                 <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
                                     <SearchIcon />
                                 </IconButton>
@@ -198,7 +211,7 @@ const GestorAeronavesServicios = () => {
                     <div className='p-fluid details-dialog'>
                         
                         <Card className='card-observaciones'>
-                             {selectedRowData.observaciones}
+                        {selectedRowData?.observaciones || 'Sin observaciones'}
                         </Card>
                           
                     </div>
@@ -249,9 +262,12 @@ const GestorAeronavesServicios = () => {
                     {/* Campo para horas anteriores */}
                     <div className="p-field">
                         <label>Horas Anteriores</label>
-                        <InputText 
+                        <InputText
+
+                            type='number' 
+                            
                             name="horas_anteriores" 
-                            value={horasVoladas} 
+                            value={servicioData.horas_anteriores} 
                             onChange={handleInputChange} 
                         />
                     </div>
