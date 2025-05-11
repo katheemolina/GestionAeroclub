@@ -9,46 +9,37 @@ export const UserContext = createContext();
 export function UserProvider({ children }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const [user, setUser] = useState(storedUser || null);
-    const [usuarioId, setUsuarioId] = useState(null); // Estado para el UsuarioId
-    const [isUserEnabled, setIsUserEnabled] = useState(true);
-    const [PerfilIncompleto, setPerfilIncompleto] = useState(true); 
+    const [usuarioId, setUsuarioId] = useState(null);
+    const [isUserEnabled, setIsUserEnabled] = useState(null); // Ahora puede ser null al inicio
+    const [PerfilIncompleto, setPerfilIncompleto] = useState(null);
+    const [loadingUserData, setLoadingUserData] = useState(true); // Estado para saber si ya cargó
     const isAuthenticated = !!user;
-    
-    
-    
+
     useEffect(() => {
-        const fetchUserId = async () => {
-            if (user) {
-                try {
-                    const idUsuario = await obtenerIdUsuarioDesdeMail(user);
-                    setUsuarioId(idUsuario.id_usuario); // Guarda el ID en el contexto
-                } catch (error) {
-                    console.error('Error al obtener el ID de Usuario:', error);
-                }
+        const inicializarUsuario = async () => {
+            if (!user) {
+                setLoadingUserData(false);
+                return;
+            }
+
+            try {
+                const idUsuario = await obtenerIdUsuarioDesdeMail(user);
+                setUsuarioId(idUsuario.id_usuario);
+
+                const estado = await obtenerEstadoDelUsuario(idUsuario.id_usuario);
+                setIsUserEnabled(estado.data.estado?.toLowerCase() === "habilitado");
+                setPerfilIncompleto(estado.data.FaltanDatos === 0);
+            } catch (error) {
+                console.error('Error al inicializar datos del usuario:', error);
+                setIsUserEnabled(false);
+                setPerfilIncompleto(false);
+            } finally {
+                setLoadingUserData(false);
             }
         };
-    
-        fetchUserId();
+
+        inicializarUsuario();
     }, [user]);
-    
-    useEffect(() => {
-        const fetchUserIsEnabled = async () => {
-            if (user && usuarioId) { 
-                try {
-                    const isEnabled = await obtenerEstadoDelUsuario(usuarioId);
-                    setIsUserEnabled(isEnabled.data.estado?.toLowerCase() === "habilitado" ? true : false);
-                    const perfilCompleto = isEnabled.data.FaltanDatos === 0;
-                    setPerfilIncompleto(perfilCompleto);
-                    
-                } catch (error) {
-                    console.error('Error al obtener el estado del Usuario:', error);
-                }
-            }
-        };
-    
-        fetchUserIsEnabled();
-    }, [user, usuarioId]); //  usuarioId como dependencia
-    
 
     useEffect(() => {
         if (user) {
@@ -59,7 +50,16 @@ export function UserProvider({ children }) {
     }, [user]);
 
     return (
-        <UserContext.Provider value={{ user, setUser, usuarioId, setUsuarioId, isAuthenticated, isUserEnabled, PerfilIncompleto}}>
+        <UserContext.Provider value={{
+            user,
+            setUser,
+            usuarioId,
+            setUsuarioId,
+            isAuthenticated,
+            isUserEnabled,
+            PerfilIncompleto,
+            loadingUserData
+        }}>
             {children}
         </UserContext.Provider>
     );

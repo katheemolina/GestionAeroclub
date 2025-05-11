@@ -20,6 +20,7 @@ import GestorNuevoRecibo from './views/Gestor/GestorNuevoRecibo';
 import GestorGenerarCuotasSociales from './views/Gestor/GestorGenerarCuotasSociales';
 import GestorNotificaciones from './views/Gestor/GestorNotificaciones';
 import GestorInstructores from './views/Gestor/GestorInstructores';
+import PantallaCarga from './components/PantallaCarga';
 
 
 // Instructores
@@ -64,7 +65,12 @@ return allowedRoles.includes(role.toLowerCase()) & isAuthenticated ? (
 }
 
 function App() {
-  const { isUserEnabled, isAuthenticated } = useUser(); // Contexto que proporciona la información del usuario
+  const { isUserEnabled, isAuthenticated, loadingUserData } = useUser(); // Contexto que proporciona la información del usuario
+
+
+  if (loadingUserData) {
+    return PantallaCarga; // Pantalla de carga o Spinner
+  }
 
   if (!isUserEnabled) {
     // Si el usuario está deshabilitado, renderiza solo este componente
@@ -98,6 +104,7 @@ function App() {
       {/* <Navbar /> */}
       <div className="app-container">
         <Sidebar />
+        
         
         {/* Rutas según el rol */}
         <div className="layout">
@@ -148,8 +155,8 @@ function App() {
 
             <Route path="*" element={<ProtectedRoute component={Bienvenida} allowedRoles={['asociado', 'gestor', 'instructor','administrador']} />} />
           </Routes>
+          <Footer />
         </div>
-      <Footer />
       </div>
         
     </Router>
