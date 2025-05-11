@@ -25,51 +25,51 @@ const AeronaveCrud = () => {
     const fetchAeronaves = async () => {
         try {
             const data = await obtenerAeronaves();
-            console.log(data);
+            console.log("Aeronaves obtenidas:", data);
+            
+            // Filtramos solo las aeronaves activas
+            const aeronavesActivas = data.filter(aeronave => aeronave.estado === 'activo');
             
             // Transformamos los datos obtenidos añadiendo cálculos adicionales para cada aeronave.
             const aeronavesConDatosExtras = await Promise.all(
+                aeronavesActivas.map(async (aeronave) => {
+                    try {
+                        // Obtenemos los servicios asociados a esta aeronave
+                        const serviciosAeronave = await obtenerServicios(aeronave.id_aeronave);
+                        const servicio = serviciosAeronave?.[0];
 
-                data.map(async (aeronave) => { // Iteramos sobre cada aeronave de la lista
-                    // Obtenemos los servicios asociados a esta aeronave (probablemente datos de mantenimiento).
-                    const serviciosAeronave = await obtenerServicios(aeronave.id_aeronave);
-                    
-                    // Tomamos el último servicio registrado (el primero en la lista `serviciosAeronave`).
-                    const servicio = serviciosAeronave?.[0];
+                        // Calculamos las horas de vuelo actuales
+                        const horasActuales = parseFloat(aeronave.horas_vuelo_aeronave) || 0;
+                        const horasEnUltimoService = parseFloat(servicio?.horas_anteriores || 0);
+                        const intervaloInspeccion = parseFloat(aeronave.intervalo_para_inspeccion || 0);
+                        const horasDesdeUltimoService = horasActuales - horasEnUltimoService;
+                        const horasRestantes = intervaloInspeccion - horasDesdeUltimoService;
 
-                    // Calculamos las horas de vuelo actuales de la aeronave convirtiendo el string a número decimal.
-                    const horasActuales = parseFloat(aeronave.horas_vuelo_aeronave);
-
-                    // Obtenemos las horas registradas en el último servicio; si no hay datos, usamos 0 como valor predeterminado.
-                    const horasEnUltimoService = parseFloat(servicio?.horas_anteriores || 0);
-
-                    // Obtenemos el intervalo entre inspecciones (cuántas horas pueden pasar entre servicios).
-                    const intervaloInspeccion = parseFloat(aeronave.intervalo_para_inspeccion || 0);
-
-                    // Calculamos cuántas horas han pasado desde el último servicio.
-                    const horasDesdeUltimoService = horasActuales - horasEnUltimoService;
-
-                    // Calculamos cuántas horas faltan para la próxima inspección.
-                    const horasRestantes = intervaloInspeccion - horasDesdeUltimoService;
-
-                    // Devolvemos un nuevo objeto que incluye los datos originales de la aeronave y los cálculos adicionales.
-                    return {
-                        ...aeronave, // Copiamos todas las propiedades originales de la aeronave.
-                        horas_vuelo_aeronave: Math.floor(horasActuales), // Redondeamos las horas de vuelo actuales al número entero más cercano.
-                        horas_para_inspeccion: horasRestantes > 0 
-                            ? `${Math.floor(horasRestantes)} hs` // Si aún faltan horas, mostramos cuántas con el sufijo "hs".
-                            : 'Inspección requerida' // Si no faltan horas (o son negativas), indicamos que se necesita inspección.
-                    };
+                        return {
+                            ...aeronave,
+                            horas_vuelo_aeronave: Math.floor(horasActuales),
+                            horas_para_inspeccion: horasRestantes > 0 
+                                ? `${Math.floor(horasRestantes)} hs`
+                                : 'Inspección requerida'
+                        };
+                    } catch (error) {
+                        console.error(`Error al obtener servicios para aeronave ${aeronave.matricula}:`, error);
+                        // Si hay error al obtener servicios, devolvemos la aeronave con valores por defecto
+                        return {
+                            ...aeronave,
+                            horas_vuelo_aeronave: Math.floor(parseFloat(aeronave.horas_vuelo_aeronave) || 0),
+                            horas_para_inspeccion: 'No disponible'
+                        };
+                    }
                 })
             );
 
-            // Actualizamos el estado con la lista transformada de aeronaves que incluye los nuevos cálculos.
+            console.log("Aeronaves procesadas:", aeronavesConDatosExtras);
             setAeronaves(aeronavesConDatosExtras);
         } catch (error) {
-            // Si ocurre algún error durante el proceso, lo mostramos en la consola.
-            console.error('Error fetching aeronaves:', error);
+            console.error('Error al obtener aeronaves:', error);
+            setAeronaves([]); // En caso de error, establecemos un array vacío
         } finally {
-            // Marcamos que la operación de carga ha finalizado, independientemente de si fue exitosa o fallida.
             setLoading(false);
         }
     };
