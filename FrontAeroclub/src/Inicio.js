@@ -2,8 +2,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Login from './components/Login';
 import './components/styles/Login.css'
 
-export const CLIENT_ID = "1081356917813-3b09t79q645qlt5a1j3ftntgmsko6jrp.apps.googleusercontent.com";
-export const REDIRECT_URI = 'https://18.226.94.236/callback';  // Actualiza con la IP pública del servidor
+export const CLIENT_ID = "398787169740-39s4aa9hmnolaeaogg020dc056m8hrkp.apps.googleusercontent.com";
+export const REDIRECT_URI = 'https://18.226.94.236/callback';  
 
 export default function Inicio() {
     return (
