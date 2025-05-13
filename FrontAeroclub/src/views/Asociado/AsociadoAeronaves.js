@@ -47,9 +47,8 @@ const AeronaveCrud = () => {
 
                         return {
                             ...aeronave,
-                            horas_vuelo_aeronave: Math.floor(horasActuales),
                             horas_para_inspeccion: horasRestantes > 0 
-                                ? `${Math.floor(horasRestantes)} hs`
+                                ? `${horasRestantes} hs`
                                 : 'Inspección requerida'
                         };
                     } catch (error) {
@@ -57,7 +56,6 @@ const AeronaveCrud = () => {
                         // Si hay error al obtener servicios, devolvemos la aeronave con valores por defecto
                         return {
                             ...aeronave,
-                            horas_vuelo_aeronave: Math.floor(parseFloat(aeronave.horas_vuelo_aeronave) || 0),
                             horas_para_inspeccion: 'No disponible'
                         };
                     }

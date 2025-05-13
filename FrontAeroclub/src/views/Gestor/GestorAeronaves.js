@@ -349,15 +349,15 @@ const handleSave = async () => {
                 <Column field="matricula" header="Matrícula" sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Matrícula'></Column>
                 <Column 
                 field="horas_vuelo_aeronave" 
-                header="Horas de vuelo" 
+                header="Total horas voladas" 
                 sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por horas de vuelo'
-                body={(rowData) => `${rowData.horas_vuelo_aeronave} hs.`}
+                body={(rowData) => `${rowData.horas_vuelo_aeronave} hs`}
                 ></Column>
                 <Column
                 field="intervalo_para_inspeccion"
                 header="Intervalo de inspección"
                 Sortable filter filterMatchMode='contains' showFilterMenu={false} filterPlaceholder='Buscar por Intervalo'
-                body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs.`}
+                body={(rowData) => `${parseInt(rowData.intervalo_para_inspeccion)} hs`}
                 />
                 <Column
                 sortable filter filterType='date' showFilterMenu={false} 
