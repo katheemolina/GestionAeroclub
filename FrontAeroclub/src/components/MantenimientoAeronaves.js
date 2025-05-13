@@ -49,7 +49,7 @@ export function MantenimientoAeronaves() {
               </div>
               <div 
                 className="progress-bar" 
-                style={{ width: `${(aeronave.horasVoladas / aeronave.siguienteInspeccion) * 100}%` }} 
+                style={{ width: `${(aeronave.horasVoladas / aeronave.siguienteInspeccion) * 100}%`, maxWidth:`100%`}} 
               />
             </div>
           ))}
