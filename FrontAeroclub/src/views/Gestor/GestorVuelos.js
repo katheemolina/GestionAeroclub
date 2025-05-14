@@ -91,7 +91,8 @@ function GestorVuelos(){
             <Column field="usuario" header="Asociado" sortable filter filterPlaceholder="Buscar por Asociado" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por origen" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por destino" filterMatchMode="contains" showFilterMenu={false}  ></Column>
-            <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+            <Column field="tiempo_vuelo" header="Tiempo de vuelo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}
+            body={(rowData) => `${rowData.tiempo_vuelo} hs`}   ></Column>
             <Column field="instruccion" header="Instrucción" sortable filter filterPlaceholder="Buscar por instruccion" filterMatchMode="contains" showFilterMenu={false}  ></Column>
             <Column header="Acciones"
             filter

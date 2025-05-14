@@ -92,7 +92,8 @@ function AsociadoLibroVuelo() {
         <Column field="matricula" header="Aeronave" sortable />
         <Column field="origen" header="Origen" sortable />
         <Column field="destino" header="Destino" sortable />
-        <Column field="tiempo_vuelo" header="Tiempo" sortable />
+        <Column field="tiempo_vuelo" header="Tiempo de vuelo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}
+                    body={(rowData) => `${rowData.tiempo_vuelo} hs`}   ></Column>
         <Column body={actionTemplate} header="Acciones" style={{ width: '80px' }} />
       </DataTable>
 

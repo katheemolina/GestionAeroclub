@@ -93,7 +93,8 @@ function InstructorVuelosPorUsuario({idUsuario = 1}){
         <Column field="usuario" header="Usuario" sortable filter value='asd' filterPlaceholder="Buscar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="origen" header="Origen" sortable filter filterPlaceholder="Busar por usuario" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column field="destino" header="Destino" sortable filter filterPlaceholder="Buscar por número" filterMatchMode="contains" showFilterMenu={false}  ></Column>
-        <Column field="tiempo_vuelo" header="Tiempo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}  ></Column>
+        <Column field="tiempo_vuelo" header="Tiempo de vuelo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}
+                    body={(rowData) => `${rowData.tiempo_vuelo} hs`}   ></Column>
         <Column field="instruccion" header="Instruccion" sortable filter filterPlaceholder="Buscar por instruccion" filterMatchMode="contains" showFilterMenu={false}  ></Column>
         <Column header="Acciones"
                 body={(rowData) => (
