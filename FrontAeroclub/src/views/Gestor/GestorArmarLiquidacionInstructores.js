@@ -16,6 +16,7 @@ import { Button } from 'primereact/button';
 import { useUser } from '../../context/UserContext'; 
 import { armarLiquidacionApi } from '../../services/generarReciboApi';
 import { Toast } from 'primereact/toast';
+import { Dropdown } from 'primereact/dropdown';
 
 const GestorArmarLiquidacionInstructores = () => {
     const [movimientos, setMovimientos] = useState([]);
@@ -60,6 +61,25 @@ const GestorArmarLiquidacionInstructores = () => {
     const plantillaFecha = (rowData) => {
         return formatearFecha(rowData.fecha);
     };
+
+    const opcionesEstado = [
+    { label: 'Seleccione una opción', value: ' ' },
+    { label: 'Pago', value: 'Pago' },
+    { label: 'Impago', value: 'Impago' }
+];
+
+    const estadoFilterTemplate = (options) => {
+    return (
+        <Dropdown
+            value={options.value}
+            options={opcionesEstado}
+            onChange={(e) => options.filterApplyCallback(e.value)}
+            placeholder="Seleccione opción"
+            className="p-column-filter"
+            style={{ width: '100%', height: '40px',  padding: '10px'}}
+        />
+    );
+};
 
     // Manejar el cambio del checkbox
     const handleCheckboxChange = (movimiento) => {
@@ -117,18 +137,22 @@ const GestorArmarLiquidacionInstructores = () => {
 
     // Renderizar el checkbox en la columna
     const renderCheckbox = (rowData) => {
-        const isChecked = selectedMovimientos.some(
-            (selected) => selected.id_movimiento === rowData.id_movimiento
-        );
+    const isChecked = selectedMovimientos.some(
+        (selected) => selected.id_movimiento === rowData.id_movimiento
+    );
 
-        return (
-            <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={() => handleCheckboxChange(rowData)}
-            />
-        );
-    };
+    const isPagado = rowData.estado === "Pago";
+
+    return (
+        <input
+            type="checkbox"
+            checked={isChecked}
+            disabled={isPagado}
+            onChange={() => handleCheckboxChange(rowData)}
+        />
+    );
+};
+
 
     const dt = useRef(null);
     const clearFilters = () => {
@@ -223,7 +247,21 @@ const GestorArmarLiquidacionInstructores = () => {
                     showFilterMenu={false}
                     style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}
                 />
-
+                <Column
+                field="estado"
+                header="Estado"
+                sortable
+                filter
+                filterField="estado"
+                showFilterMenu={false}
+                filterElement={estadoFilterTemplate}
+                style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                body={(rowData) => (
+                    <span style={{ color: rowData.estado === "Pago" ? 'green' : 'red', fontWeight: 'bold' }}>
+                        {rowData.estado}
+                    </span>
+                )}
+                />
                 {/* Columna de Acciones */}
                 <Column
                     filter
