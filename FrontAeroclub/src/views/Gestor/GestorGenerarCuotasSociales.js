@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/datatable-style.css';
 import PantallaCarga from '../../components/PantallaCarga';
 import { useUser } from '../../context/UserContext';
@@ -17,11 +17,26 @@ const GestorGenerarCuotasSociales = () => {
     const [mes, setMes] = useState('');
     const [importe, setImporte] = useState('');
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [fechaMovimiento, setFechaMovimiento] = useState(new Date().toISOString().split('T')[0]); 
+    const [anio, setAnio] = useState('');
     const [resultado, setResultado] = useState(null);
     const [errorState, setError] = useState('');  // Nuevo estado para manejar el error
     const { usuarioId } = useUser();
 
+    useEffect(() => {
+        const fechaActual = new Date();
+        const meses = [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+
+        const mesActual = meses[fechaActual.getMonth()]; // getMonth devuelve de 0 a 11
+        const anioActual = fechaActual.getFullYear().toString();
+
+        setMes(mesActual);
+        setAnio(anioActual);
+    }, []);
+
+    
     // Opciones de meses
     const mesesDelAnio = [
         { label: 'Enero', value: 'Enero' },
@@ -39,32 +54,32 @@ const GestorGenerarCuotasSociales = () => {
     ];
 
     const handleSubmit = async () => {
-        if (!mes || !importe || !fechaMovimiento) {  // Verificamos que todos los campos estén completos
+        if (!mes || !anio || !importe) {
             toast.warning('Por favor, complete todos los campos.');
             return;
         }
 
-        setLoading(true); // Activar la carga mientras se realiza la solicitud
-        setError('');  // Limpiar el error antes de hacer la solicitud
+        setLoading(true);
+        setError('');
+
         const reciboData = {
             mes,
+            anio,
             importe,
-            id_usuario_evento: usuarioId, // Agregar el usuario actual
-            fecha_movimiento: fechaMovimiento, // Usamos la fecha seleccionada
+            id_usuario_evento: usuarioId,
         };
+
         try {
-            // Llamamos al backend para generar las cuotas sociales
             const response = await generarCuotasSociales(reciboData);
             setResultado('Cuotas sociales generadas con éxito.');
-            //toast.success(resultado)
         } catch (error) {
-            setResultado('');  // Limpiar cualquier mensaje de éxito previo
-            setError(`Los datos no se han guardado. ${error.message}`);  // Mostrar el error recibido del backend
+            setResultado('');
+            setError(`Los datos no se han guardado. ${error.message}`);
         } finally {
-            setLoading(false); // Desactivar la carga
-            
+            setLoading(false);
         }
     };
+
 
     if (loading) {
         return <PantallaCarga />;
@@ -77,40 +92,48 @@ const GestorGenerarCuotasSociales = () => {
             </header>
             <div className='contenedor-para-centrar'>
             <div className="form-container contenedor-generar-cuotas">
-                <label>
-                    <strong>Fecha del Movimiento:</strong>
-                    <input
-                        type="date"
-                        value={fechaMovimiento}
-                        onChange={(e) => setFechaMovimiento(e.target.value)}
-                    />
-                </label>
-                <label>
-                    <strong>Mes:</strong>
-                    <select value={mes} onChange={(e) => setMes(e.target.value)}>
-                        <option value="" disabled>
-                            Seleccione un mes
+            <label>
+                <strong>Año:</strong>
+                <input
+                    type="number"
+                    min="2000"
+                    max="2100"
+                    value={anio}
+                    onChange={(e) => setAnio(e.target.value)}
+                    placeholder="Ejemplo: 2025"
+                />
+            </label>
+            <label>
+                <strong>Mes:</strong>
+                <select value={mes} onChange={(e) => setMes(e.target.value)}>
+                    <option value="" disabled>
+                        Seleccione un mes
+                    </option>
+                    {mesesDelAnio.map((mesOption) => (
+                        <option key={mesOption.value} value={mesOption.value}>
+                            {mesOption.label}
                         </option>
-                        {mesesDelAnio.map((mesOption) => (
-                            <option key={mesOption.value} value={mesOption.value}>
-                                {mesOption.label}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <label>
-                    <strong>Importe:</strong>
-                    <input
-                        type="number"
-                        value={importe}
-                        onChange={(e) => setImporte(e.target.value)}
-                        placeholder="Ejemplo: 1000"
-                    />
-                </label>
-                <button id="btn-generar-cuotas" className="btn-primary" onClick={() => setShowConfirmDialog(true)}>
-                    Generar Cuotas
-                </button>
-            </div>
+                    ))}
+                </select>
+            </label>
+            <label>
+                <strong>Importe:</strong>
+                <input
+                    type="number"
+                    value={importe}
+                    onChange={(e) => setImporte(e.target.value)}
+                    placeholder="Ejemplo: 1000"
+                />
+            </label>
+            <button
+                id="btn-generar-cuotas"
+                className="btn-primary"
+                onClick={() => setShowConfirmDialog(true)}
+            >
+                Generar Cuotas
+            </button>
+        </div>
+
             </div>
 
             <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={

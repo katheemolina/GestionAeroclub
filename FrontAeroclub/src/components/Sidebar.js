@@ -17,7 +17,6 @@ function Sidebar() {
   const { user, PerfilIncompleto } = useUser();
   const { role } = useRole();
   const currentLocation = useLocation();
-  const [showLogout, setShowLogout] = useState(false);
 
   const enlacesPorRol = {
     Asociado: [
@@ -58,11 +57,6 @@ function Sidebar() {
 
   const enlaces = enlacesPorRol[role] || [];
 
-  const toggleLogout = () => {
-    setShowLogout((prev) => !prev);
-  };
-
-
   if (!localStorage.getItem('role')) {
     return (
       <div className="sidebar-container">
@@ -72,32 +66,18 @@ function Sidebar() {
             <hr className="divisor-header" />
             <p>Selecciona un rol</p>
           </div>
-          <Tooltip title="Haz clic para cerrar sesión" arrow>
-            <div
-              className="sidebar-header-img-container"
-              onClick={toggleLogout}
-            >
-              <img
-                className="sidebar-header-img"
-                src={user?.picture || '/path/to/default/image.jpg'}
-                alt="foto de perfil"
-              />
-            </div>
-          </Tooltip>
         </div>
-        {showLogout && (
-          <div className='logout-container'>
-            <Boton
-              icon={<LogoutIcon />}
-              texto="Cerrar Sesión"
-              estilos="logout-button"
-              logout={true}
-            />
-          </div>
-        )}
         <BotonesPorRol />
         <div className="sidebar-navbar">
           <p style={{ padding: '1rem', color: '#888' }}>Esperando que selecciones un rol...</p>
+        </div>
+        <div className="logout-fixed">
+          <Boton
+            icon={<LogoutIcon />}
+            texto="Cerrar Sesión"
+            estilos="logout-button"
+            logout={true}
+          />
         </div>
       </div>
     );
@@ -111,30 +91,14 @@ function Sidebar() {
           <hr className="divisor-header" />
           <p>{role.toUpperCase()}</p>
         </div>
-        <Tooltip title="Haz clic para cerrar sesión" arrow>
-          <div
-            className="sidebar-header-img-container"
-            onClick={toggleLogout}
-          >
-            <img
-              className="sidebar-header-img"
-              src={user?.picture || '/path/to/default/image.jpg'}
-              alt="foto de perfil"
-            />
-          </div>
-        </Tooltip>
-      </div>
-
-      {showLogout && (
-        <div className='logout-container'>
-          <Boton
-            icon={<LogoutIcon />}
-            texto="Cerrar Sesión"
-            estilos="logout-button"
-            logout={true}
+        <div className="sidebar-header-img-container">
+          <img
+            className="sidebar-header-img"
+            src={user?.picture || '/path/to/default/image.jpg'}
+            alt="foto de perfil"
           />
         </div>
-      )}
+      </div>
 
       <BotonesPorRol />
 
@@ -151,6 +115,15 @@ function Sidebar() {
               icon={enlace.icon}
             />
           ))}
+      </div>
+
+      <div className="logout-fixed">
+        <Boton
+          icon={<LogoutIcon />}
+          texto="Cerrar Sesión"
+          estilos="sidebar-navbar-link"
+          logout={true}
+        />
       </div>
     </div>
   );

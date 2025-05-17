@@ -63,7 +63,8 @@ function AsociadoPerfil() {
       //console.log("Licencias: ",data)
       setLicencias(data);
     } catch (error) {
-      console.error('Error fetching licencias:', error);
+      setLicencias([]);
+      //console.error('Error fetching licencias:', error);
     }
   };
 

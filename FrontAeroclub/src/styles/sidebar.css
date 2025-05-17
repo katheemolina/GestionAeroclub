@@ -39,34 +39,8 @@
     border-radius: 50%; /* Imagen redonda */
     object-fit: cover; /* Evita deformaciones */
     float: right; /* Alinea la imagen a la derecha */
-    cursor: pointer;
+    /* cursor: pointer; */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and box-shadow */
-}
-
-.sidebar-header-img:hover{
-    transform: scale(1.1); /* Scale the element by 10% on hover */
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.6); /* Optional: add a shadow to emphasize the growth effect */
-}
-
-.logout-container{
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    background-color: white;
-    
-}
-
-.logout-button{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: var(--brand-color-emphasis);
-    width: 100%;
-}
-
-.logout-button span{
-    height: 24px;
 }
 
 /* Estilo para el separador en la cabecera */
@@ -120,14 +94,14 @@
   }
 
 /* Estilo al pasar el ratón sobre un enlace */
-.sidebar-navbar-link:hover {
+/* .sidebar-navbar-link:hover {
     color: var(--brand-color); 
-    background-color: var(--brand-color-light); /* Fondo rojo cuando se pasa el ratón */
-    transform: scale(1.05); /* Agranda el botón un 5% */
-}
+    background-color: var(--brand-color-light); Fondo rojo cuando se pasa el ratón
+    transform: scale(1.05); Agranda el botón un 5%
+} */
 
-.sidebar-navbar-link.active {
-    background-color: var(--brand-color); /* Color de fondo cuando el botón está activo */
-    color: white; /* Color del texto en el botón activo */
-    font-weight: bold; /* Opcional: para resaltar más el botón */
-}
+/* .sidebar-navbar-link.active {
+    background-color: var(--brand-color); Color de fondo cuando el botón está activo
+    color: white; Color del texto en el botón activo
+    font-weight: bold; Opcional: para resaltar más el botón
+} */

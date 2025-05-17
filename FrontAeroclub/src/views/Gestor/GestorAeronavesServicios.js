@@ -68,27 +68,31 @@ const GestorAeronavesServicios = () => {
         setDialogVisible(false);
     };
 
-
     useEffect(() => {
-        if (id_aeronave) {
+        if (aeronave) {
+            const horasHistoricas = Number(aeronave.horas_historicas_voladas || 0);
+            const horasVuelo = Number(aeronave.horas_vuelo_aeronave || 0);
+            const totalHorasVoladas = horasHistoricas + horasVuelo;
+            
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+            
             setServicioData((prevData) => ({
                 ...prevData,
-                fecha: formattedDate, // Establecer la fecha de hoy por defecto
+                horas_anteriores: totalHorasVoladas,
+                fecha: formattedDate,
             }));
         }
-    }, [id_aeronave]);
+    }, [aeronave]);
     
     useEffect(() => {
-        
         if (!id_aeronave) {
             toast.error("No se recibió un ID de aeronave.");
         } else {
             // Obtener el listado de aeronaves y buscar la correspondiente
             obtenerAeronaves().then((aeronaves) => {
                 const aeronaveSeleccionada = aeronaves.find(a => a.id_aeronave === id_aeronave);
-                //console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
+                console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
                 if (aeronaveSeleccionada) {
                     setAeronave(aeronaveSeleccionada); // Establecer la aeronave seleccionada en el estado
                     // Calcular las horas voladas: horas_historicas_voladas + horas_vuelo_aeronave
@@ -154,9 +158,6 @@ const GestorAeronavesServicios = () => {
             });
     };
     
-    
-
-
     return (
         <div className="background">
             <ToastContainer />
@@ -263,12 +264,10 @@ const GestorAeronavesServicios = () => {
                     <div className="p-field">
                         <label>Horas Anteriores</label>
                         <InputText
-
-                            type='number' 
-                            
-                            name="horas_anteriores" 
-                            value={servicioData.horas_anteriores} 
-                            onChange={handleInputChange} 
+                            type="number"
+                            name="horas_anteriores"
+                            value={servicioData.horas_anteriores}
+                            onChange={handleInputChange}
                         />
                     </div>
                 </div>

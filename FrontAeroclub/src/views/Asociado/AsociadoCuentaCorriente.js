@@ -5,14 +5,14 @@ import { obtenerCuentaCorrientePorUsuario, obtenerSaldoCuentaCorrientePorUsuario
 import { obtenerTodosLosRecibos } from "../../services/recibosApi";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Dropdown } from 'primereact/dropdown';
+//import { Dropdown } from 'primereact/dropdown';
 import { useUser } from '../../context/UserContext';
 import SearchIcon from '@mui/icons-material/Search';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Dialog } from 'primereact/dialog';
-import { Card } from 'primereact/card';
+//import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
@@ -44,15 +44,15 @@ function AsociadoCuentaCorriente() {
         
         // Acceder al primer objeto del array
         const { Saldo, deuda_cuota_social, deuda_vuelos } = kpiResponse[0]; 
-  
+        
         setKpiData([
           { title: 'Saldo', value: Saldo },
           { title: 'Deuda de cuota social', value: deuda_cuota_social },
           { title: 'Deuda de vuelos', value: deuda_vuelos },
         ]);
-  
+        
       } catch (error) {
-        toast.error("Error al obtener datos: " + error);
+        //toast.error("Error al obtener datos: " + error);
       }
       setLoading(false);
     };
