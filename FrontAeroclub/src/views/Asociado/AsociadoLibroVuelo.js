@@ -53,6 +53,7 @@ function AsociadoLibroVuelo() {
       try {
         const vuelosResponse = await obtenerLibroDeVueloPorUsuario(usuarioId);
         setData(vuelosResponse);
+        //console.log("Vuelos por usuario: ",vuelosResponse)
 
         const kpiResponse = await totalesHorasVueloPorUsuario(usuarioId);
         if (kpiResponse && kpiResponse.length > 0) {
@@ -132,6 +133,14 @@ function AsociadoLibroVuelo() {
 
             <div className="flight-details-grid">
               <div className="detail-card">
+                  <span className="detail-label">Hora Salida</span>
+                  <span className="detail-value">{selectedFlight.hora_salida}</span>
+                </div>
+                <div className="detail-card">
+                  <span className="detail-label">Hora Llegada</span>
+                  <span className="detail-value">{selectedFlight.hora_llegada}</span>
+                </div>
+              <div className="detail-card">
                 <span className="detail-label">Tiempo de Vuelo</span>
                 <span className="detail-value">{selectedFlight.tiempo_vuelo}</span>
               </div>
@@ -143,10 +152,12 @@ function AsociadoLibroVuelo() {
                 <span className="detail-label">Instrucción</span>
                 <span className="detail-value">{selectedFlight.instruccion ? 'Sí' : 'No'}</span>
               </div>
+              {/*
               <div className="detail-card">
                 <span className="detail-label">Instructor</span>
                 <span className="detail-value">{selectedFlight.instructor || 'No aplica'}</span>
               </div>
+              */}
             </div>
           </div>
         )}
