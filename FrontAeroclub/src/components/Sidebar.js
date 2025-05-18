@@ -103,6 +103,7 @@ function Sidebar() {
       <BotonesPorRol />
 
       <div className="sidebar-navbar">
+
         {enlaces
           .filter(enlace => !PerfilIncompleto ? enlace.completarPerfil : true)
           .map((enlace, index) => (
@@ -115,9 +116,8 @@ function Sidebar() {
               icon={enlace.icon}
             />
           ))}
-      </div>
 
-      <div className="logout-fixed">
+        {/*Botón de logout incorporado en el navbar*/}
         <Boton
           icon={<LogoutIcon />}
           texto="Cerrar Sesión"
