@@ -332,7 +332,7 @@ function FormularioGestorRecibos() {
             <div className="form-group">
                 <label className="label-recibo">Itinerarios:</label>
                 <select className="input-recibo" value={itinerarios} onChange={handleItinerariosChange}>
-                    {[...Array(10).keys()].map((i) => (
+                    {[...Array(12).keys()].map((i) => (
                         <option key={i + 1} value={i + 1}>
                             {i + 1}
                         </option>

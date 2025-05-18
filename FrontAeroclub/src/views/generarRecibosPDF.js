@@ -56,7 +56,7 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
     tipoRecibo: recibo.tipo_recibo || "-",
     asociado: recibo.usuario || "-",
     aeronave: recibo.matricula || "-",
-    numeroRecibo: recibo.numero_recibo || "-",
+    numeroRecibo: (typeof recibo.numero_recibo === "number" && recibo.numero_recibo >= 0)? recibo.numero_recibo: "-", //para numeros mayor igual a cero
     fecha: recibo.fecha || new Date().toLocaleDateString(),
     observaciones: recibo.observaciones || "Sin observaciones",
     observacionesCuotaSocial: rowData.descripcionCuotaSocial || rowData.descripcion_completa || "-",
@@ -135,15 +135,29 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
           yStart += 10;
         });
   
-         // Observaciones
+      // Observaciones
       doc.setFont("helvetica", "bold");
       doc.text("Observaciones:", 10, yStart);
-      yStart += 6; // Espaciado para el contenido de observaciones
-      doc.setFont("helvetica", "normal");
-      doc.text(`${reciboData.observaciones}`, 20, yStart, { maxWidth: 180 });
       yStart += 6;
-      doc.text(`Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`, 20, yStart, { maxWidth: 180 });
-  
+
+      doc.setFont("helvetica", "normal");
+
+      // Divide el texto en líneas que no superen 180 de ancho
+      const maxWidth = 180;
+      const observacionesLineas = doc.splitTextToSize(reciboData.observaciones, maxWidth);
+
+      // Imprime las líneas
+      doc.text(observacionesLineas, 20, yStart);
+
+      // Avanza yStart dinámicamente según la cantidad de líneas
+      yStart += observacionesLineas.length * 5;
+
+      // Ahora imprime la tarifa
+      const tarifaText = `Tarifa ${reciboData.aeronave} vigente desde ${reciboData.fechaVigenciaTarifa} - Valor hora: $${reciboData.tarifa}`;
+      const tarifaLineas = doc.splitTextToSize(tarifaText, maxWidth);
+
+      doc.text(tarifaLineas, 20, yStart);
+
       // Detalles de instrucción (condicional)
       if (recibo.instructor && recibo.instructor.trim() !== "") {
         yStart += 6; // Espaciado solo si existe un instructor
@@ -151,7 +165,7 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       }
   
       // Nueva línea divisoria
-      yStart += 10;
+      yStart += 4;
       doc.setLineWidth(0.3);
       doc.line(10, yStart, 200, yStart);
   
@@ -178,7 +192,7 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       }, 0);
 
       // Cuadro de importes en el PDF
-      yStart += 10;
+      yStart += 7;
 
       // Importe e Instrucción (uno debajo del otro, a la izquierda)
       doc.setFont("helvetica", "bold");
@@ -211,7 +225,7 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       doc.text(`${totalAterrizajes}`, 155, yStart, { align: "right" }); // Valor de aterrizajes
 
       // Línea divisoria
-      yStart += 10;
+      yStart += 5;
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
 
@@ -219,9 +233,8 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       yStart += 10;
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14); // Tamaño más grande para destacar
-      doc.text("Total a pagar:", 105, yStart, { align: "center" });
-      doc.setFont("helvetica", "normal");
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 150, yStart, { align: "center" });
+      doc.text("Total a pagar:", 26, yStart, { align: "center" });
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 80, yStart, { align: "center" });
 
       // Línea divisoria
       yStart += 6;
@@ -261,20 +274,19 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       doc.text(`$${tarifaPorLitro}`, xValue, yStart);
   
       yStart += 10;
-    // Observaciones
-    doc.setFont("helvetica", "normal");
-    doc.text("Observaciones:", xTitle, yStart);
+      // Observaciones
+      doc.setFont("helvetica", "normal");
+      doc.text("Observaciones:", xTitle, yStart);
 
-    // Ajuste automático del texto largo
-    let observacionesTexto = doc.splitTextToSize(reciboData.observaciones, 70); // 60 es el ancho máximo en px
-    doc.setFont("helvetica", "normal");
-    doc.text(observacionesTexto, xValue, yStart, { align: "left" });
+      // Ajuste automático del texto largo
+      let observacionesTexto = doc.splitTextToSize(reciboData.observaciones, 70); // 60 es el ancho máximo en px
+      doc.setFont("helvetica", "normal");
+      doc.text(observacionesTexto, xValue, yStart, { align: "left" });
 
-    yStart += 1 + (observacionesTexto.length * 3); // Ajustamos el espaciado dinámicamente
+      yStart += 1 + (observacionesTexto.length * 6); // Ajustamos el espaciado dinámicamente
 
   
       // Línea divisoria
-      yStart += 10;
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
   
@@ -308,12 +320,17 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
     
       // Observaciones
       doc.setFont("helvetica", "normal");
-      doc.text("Observaciones:", 20, yStart);
-      doc.setFont("helvetica", "normal");
-      doc.text(reciboData.observacionesCuotaSocial, 70, yStart, { maxWidth: 180 });
+      doc.text("Descripción:", 20, yStart);
+
+      // Texto de la observación con ajuste automático de línea
+      const maxWidth = 180;
+      const lineasObs = doc.splitTextToSize(reciboData.observacionesCuotaSocial, maxWidth);
+      doc.text(lineasObs, 70, yStart);
+
+      // Ajustamos yStart dinámicamente
+      yStart += lineasObs.length * 6;
 
       // Línea divisoria
-      yStart += 10;
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
     
@@ -322,9 +339,9 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       // Total a pagar
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
-      doc.text("Total a pagar:", 80, yStart);
+      doc.text("Total a pagar:", 20, yStart);
       doc.setFontSize(16);
-      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 125, yStart);
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 70, yStart);
 
       // Línea divisoria
       yStart += 4;
