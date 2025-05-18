@@ -33,3 +33,22 @@ export const generarCuotasSociales = async (reciboData) => {
         throw error;
     }
 };
+
+export const obtenerCSGeneradas = async () => {
+    try {
+        const response = await fetch(`${API_URL}/obtenerCSGeneradas`);
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || 'Error desconocido al obtener datos.';
+            throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        toast.success('Cuotas sociales obtenidas correctamente.');
+        return data;
+    } catch (error) {
+        toast.error(`Error al obtener cuotas sociales. ${error.message}`);
+        throw error;
+    }
+}; 
