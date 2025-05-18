@@ -309,11 +309,12 @@ const formatFecha = (rowData) => {
           <label>
             DNI:
             <input
-              type="text"
+              type="number"
               name="Dni"
               placeholder="DNI"
               value={formData.Dni}
               onChange={handleChange}
+              min="1"
             />
           </label>
         </div>
@@ -369,6 +370,7 @@ const formatFecha = (rowData) => {
               placeholder="Horas de Vuelo"
               value={formData.CantHorasVuelo}
               onChange={handleChange}
+              min="0"
             />
           </label>
           <label>
@@ -379,6 +381,7 @@ const formatFecha = (rowData) => {
               placeholder="Aterrizajes"
               value={formData.CantAterrizajes}
               onChange={handleChange}
+              min="0"
             />
           </label>
         </div>
