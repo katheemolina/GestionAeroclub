@@ -50,6 +50,8 @@ function Dashboard() {
 
         //console.log("vuelos response: ", vuelosResponse)
 
+        //console.log("Hora por usuario: ",horasResponse)
+
 
         const usuario = usuarioResponse?.[0] || {};
         const saldoData = saldoResponse?.[0] || {};

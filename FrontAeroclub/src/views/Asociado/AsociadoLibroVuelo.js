@@ -53,7 +53,7 @@ function AsociadoLibroVuelo() {
       try {
         const vuelosResponse = await obtenerLibroDeVueloPorUsuario(usuarioId);
         setData(vuelosResponse);
-        //console.log("Vuelos por usuario: ",vuelosResponse)
+        console.log("Vuelos por usuario: ",vuelosResponse)
 
         const kpiResponse = await totalesHorasVueloPorUsuario(usuarioId);
         if (kpiResponse && kpiResponse.length > 0) {
