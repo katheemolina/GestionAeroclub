@@ -153,7 +153,7 @@ const GestorGenerarCuotasSociales = () => {
                         Generar Cuotas
                     </button>
                 </div>
-                <div className="form-container contenedor-generar-cuotas">
+                <div className="form-container contenedor-log-cuotas">
                     <DataTable 
                         filterDisplay='row'
                         value={cuotasSociales} 
