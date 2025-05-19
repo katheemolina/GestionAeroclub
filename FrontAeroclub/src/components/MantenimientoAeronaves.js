@@ -15,8 +15,8 @@ export function MantenimientoAeronaves() {
           .map((aeronave) => ({
             id: aeronave.id_aeronave,
             nombre: aeronave.matricula,
-            horasVoladas: parseFloat(aeronave.horas_vuelo_desde_ultimo_servicio),
-            siguienteInspeccion: parseFloat(aeronave.intervalo_para_inspeccion),
+            horasVoladas: parseFloat(aeronave.horas_vuelo_desde_ultimo_servicio) || 0,
+            siguienteInspeccion: parseFloat(aeronave.intervalo_para_inspeccion) || 0,
             ultimaInspeccion: aeronave.ultimo_servicio.split(' ')[0], 
           }));
         setAeronaves(aeronavesFiltradas);
