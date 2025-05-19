@@ -70,9 +70,8 @@ const GestorAeronavesServicios = () => {
 
     useEffect(() => {
         if (aeronave) {
-            const horasHistoricas = Number(aeronave.horas_historicas_voladas || 0);
-            const horasVuelo = Number(aeronave.horas_vuelo_aeronave || 0);
-            const totalHorasVoladas = horasHistoricas + horasVuelo;
+            
+            const totalHorasVoladas = Number(aeronave.horas_vuelo_aeronave || 0);
             
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
