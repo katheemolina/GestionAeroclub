@@ -410,12 +410,11 @@ const handleSave = async () => {
                                 <BuildIcon />
                             </IconButton>
                         </Tooltip>
-
-                        <Tooltip title="Actualizar datos del Aeronave">
+                        {/* <Tooltip title="Actualizar datos del Aeronave">
                             <IconButton color="primary"  label="Actualizar Aeronave" onClick={() => handleEdit(rowData)}>
                                 <EditIcon />
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
 
                         <Tooltip title="Ver detalles">
                         <IconButton color="primary" aria-label="view-details" onClick={() => openDialog(rowData)}>
