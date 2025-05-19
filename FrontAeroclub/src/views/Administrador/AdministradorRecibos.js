@@ -113,7 +113,20 @@ const dt = useRef(null);
         <Column filter sorteable showFilterMenu={false} filterType='date' body={plantillaFecha} filterPlaceholder='Buscar por Fecha' field="fecha" header="Fecha" sortable className="columna-ancho-min" />
         <Column filter filterMatchMode='contains' sorteable showFilterMenu={false} filterPlaceholder='Buscar por Asociado' field="usuario" header="Asociado" sortable className="columna-ancho-min" />
         <Column filter filterMatchMode='contains' sorteable showFilterMenu={false} filterPlaceholder='Buscar por Recibo' field="numero_recibo" header="N° Recibo" sortable className="columna-ancho-min" />
-        <Column filter sorteable showFilterMenu={false} filterPlaceholder='Buscar por Tipo' field="tipo_recibo" header="Tipo de recibo" sortable className="columna-ancho-min" />
+        <Column filter sorteable showFilterMenu={false} filterPlaceholder='Buscar por Tipo' field="tipo_recibo" header="Tipo de recibo" sortable className="columna-ancho-min" 
+          body={(rowData) => {
+          if (rowData.tipo_recibo === 'cuota_social') {
+            return 'Cuota Social';
+          }
+          if (rowData.tipo_recibo === 'vuelo') {
+            return 'Vuelo';
+          }
+          if (rowData.tipo_recibo === 'combustible') {
+            return 'Combustible';
+          }
+          return rowData.tipo_recibo;
+        }}/>
+        
         <Column
           filter
           sorteable showFilterMenu={false}
