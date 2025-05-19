@@ -79,6 +79,7 @@ const GestorGenerarCuotasSociales = () => {
             setResultado('');
             setError(`Los datos no se han guardado. ${error.message}`);
         } finally {
+            fetchCuotasSociales();
             setLoading(false);
         }
     };
@@ -160,7 +161,17 @@ const GestorGenerarCuotasSociales = () => {
                         paginator rows={10} 
                         rowsPerPageOptions={[5, 10, 25]} 
                         style={{ width: '100%' }} >
-                        <Column field="periodo" header="Periodo mm/aaaa" ></Column>
+                        <Column 
+                            field="periodo" 
+                            header="Periodo"
+                            body={(rowData) => {
+                                const periodo = rowData.periodo?.toString();
+                                if (periodo?.length === 6) {
+                                    return `${periodo.slice(0, 2)}/${periodo.slice(2)}`;
+                                }
+                                return periodo || ''; // fallback for undefined/null
+                            }} 
+                        />
                         <Column field="CantidadCSGeneradas" header="Cantidad de Cuotas Sociales Generadas" ></Column>
                     </DataTable>
                 </div>
