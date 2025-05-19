@@ -104,6 +104,14 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
   };
 
+  const extraerNumerosRecibo = (descripcion) => {
+  const match = descripcion.match(/\(([^)]+)\)/);
+  return match
+    ? match[1].split(',').map(num => num.trim())
+    : [];
+};
+
+
   // Plantilla para mostrar la fecha 
   const plantillaFecha = (rowData) => {
     return formatearFecha(rowData.fecha);
@@ -117,37 +125,62 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     
   };
     
-  const handlePreviewAndPrint = (rowData) => {
-    //console.log("rowData: ", rowData);
-  
-    let recibo; // Variable para guardar el recibo encontrado
-  
-    // Si el tipo no es null (es un recibo generado por el sistema)
-    if (rowData.tipo !== null) {
-      // Buscar el recibo en la lista usando el id_movimiento guardado como referencia
-      recibo = dataRecibos.find(recibo => recibo.id_movimiento === rowData.referencia_aeroclub);
-    } else {
-      // Si no tiene tipo (puede ser una cuota social sin tipo explícito),
-      // intentar extraer el número de recibo desde la descripción
-      const numeroRecibo = rowData.descripcion_completa.match(/\((\d+)\)/)?.[1];
-  
-      if (numeroRecibo) {
-        // Buscar el recibo correspondiente por número en la lista de recibos
-        recibo = dataRecibos.find(recibo => recibo.numero_recibo == numeroRecibo);
-      }
+const handlePreviewAndPrint = (rowData) => {
+  let recibosAProcesar = [];
+
+  if (rowData.descripcion_completa?.includes("Pago de recibos")) {
+    const numeros = extraerNumerosRecibo(rowData.descripcion_completa); // ['10','5',...]
+    recibosAProcesar = dataRecibos.filter(r =>
+      numeros.includes(String(r.numero_recibo))
+    );
+
+  } 
+  else if (rowData.tipo !== null) {
+    const unico = dataRecibos.find(r =>
+      r.id_movimiento === rowData.referencia_aeroclub
+    );
+    if (unico) recibosAProcesar = [unico];
+
+  } 
+  else {
+    const numeros = extraerNumerosRecibo(rowData.descripcion_completa); 
+    if (numeros.length > 0) {
+      recibosAProcesar = dataRecibos.filter(r =>
+        numeros.includes(String(r.numero_recibo))
+      );
     }
-  
-    // Si no se encontró el recibo, mostrar un error y frenar el proceso
-    if (!recibo) {
-      toast.error("No se encontró el recibo asociado.");
-      return;
-    }
-    // Agregar al objeto del recibo la descripción original de la cuota social, necesaria para mostrarla correctamente en el PDF
-    recibo.descripcionCuotaSocial = rowData.descripcion_completa || "-";
-  
-    // Llamar a la función que genera el PDF, pasando solo el recibo, y el flag `true` para que se saltee la lógica de búsqueda dentro de la función
-    generarReciboPDF(recibo, null, null, true);
-  };
+  }
+
+  if (recibosAProcesar.length === 0) {
+    toast.error("No se encontró el/los recibo(s) asociado(s).");
+    return;
+  }
+
+  if (recibosAProcesar.length > 1) {
+    const totalImporte = recibosAProcesar
+      .reduce((sum, r) => sum + parseFloat(r.importe_total ?? r.importe), 0);
+    const numerosConcatenados = recibosAProcesar
+      .map(r => r.numero_recibo)
+      .join(',');
+
+    const reciboCombinado = {
+      ...recibosAProcesar[0],
+      numero_recibo: numerosConcatenados,
+      importe_total: totalImporte,
+      recibos: recibosAProcesar,
+      descripcionCuotaSocial: rowData.descripcion_completa || "-"
+    };
+
+    generarReciboPDF(reciboCombinado, null, null, true);
+
+  } 
+  else {
+    const solo = recibosAProcesar[0];
+    solo.descripcionCuotaSocial = rowData.descripcion_completa || "-";
+    generarReciboPDF(solo, null, null, true);
+  }
+};
+
   
   
 
@@ -155,10 +188,9 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
     if (!movimiento) return null;
 
     // Función auxiliar para extraer números de recibo de la descripción
-    const extraerNumerosRecibo = (descripcion) => {
-      const match = descripcion.match(/\((\d+)\)/);
-      return match ? match[1] : null;
-    };
+    // Devuelve un array de strings con cada número dentro de (…) 
+
+
 
     // Función auxiliar para renderizar el estado
     const renderEstado = (estado, descripcion) => {
@@ -183,13 +215,17 @@ function GestorCuentaCorriente({ idUsuario = 0 }) {
 
     // Si es un pago, buscar los recibos relacionados
     if (movimiento.descripcion_completa?.includes("Pago de recibos:")) {
-      const numerosRecibo = extraerNumerosRecibo(movimiento.descripcion_completa);
-      const recibosPagados = dataRecibos.filter(r => r.numero_recibo.toString() === numerosRecibo);
+      
+      const numerosRecibo = extraerNumerosRecibo(movimiento.descripcion_completa); // ej. ['10','5']
+      const recibosPagados = dataRecibos.filter(r =>
+    numerosRecibo.includes(r.numero_recibo.toString()));
+
 
       return (
         <div className="details-dialog">
           <div className="details-section">
-            <h3>Pago de recibos: ({numerosRecibo})</h3>
+            <h3>Pago de recibos: ({ numerosRecibo.join(', ') })</h3>
+
             <div className="details-grid">
               <div className="detail-item">
                 <span className="detail-label">Estado</span>
