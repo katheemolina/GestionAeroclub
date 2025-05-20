@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useUser } from '../../context/UserContext';
 import PantallaCarga from '../../components/PantallaCarga';
+import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import KpiBox from '../../components/KpiBox';
 import { Dialog } from 'primereact/dialog';
@@ -70,7 +71,8 @@ function AsociadoLibroVuelo() {
         }
         
       } catch (error) {
-        toast.error("Error al obtener datos: " + error);
+        //toast.error("Error al obtener datos: " + error);
+        toast.error("No se encontró información de vuelos.");
       }
       setLoading(false);
     };
@@ -87,6 +89,7 @@ function AsociadoLibroVuelo() {
       <header className="header">
         <h1>Libro de Vuelo</h1>
       </header>
+      <ToastContainer/>
       <KpiBox data={kpiData} />
       <DataTable value={data} paginator rows={15} scrollable scrollHeight="800px">
         <Column field="fecha" header="Fecha" sortable body={plantillaFecha}/>

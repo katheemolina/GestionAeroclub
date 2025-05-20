@@ -87,7 +87,8 @@ function AsociadoCuentaCorriente() {
         //console.log("Recibos filtrados:", filteredRecibos);
 
       } catch (error) {
-        toast.error("Error al obtener datos:", error);
+        //toast.error("Error al obtener datos:", error);
+        toast.error("No se encontró información.");
       }
       setLoading(false);
     };
