@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { movimientosNoLiquidadosPorInstructor } from '../../services/usuariosApi';
+import { obtenerCuentaCorrienteAeroclubDetalle } from '../../services/movimientosApi';
+import { obtenerTodosLosRecibos } from "../../services/recibosApi";
 import '../../styles/datatable-style.css';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -26,6 +28,11 @@ const GestorArmarLiquidacionInstructores = () => {
     const [selectedRowData, setSelectedRowData] = useState(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [detalleMovimiento, setDetalleMovimiento] = useState(null);
+    
+    const [recibosTodos, setRecibosTodos] = useState([]);
+
     const idUsuarioEvento = useUser(); // Supongo que este hook devuelve el id del usuario actual.
 
     // Fetch movimientos no liquidados
@@ -33,8 +40,14 @@ const GestorArmarLiquidacionInstructores = () => {
         setLoading(true);
         try {
             const data = await movimientosNoLiquidadosPorInstructor(); // Fetch instructores
-            //console.log("Movimiento de liquidación:",data)
+            console.log("Movimiento de liquidación:",data)
             setMovimientos(data);
+
+            // Obtener todos los recibos
+            const recibosResponse = await obtenerTodosLosRecibos(idUsuarioEvento);
+            setRecibosTodos(recibosResponse);//Para los pdf
+            console.log("Todos los recibos:", recibosResponse);
+            
         } catch (error) {
             setMovimientos([]);
             console.error('Error fetching movimientos:', error);
@@ -43,6 +56,7 @@ const GestorArmarLiquidacionInstructores = () => {
     };
 
     useEffect(() => {
+
         fetchInstructores();
     }, []);
 
@@ -151,7 +165,124 @@ const GestorArmarLiquidacionInstructores = () => {
             onChange={() => handleCheckboxChange(rowData)}
         />
     );
-};
+    };
+
+    const handleVerDetalleMovimiento = async (movimiento) => {
+        const numeroRecibo = movimiento.descripcion_completa?.match(/Recibo Nro\. (\d+)/)?.[1];
+        if (!numeroRecibo) return;
+
+        const recibo = recibosTodos.find(r => r.numero_recibo == numeroRecibo);
+        if (recibo && recibo.tipo_recibo === 'vuelo') {
+            setSelectedRowData(movimiento);
+            setDetalleMovimiento(recibo);
+            setDialogVisible(true);
+        } else {
+            toast.warn("Este movimiento no corresponde a un vuelo.");
+        }
+    };
+
+
+
+
+    const renderDetalleMovimiento = (movimiento, recibo) => {
+
+        if (!movimiento || !recibo || recibo.tipo_recibo !== 'vuelo') return null;
+
+        const itinerarios = JSON.parse(recibo.datos_itinerarios || "[]");
+        const importeVuelo = recibo.importe_tarifa * recibo.cantidad;
+        const importeInstructor = recibo.instructor ? (importeVuelo * 0.15) : 0;
+
+         // Función auxiliar para renderizar el estado
+            const renderEstado = (estado) => (
+            <span className={`estado-badge ${estado === 'Pago' ? 'estado-pago' : 'estado-impago'}`}>
+                {estado}
+            </span>
+            );
+
+        const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
+        const formatearFecha = (fecha) => new Date(fecha).toLocaleDateString('es-AR');
+
+        return (
+            <div className="details-dialog">
+            <div className="details-section">
+                <h3>Recibo de vuelo Nro. {recibo.numero_recibo}</h3>
+                <div className="vuelo-info">
+                <div className="detail-item">
+                    <span className="detail-label">Estado</span>
+                    <span className="detail-value">{renderEstado(recibo.estado, movimiento.descripcion_completa)}</span>
+                </div>
+                <div className="detail-item">
+                    <span className="detail-label">Fecha</span>
+                    <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+                </div>
+                <div className="detail-item">
+                    <span className="detail-label">Matrícula</span>
+                    <span className="detail-value">{recibo.matricula}</span>
+                </div>
+                <div className="detail-item">
+                    <span className="detail-label">Horas de vuelo</span>
+                    <span className="detail-value">{recibo.cantidad}</span>
+                </div>
+                <div className="detail-item">
+                    <span className="detail-label">Tarifa por hora</span>
+                    <span className="detail-value">{formatoMoneda(recibo.importe_tarifa)}</span>
+                </div>
+                {recibo.instructor && (
+                    <div className="detail-item">
+                    <span className="detail-label">Instructor</span>
+                    <span className="detail-value">{recibo.instructor}</span>
+                    </div>
+                )}
+                </div>
+
+                <div className="importes-section">
+                <h4>Desglose de Importes</h4>
+                <div className="details-grid">
+                    <div className="detail-item">
+                    <span className="detail-label">Importe Vuelo</span>
+                    <span className="detail-value importe-value">{formatoMoneda(importeVuelo)}</span>
+                    </div>
+                    {recibo.instructor && (
+                    <div className="detail-item">
+                        <span className="detail-label">Importe Instructor (15%)</span>
+                        <span className="detail-value importe-value">{formatoMoneda(importeInstructor)}</span>
+                    </div>
+                    )}
+                    <div className="detail-item total-importe">
+                    <span className="detail-label">Total a Pagar</span>
+                    <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+                    </div>
+                </div>
+                </div>
+
+                {itinerarios.length > 0 && (
+                <div className="vuelo-details">
+                    <h4>Itinerarios</h4>
+                    {itinerarios.map((itinerario, index) => (
+                    <div key={index} className="itinerario-section">
+                        <div className="details-grid">
+                        <div className="detail-item"><span className="detail-label">Origen</span><span className="detail-value">{itinerario.origen}</span></div>
+                        <div className="detail-item"><span className="detail-label">Destino</span><span className="detail-value">{itinerario.destino}</span></div>
+                        <div className="detail-item"><span className="detail-label">Hora salida</span><span className="detail-value">{itinerario.hora_salida}</span></div>
+                        <div className="detail-item"><span className="detail-label">Hora llegada</span><span className="detail-value">{itinerario.hora_llegada}</span></div>
+                        <div className="detail-item"><span className="detail-label">Aterrizajes</span><span className="detail-value">{itinerario.aterrizajes}</span></div>
+                        <div className="detail-item"><span className="detail-label">Duración</span><span className="detail-value">{itinerario.duracion} horas</span></div>
+                        </div>
+                    </div>
+                    ))}
+                </div>
+                )}
+
+                <div className="observaciones-section">
+                <span className="observaciones-label">Observaciones</span>
+                <p className="observaciones-value">{recibo.observaciones || "Ninguna"}</p>
+                </div>
+            </div>
+            </div>
+        );
+    };
+
+
 
 
     const dt = useRef(null);
@@ -276,35 +407,20 @@ const GestorArmarLiquidacionInstructores = () => {
                     header="Acciones"
                     body={(rowData) => (
                         <div className="acciones">
-             
+                        <IconButton
+                            color="primary"
+                            title="Ver detalles"
+                            aria-label="view-details"
+                            onClick={() => handleVerDetalleMovimiento(rowData)} // <- asegurate de tener esto
+                        >
+                            <SearchIcon />
+                        </IconButton>
                         </div>
                     )}
                 />
 
+
             </DataTable>
-
-
-            
-                {selectedRowData && (
-                    <div>
-                        <div className="p-fluid details-dialog">
-                            
-                            <Card>
-                                <p><strong>Fecha:</strong> {selectedRowData.fecha}</p>
-                            </Card>
-                            <Card>
-                                <p><strong>Descripción:</strong> {selectedRowData.descripcion_completa}</p>
-                            </Card>
-                            <Card>
-                                <p><strong>Importe:</strong> {formatoMoneda(selectedRowData)}</p>
-                            </Card>
-                            <Card>
-                                <p><strong>Observaciones:</strong> {selectedRowData.observaciones || "-"}</p>
-                            </Card>
-
-                        </div>
-                    </div>
-                )}
 
             <Dialog
                 header="Confirmar"
@@ -337,6 +453,22 @@ const GestorArmarLiquidacionInstructores = () => {
             >
                 <p>¿Está seguro de que desea ejecutar las liquidaciones indicadas?</p>
             </Dialog>
+
+            <Dialog
+                header="Detalle del Vuelo"
+                visible={dialogVisible}
+                onHide={() => setDialogVisible(false)}
+                className="custom-dialog"
+                style={{ width: '700px' }}
+                >
+                {selectedRowData && detalleMovimiento
+                    ? renderDetalleMovimiento(selectedRowData, detalleMovimiento)
+                    : <p>No hay datos disponibles.</p>
+                }
+            </Dialog>
+
+
+
         </div>
     );
 };
