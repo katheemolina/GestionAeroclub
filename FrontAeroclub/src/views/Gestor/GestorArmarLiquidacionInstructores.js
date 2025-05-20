@@ -40,13 +40,13 @@ const GestorArmarLiquidacionInstructores = () => {
         setLoading(true);
         try {
             const data = await movimientosNoLiquidadosPorInstructor(); // Fetch instructores
-            console.log("Movimiento de liquidación:",data)
+            //console.log("Movimiento de liquidación:",data)
             setMovimientos(data);
 
             // Obtener todos los recibos
             const recibosResponse = await obtenerTodosLosRecibos(idUsuarioEvento);
             setRecibosTodos(recibosResponse);//Para los pdf
-            console.log("Todos los recibos:", recibosResponse);
+            //console.log("Todos los recibos:", recibosResponse);
             
         } catch (error) {
             setMovimientos([]);

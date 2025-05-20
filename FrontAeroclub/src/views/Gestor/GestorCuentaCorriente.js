@@ -165,6 +165,7 @@ const handlePreviewAndPrint = (rowData) => {
 
     const reciboCombinado = {
       ...recibosAProcesar[0],
+      tipo_recibo: "pagos_unidos",
       numero_recibo: numerosConcatenados,
       importe_total: totalImporte,
       recibos: recibosAProcesar,

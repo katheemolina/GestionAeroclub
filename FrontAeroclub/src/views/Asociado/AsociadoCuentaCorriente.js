@@ -153,13 +153,46 @@ function AsociadoCuentaCorriente() {
     return { ...item, recibo }; // Añade los datos del recibo a cada fila
   });
   
-  //RECIBOS PDF - Importo datos necesarios
-  const handlePreviewAndPrint = (rowData) => {
-    generarReciboPDF(rowData, dataRecibo, recibosTodos);
-    //console.log ("Info de entrada, rowData:",rowData)
-    //console.log ("Recibo filtrado, dataRecibo:",dataRecibo)
-    //console.log ("Todos los recibos, recibosTodos",recibosTodos)
-  };
+const handlePreviewAndPrint = (rowData) => {
+  const descripcion = rowData.descripcion_completa || "";
+  const recibosAsociadosMatch = descripcion.match(/\(([^)]+)\)/); // Extrae "7,25"
+
+  if (recibosAsociadosMatch) {
+    const numerosStr = recibosAsociadosMatch[1];
+    const numeros = numerosStr.split(',').map(n => n.trim());
+
+    const recibosAProcesar = recibosTodos.filter(recibo =>
+      numeros.includes(recibo.numero_recibo?.toString())
+    );
+
+    if (recibosAProcesar.length > 1) {
+      const totalImporte = recibosAProcesar.reduce(
+        (sum, r) => sum + parseFloat(r.importe_total ?? r.importe ?? 0),
+        0
+      );
+
+      const numerosConcatenados = recibosAProcesar.map(r => r.numero_recibo).join(',');
+
+      const reciboCombinado = {
+        ...recibosAProcesar[0],
+        tipo_recibo: "pagos_unidos",
+        numero_recibo: numerosConcatenados,
+        importe_total: totalImporte,
+        recibos: recibosAProcesar,
+        descripcionCuotaSocial: rowData.descripcion_completa || "-",
+        usuario: recibosAProcesar[0].usuario
+      };
+
+      generarReciboPDF(reciboCombinado, null, null, true);
+      return;
+    }
+  }
+
+  // Si no hay múltiples recibos asociados, sigue como antes
+  generarReciboPDF(rowData, dataRecibo, recibosTodos);
+};
+
+
 
   const renderDetalleMovimiento = (movimiento, recibo) => {
     if (!movimiento) return null;

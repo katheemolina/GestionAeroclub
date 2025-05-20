@@ -125,7 +125,7 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
           }
   
           xStart = 10;
-          const rowData = [hora_salida, hora_llegada, origen, destino, parseFloat(duracion).toFixed(1), aterrizajes];
+          const rowData = [hora_salida, hora_llegada, origen, destino, parseFloat(duracion).toFixed(1), aterrizajes || "-"];
           rowData.forEach((data, colIndex) => {
             doc.setFont("helvetica", "normal");
             doc.text(`${data}`, xStart, yStart);
@@ -222,7 +222,7 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       doc.setFont("helvetica", "bold");
       doc.text("Aterrizajes:", 120, yStart);
       doc.setFont("helvetica", "normal");
-      doc.text(`${totalAterrizajes}`, 155, yStart, { align: "right" }); // Valor de aterrizajes
+      doc.text(`${totalAterrizajes || "-"}`, 155, yStart, { align: "right" }); // Valor de aterrizajes
 
       // Línea divisoria
       yStart += 5;
@@ -347,6 +347,42 @@ export const generarReciboPDF = async (rowData, dataRecibo, recibosTodos, modoDi
       yStart += 4;
       doc.setLineWidth(0.5);
       doc.line(10, yStart, 200, yStart);
+
+          } else if (reciboData.tipoRecibo === "pagos_unidos") {
+      let yStart = 74;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+
+      doc.text("Tipo de Recibo:", 20, yStart);
+      doc.setFont("helvetica", "bold");
+      doc.text("Pago de múltiples recibos en conjunto", 80, yStart);
+
+      yStart += 10;
+
+      doc.setFont("helvetica", "normal");
+      doc.text("Descripción:", 20, yStart);
+      const maxWidth = 180;
+      const lineas = doc.splitTextToSize(reciboData.observacionesCuotaSocial, maxWidth);
+      doc.text(lineas, 80, yStart);
+      yStart += lineas.length * 6;
+
+      // Línea divisoria
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+
+      yStart += 10;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("Total a pagar:", 20, yStart);
+      doc.setFontSize(16);
+      doc.text(`$${parseFloat(reciboData.importeTotal).toFixed(2)}`, 80, yStart);
+
+      yStart += 6;
+      doc.setLineWidth(0.5);
+      doc.line(10, yStart, 200, yStart);
+
 
     }
     
