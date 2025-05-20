@@ -237,8 +237,10 @@ function GestorAsociadoCuentaCorriente() {
 
     // Función auxiliar para extraer números de recibo de la descripción
     const extraerNumerosRecibo = (descripcion) => {
-      const match = descripcion.match(/\((\d+)\)/);
-      return match ? match[1] : null;
+      const match = descripcion.match(/\(([^)]+)\)/);
+      return match
+        ? match[1].split(',').map(num => num.trim())
+        : [];
     };
 
     // Función auxiliar para renderizar el estado
@@ -251,12 +253,12 @@ function GestorAsociadoCuentaCorriente() {
     // Si es un pago, buscar los recibos relacionados
     if (movimiento.descripcion_completa?.includes("Pago de recibos:")) {
       const numerosRecibo = extraerNumerosRecibo(movimiento.descripcion_completa);
-      const recibosPagados = recibosTodos.filter(r => r.numero_recibo.toString() === numerosRecibo);
+      const recibosPagados = recibosTodos.filter(r =>numerosRecibo.includes(r.numero_recibo.toString()));
 
       return (
         <div className="details-dialog">
           <div className="details-section">
-            <h3>Pago de recibos: ({numerosRecibo})</h3>
+            <h3>Pago de recibos: ({ numerosRecibo.join(', ') })</h3>
             <div className="details-grid">
               <div className="detail-item">
                 <span className="detail-label">Estado</span>

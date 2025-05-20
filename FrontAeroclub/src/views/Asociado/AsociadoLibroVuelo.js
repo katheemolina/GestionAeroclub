@@ -133,24 +133,28 @@ function AsociadoLibroVuelo() {
 
             <div className="flight-details-grid">
               <div className="detail-card">
-                  <span className="detail-label">Hora Salida</span>
-                  <span className="detail-value">{selectedFlight.hora_salida}</span>
-                </div>
-                <div className="detail-card">
-                  <span className="detail-label">Hora Llegada</span>
-                  <span className="detail-value">{selectedFlight.hora_llegada}</span>
-                </div>
+                <span className="detail-label">Hora Salida</span>
+                <span className="detail-value">{selectedFlight.hora_salida}</span>
+              </div>
+              <div className="detail-card">
+                <span className="detail-label">Hora Llegada</span>
+                <span className="detail-value">{selectedFlight.hora_llegada}</span>
+              </div>
               <div className="detail-card">
                 <span className="detail-label">Tiempo de Vuelo</span>
                 <span className="detail-value">{selectedFlight.tiempo_vuelo}</span>
               </div>
               <div className="detail-card">
-                <span className="detail-label">Aterrizajes</span>
-                <span className="detail-value">{selectedFlight.aterrizajes || '0'}</span>
+                <span className="detail-label">Finalidad</span>
+                <span className="detail-value">{selectedFlight.finalidad}</span>
               </div>
               <div className="detail-card">
                 <span className="detail-label">Instrucción</span>
-                <span className="detail-value">{selectedFlight.instruccion ? 'Sí' : 'No'}</span>
+                <span className="detail-value">{selectedFlight.instruccion}</span>
+              </div>
+              <div className="detail-card">
+                <span className="detail-label">Aterrizajes</span>
+                <span className="detail-value">{selectedFlight.aterrizajes || "0"}</span>
               </div>
               {/*
               <div className="detail-card">

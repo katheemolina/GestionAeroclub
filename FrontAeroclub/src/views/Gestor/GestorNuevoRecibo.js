@@ -436,7 +436,7 @@ function FormularioGestorRecibos() {
                 <input
                     className="input-recibo"
                     type="number"
-                    min={0}
+                    min={1}
                     value={itinerarioData[index]?.aterrizajes || ''}
                     onChange={(e) => handleItinerarioChange(index, 'aterrizajes', e.target.value)}
                 />
@@ -707,29 +707,31 @@ function FormularioGestorRecibos() {
     };
 
 
-    const validarItinerarios = () => {
-        if (!itinerarioData || itinerarioData.length === 0) {
-            toast.warning('Debe haber al menos un itinerario.');
+const validarItinerarios = () => {
+    if (!itinerarioData || itinerarioData.length === 0) {
+        toast.warning('Debe haber al menos un itinerario.');
+        return false;
+    }
+
+    for (let i = 0; i < itinerarioData.length; i++) {
+        const { origen, horaSalida, horaLlegada, destino, aterrizajes } = itinerarioData[i];
+
+        // Validar campos vacíos
+        if (!origen || !horaSalida || !horaLlegada || !destino || aterrizajes === '') {
+            toast.warning(`Completa todos los datos del vuelo ${i + 1}.`);
             return false;
         }
-    
-        for (let i = 0; i < itinerarioData.length; i++) {
-            const { origen, horaSalida, horaLlegada, destino, aterrizajes } = itinerarioData[i];
-    
-            if (!origen || !horaSalida || !horaLlegada || !destino || aterrizajes === '' || aterrizajes < 0) {
-                toast.warning(`Completa todos los datos del vuelo ${i + 1}.`);
-                return false;
-            }
-    
-            // Validar que la hora de salida sea menor a la de llegada
-            //if (horaSalida >= horaLlegada) {
-              //  toast.warning(`La hora de salida debe ser menor a la de llegada en el vuelo ${i + 1}.`);
-              //  return false;
-            //}
+
+        // Validar número de aterrizajes
+        if (isNaN(aterrizajes) || aterrizajes <= 0) {
+            toast.warning(`Los aterrizajes deben ser un número positivo en el vuelo ${i + 1}.`);
+            return false;
         }
-        
-        return true; // Si todo está correcto
-    };
+    }
+
+    return true; // Todos los vuelos son válidos
+};
+
     
 
     

@@ -21,7 +21,7 @@ function GestorVuelos(){
         try {
             // Obtener vuelos
             const vuelosResponse = await obtenerTodosLosItinerarios();
-            console.log("Vuelos:", vuelosResponse)
+            //console.log("Vuelos:", vuelosResponse)
             setData(vuelosResponse);
             
         } catch (error) {
@@ -176,7 +176,7 @@ function GestorVuelos(){
                 </div>
                 <div className="detail-card">
                   <span className="detail-label">Aterrizajes</span>
-                  <span className="detail-value">{selectedRowData.aterrizajes}</span>
+                  <span className="detail-value">{selectedRowData.aterrizajes || "0"}</span>
                 </div>
               </div>
             </div>

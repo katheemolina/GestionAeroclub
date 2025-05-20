@@ -218,8 +218,7 @@ const handlePreviewAndPrint = (rowData) => {
     if (movimiento.descripcion_completa?.includes("Pago de recibos:")) {
       
       const numerosRecibo = extraerNumerosRecibo(movimiento.descripcion_completa); // ej. ['10','5']
-      const recibosPagados = dataRecibos.filter(r =>
-    numerosRecibo.includes(r.numero_recibo.toString()));
+      const recibosPagados = dataRecibos.filter(r =>numerosRecibo.includes(r.numero_recibo.toString()));
 
 
       return (
