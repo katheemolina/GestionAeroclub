@@ -257,7 +257,44 @@ const extraerNumerosRecibo = (descripcion) => {
     }
 
     // Si no es un pago, mostrar según el tipo de recibo
-    if (!recibo) return null;
+    if (!recibo) {
+      if (movimiento.descripcion_completa && (movimiento.descripcion_completa.toLowerCase().includes("instruccion") || movimiento.descripcion_completa.toLowerCase().includes("liquidacion"))) 
+          {
+            return (
+
+              
+                <div className="details-dialog">
+            <div className="details-section">
+              <h3>{movimiento.descripcion_completa}</h3>
+              <div className="cuota-info">
+                <div className="detail-item">
+                  <span className="detail-label">Estado</span>
+                  <span className="detail-value">{renderEstado(movimiento.estado)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Fecha</span>
+                  <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Importe</span>
+                  <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+                </div>
+              </div>
+              <div className="observaciones-section">
+                <span className="observaciones-label">Observaciones</span>
+                <p className="observaciones-value">{movimiento.observaciones || "Ninguna"}</p>
+              </div>
+            </div>
+          </div>
+
+            )
+          }
+
+    } 
+
+     
+
+    
 
     switch (recibo.tipo_recibo) {
       case "cuota_social":
@@ -447,6 +484,20 @@ const extraerNumerosRecibo = (descripcion) => {
             body={plantillaFecha} // Aplica la plantilla personalizada para mostrar el formato deseado
           />
           <Column field="descripcion_completa" header="Descripción" sortable filter filterPlaceholder="Buscar por descripción" filterMatchMode="contains" showFilterMenu={false} />
+          <Column
+                      field="estado"
+                      header="Estado"
+                      sortable
+                      filter
+                      filterPlaceholder="Buscar por estado"
+                      filterMatchMode="contains"
+                      showFilterMenu={false}
+                      body={(rowData) => (
+                              <span style={{ color: rowData.estado === "Pago" ? 'green' : 'red', fontWeight: 'bold' }}>
+                                  {rowData.estado}
+                              </span>
+                          )}
+                    />
           <Column field="importe" header="Importe" sortable body={(rowData) => formatoMoneda(rowData.importe)} filter filterPlaceholder="Buscar por importe" filterMatchMode="contains" showFilterMenu={false} />
           <Column
             header="Acciones"

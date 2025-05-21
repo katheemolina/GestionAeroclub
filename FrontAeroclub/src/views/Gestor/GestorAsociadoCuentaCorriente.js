@@ -94,11 +94,12 @@ function GestorAsociadoCuentaCorriente() {
 
   const openDialog = async (rowData) => {
     setSelectedRowData(rowData);
-  
+    //console.log(rowData)
     if (rowData.tipo !== "pago") {
       try {
         const detalles = await obtenerCuentaCorrienteAeroclubDetalle(rowData.id_movimiento);
         // Buscar el recibo correspondiente
+        //console.log(detalles)
         const reciboEncontrado = dataRecibo.find(recibo => recibo.id_movimiento === rowData.id_movimiento);
         if (reciboEncontrado) {
           setSelectedRowData({...rowData, recibo: reciboEncontrado});
@@ -235,6 +236,8 @@ function GestorAsociadoCuentaCorriente() {
   const renderDetalleMovimiento = (movimiento, recibo) => {
     if (!movimiento) return null;
 
+    
+
     // Función auxiliar para extraer números de recibo de la descripción
     const extraerNumerosRecibo = (descripcion) => {
       const match = descripcion.match(/\(([^)]+)\)/);
@@ -305,6 +308,41 @@ function GestorAsociadoCuentaCorriente() {
       if (reciboEncontrado) {
         recibo = reciboEncontrado;
       } else {
+
+        if (movimiento.descripcion_completa && (movimiento.descripcion_completa.toLowerCase().includes("instruccion") || movimiento.descripcion_completa.toLowerCase().includes("liquidacion"))) 
+          {
+            return (
+
+              
+                <div className="details-dialog">
+            <div className="details-section">
+              <h3>{movimiento.descripcion_completa}</h3>
+              <div className="cuota-info">
+                <div className="detail-item">
+                  <span className="detail-label">Estado</span>
+                  <span className="detail-value">{renderEstado(movimiento.estado)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Fecha</span>
+                  <span className="detail-value">{formatearFecha(movimiento.fecha)}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Importe</span>
+                  <span className="detail-value importe-value">{formatoMoneda(movimiento.importe)}</span>
+                </div>
+              </div>
+              <div className="observaciones-section">
+                <span className="observaciones-label">Observaciones</span>
+                <p className="observaciones-value">{movimiento.observaciones || "Ninguna"}</p>
+              </div>
+            </div>
+          </div>
+
+            )
+          }
+
+
+
         return null;
       }
     }
@@ -551,6 +589,11 @@ function GestorAsociadoCuentaCorriente() {
             filterPlaceholder="Buscar por estado"
             filterMatchMode="contains"
             showFilterMenu={false}
+            body={(rowData) => (
+                    <span style={{ color: rowData.estado === "Pago" ? 'green' : 'red', fontWeight: 'bold' }}>
+                        {rowData.estado}
+                    </span>
+                )}
           />
           <Column
             field="importe"

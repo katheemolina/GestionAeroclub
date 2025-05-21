@@ -513,6 +513,20 @@ const handlePreviewAndPrint = (rowData) => {
           showFilterMenu={false}
           style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
         />
+        {/* <Column
+                    field="estado"
+                    header="Estado"
+                    sortable
+                    filter
+                    filterPlaceholder="Buscar por estado"
+                    filterMatchMode="contains"
+                    showFilterMenu={false}
+                    body={(rowData) => (
+                            <span style={{ color: rowData.estado === "Pago" ? 'green' : 'red', fontWeight: 'bold' }}>
+                                {rowData.estado}
+                            </span>
+                        )}
+                  /> */}
         <Column
           field="importe"
           header="Importe"
