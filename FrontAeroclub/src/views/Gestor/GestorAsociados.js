@@ -18,6 +18,8 @@ import './Styles/GestorAsociados.css';
 import { useNavigate } from 'react-router-dom';
 import PantallaCarga from '../../components/PantallaCarga';
 import { Checkbox } from 'primereact/checkbox';
+import '../../components/styles/DialogConfirmacion.css'
+
 
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
@@ -345,33 +347,46 @@ const GestorAsociados  = () => {
             </DataTable>
             
              {/* Dialogo de confirmación para habilitar */}
-             <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showEnableConfirmDialog} style={{ width: '350px' }} modal footer={
-                <>
+             <Dialog 
+                header="Confirmar" 
+                className="dialogConfirmar" 
+                visible={showEnableConfirmDialog} 
+                style={{ width: '400px' }} 
+                modal 
+                footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
                     <Button label="Cancelar" className="p-button-text gestor-btn-cancelar" icon="pi pi-times" onClick={() => setShowEnableConfirmDialog(false)}/>
-                    <Button label="Confirmar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleHabilitarUsuario} autoFocus />
-                </>
+                    <Button label="Habilitar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleHabilitarUsuario} autoFocus />
+                </div>
             } onHide={() => setShowEnableConfirmDialog(false)}>
-                <p>¿Está seguro de que desea habilitar este usuario?</p>
+                <p>¿Está seguro de que desea <b>habilitar este usuario</b>?</p>
             </Dialog>
             
             {/* Dialogo de confirmación para deshabilitar */}
-            <Dialog header="Confirmar"  className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
-                <>
-                    <Button label="Cancelar" className="p-button-text gestor-btn-cancelar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} />
-                    <Button label="Confirmar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleDeshabilitarUsuario} autoFocus />
-                </>
+            <Dialog 
+                header="Confirmar"  
+                className="dialogConfirmar" 
+                visible={showConfirmDialog} 
+                style={{ width: '400px' }} 
+                modal 
+                footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                    <Button label="Cancelar" className="gestor-btn-confirmar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} />
+                    <Button label="Deshabilitar" className="p-button-text gestor-btn-cancelar" icon="pi pi-check" onClick={handleDeshabilitarUsuario} autoFocus />
+                </div>
             } onHide={() => setShowConfirmDialog(false)}>
-                <p>¿Está seguro de que desea deshabilitar este usuario?</p>
+                <p>¿Está seguro de que desea <b>deshabilitar este usuario</b>?</p>
             </Dialog>
             
             {/* Dialogo para el cambio de roles */}
             <Dialog 
+                className='dialogConfirmar'
                 header="Cambio de Roles" 
                 visible={showRoleDialog} 
                 style={{ width: '400px' }} 
                 modal 
                 footer={
-                    <>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
                         <Button 
                             label="Cancelar" 
                             icon="pi pi-times" 
@@ -385,7 +400,7 @@ const GestorAsociados  = () => {
                             autoFocus 
                             className="gestor-btn-confirmar"
                         />
-                    </>
+                    </div>
                 } 
                 onHide={() => setShowRoleDialog(false)}
             >

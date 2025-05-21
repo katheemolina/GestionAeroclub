@@ -10,14 +10,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Dialog } from 'primereact/dialog';
+import '../../components/styles/DialogConfirmacion.css'
 
 function AdministradorRecibos({ idUsuario = 0 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtroEstado, setFiltroEstado] = useState(null);
-   const [estadoFiltro, setEstadoFiltro] = useState(null);
-   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-   const [selectedRecibo, setselectedRecibo] = useState(null);
+  const [estadoFiltro, setEstadoFiltro] = useState(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedRecibo, setselectedRecibo] = useState(null);
+   
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,14 +179,18 @@ const dt = useRef(null);
           )}
         />
       </DataTable>
-      <Dialog header="Confirmar"  className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
-                      <>
-                          <Button label="Cancelar" className="p-button-text gestor-btn-cancelar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} />
-                          <Button label="Confirmar" className="gestor-btn-confirmar" icon="pi pi-check" onClick={handleAnularRecibo} autoFocus />
-                      </>
-                  } onHide={() => setShowConfirmDialog(false)}>
-                      <p>¿Está seguro de que desea anular este recibo?</p>
-                  </Dialog>
+      <Dialog 
+        header="Confirmar"  
+        className="dialogConfirmar" 
+        visible={showConfirmDialog} style={{ width: '400px' }} 
+        modal footer={
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+              <Button label="Cancelar" className="gestor-btn-confirmar" icon="pi pi-times" onClick={() => setShowConfirmDialog(false)} autoFocus />
+              <Button label="Anular" className="p-button-text gestor-btn-cancelar" icon="pi pi-check" onClick={handleAnularRecibo} />
+          </div>
+        } onHide={() => setShowConfirmDialog(false)}>
+          <p>¿Está seguro de que desea <b>anular este recibo?</b></p>
+      </Dialog>
     </div>
   );
 }

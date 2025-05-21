@@ -22,6 +22,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import PrintIcon from '@mui/icons-material/Print';
 import { generarReciboPDF } from "../generarRecibosPDF";
+import '../../components/styles/DialogConfirmacion.css'
 
 
 function GestorAsociadoCuentaCorriente() {
@@ -530,20 +531,22 @@ function GestorAsociadoCuentaCorriente() {
           label="Procesar movimientos seleccionados"
           onClick={() => setConfirmDialogVisible(true)}
           disabled={selectedMovimientos.length === 0}
-          className="procesar-button"
+          className="nuevo gestor-btn-confirmar"
         />
         <Dialog
-          header="Confirmar procesamiento"
+          header="Confirmar"
+          className='dialogConfirmar'
           visible={confirmDialogVisible}
           onHide={() => setConfirmDialogVisible(false)}
+          style={{width:'400px'}}
           footer={
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
               <Button label="Cancelar" icon="pi pi-times" onClick={() => setConfirmDialogVisible(false)} className="p-button-text" />
-              <Button label="Confirmar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} />
+              <Button label="Procesar" icon="pi pi-check" onClick={handleEnviarSeleccionados} style={{ backgroundColor: 'green', color: 'white' }} autoFocus/>
             </div>
           }
         >
-          <p>¿Está seguro de que desea procesar los movimientos seleccionados?</p>
+          <p>¿Está seguro de que desea <b>procesar los movimientos seleccionados</b>?</p>
         </Dialog>
 
         <DataTable

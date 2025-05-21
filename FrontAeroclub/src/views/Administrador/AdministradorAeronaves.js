@@ -17,6 +17,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import { Dropdown } from 'primereact/dropdown';
+import '../../components/styles/DialogConfirmacion.css'
 
 
 
@@ -216,21 +217,23 @@ const AeronaveCrud = () => {
             </DataTable>
 
             <Dialog
-                header="Confirmación"
+                header="Confirmar"
+                className='dialogConfirmar'
                 visible={estadoDialog}
                 onHide={() => setEstadoDialog(false)}
-                style={{ width: '450px' }}
+                style={{ width: '400px' }}
                 footer={
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
                         <Button label="Cancelar" icon="pi pi-times" onClick={() => setEstadoDialog(false)} className="gestor-btn-cancelar" />
-                        <Button label="Confirmar" icon="pi pi-check" onClick={handleCambiarEstado} className="gestor-btn-confirmar" />
+                        <Button label="Cambiar" icon="pi pi-check" onClick={handleCambiarEstado} className="gestor-btn-confirmar" />
                     </div>
-                } > <p>¿Está seguro de que desea cambiar el estado de esta aeronave?</p>
+                } > <p>¿Está seguro de que desea <b>cambiar el estado de esta aeronave</b>?</p>
             </Dialog>
 
 
             <Dialog
-                header="Confirmación"
+                header="Confirmar"
+                className='dialogConfirmar'
                 visible={deleteDialogVisible}
                 onHide={closeDeleteDialog}
                 style={{ width: '400px' }}
@@ -240,18 +243,18 @@ const AeronaveCrud = () => {
                             label="Cancelar" 
                             icon="pi pi-times" 
                             onClick={closeDeleteDialog} 
-                            className="gestor-btn-cancelar" 
+                            className="gestor-btn-confirmar" 
                         />
                         <Button 
                             label="Eliminar" 
                             icon="pi pi-check" 
                             onClick={handleDeleteAeronave} 
-                            className="gestor-btn-confirmar" 
+                            className="gestor-btn-cancelar" 
                         />
                     </div>
                 }
             >
-                <p>¿Está seguro de que desea eliminar la aeronave "{aeronaveToDelete?.modelo}"?</p>
+                <p>¿Está seguro de que desea <b>eliminar la aeronave "{aeronaveToDelete?.modelo}"</b>?</p>
             </Dialog>
 
             <Dialog header="Detalles de la Aeronave" visible={dialogVisible} style={{ width: '400px' }} onHide={closeDialog}>

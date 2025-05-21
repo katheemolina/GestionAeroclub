@@ -14,6 +14,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Dropdown } from 'primereact/dropdown'; // P
 import { Dialog } from 'primereact/dialog';
+import '../../components/styles/DialogConfirmacion.css'
 
 import { IconButton, Tooltip } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
@@ -341,36 +342,36 @@ function GestorRecibos({ idUsuario = 0 }) {
       </DataTable>
 
       <Dialog
-  header="Confirmar"
-  className="modal-confirmar-habilitacion"
-  visible={showConfirmDialog}
-  style={{ width: '350px' }}
-  modal
-  footer={
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
-      <Button
-        label="Cancelar"
-        className="gestor-btn-cancelar"
-        icon="pi pi-times"
-        style={{ marginRight: '10px' }}
-        onClick={() => setShowConfirmDialog(false)}
-      />
-      <Button
-        label="Confirmar"
-        className="p-button-secondary gestor-btn-confirmar"
-        icon="pi pi-check"
-        onClick={() => {
-          handleEnviarSeleccionados();
-          setShowConfirmDialog(false);
-        }}
-        autoFocus
-      />
-    </div>
-  }
-  onHide={() => setShowConfirmDialog(false)}
->
-  <p>¿Está seguro de que desea realizar el pago de los recibos seleccionados?</p>
-</Dialog>
+        header="Confirmar"
+        className="dialogConfirmar"
+        visible={showConfirmDialog}
+        style={{ width: '400px' }}
+        modal
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+            <Button
+              label="Cancelar"
+              className="gestor-btn-cancelar"
+              icon="pi pi-times"
+              style={{ marginRight: '10px' }}
+              onClick={() => setShowConfirmDialog(false)}
+            />
+            <Button
+              label="Confirmar"
+              className="p-button-secondary gestor-btn-confirmar"
+              icon="pi pi-check"
+              onClick={() => {
+                handleEnviarSeleccionados();
+                setShowConfirmDialog(false);
+              }}
+              autoFocus
+            />
+          </div>
+        }
+        onHide={() => setShowConfirmDialog(false)}
+      >
+        <p>¿Está seguro de que desea <b>realizar el pago de los recibos seleccionados</b>?</p>
+      </Dialog>
 
     
     </div>

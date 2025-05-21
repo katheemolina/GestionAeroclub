@@ -13,6 +13,8 @@ import './Styles/GestorGenerarCuotasSociales.css'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+import '../../components/styles/DialogConfirmacion.css'
+
 
 const GestorGenerarCuotasSociales = () => {
     const [loading, setLoading] = useState(false);
@@ -184,22 +186,22 @@ const GestorGenerarCuotasSociales = () => {
                 </div>
             </div>
 
-            <Dialog header="Confirmar" className="modal-confirmar-habilitacion" visible={showConfirmDialog} style={{ width: '350px' }} modal footer={
-                <>
+            <Dialog header="Confirmar" className="dialogConfirmar" visible={showConfirmDialog} style={{ width: '400px' }} modal footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
                     <Button label="Cancelar" 
-                      className="p-button-text gestor-btn-cancelar" 
-                      icon="pi pi-times" 
-                      onClick={() => setShowConfirmDialog(false)}/>
-                    <Button label="Confirmar" 
-                      className="gestor-btn-confirmar" 
+                        className="p-button-text gestor-btn-cancelar" 
+                        icon="pi pi-times" 
+                        onClick={() => setShowConfirmDialog(false)}/>
+                    <Button label="Generar" 
+                        className="gestor-btn-confirmar" 
                         icon="pi pi-check"
                         onClick={() => {
-                          handleSubmit();
-                          setShowConfirmDialog(false);
+                            handleSubmit();
+                            setShowConfirmDialog(false);
                         }} autoFocus />
-                </>
+                </div>
             } onHide={() => setShowConfirmDialog(false)}>
-                <p>¿Está seguro de que desea generar las cuotas sociales?</p>
+                <p>¿Está seguro de que desea <b>generar las cuotas sociales</b>?</p>
             </Dialog>
         </div>
         

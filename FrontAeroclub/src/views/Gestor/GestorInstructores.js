@@ -21,6 +21,8 @@ import { Dropdown } from 'primereact/dropdown';
 import './Styles/GestorAsociados.css';
 import PantallaCarga from '../../components/PantallaCarga';
 
+import '../../components/styles/DialogConfirmacion.css'
+
 const GestorAsociados = () => {
     const [instructores, setInstructores] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -144,6 +146,7 @@ const GestorAsociados = () => {
 
             <Dialog
                 visible={dialogOpen}
+                className='dialogConfirmar'
                 onHide={() => setDialogOpen(false)}
                 header="Modificar Tarifa Especial"
                 style={{ width: '450px'}}
