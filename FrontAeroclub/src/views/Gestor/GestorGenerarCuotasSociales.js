@@ -86,15 +86,22 @@ const GestorGenerarCuotasSociales = () => {
 
     // Fetch tarifas data from the API
     const fetchCuotasSociales = async () => {
-        try {
-            const data = await obtenerCSGeneradas();
-            //console.log(data)
-            setCuotasSociales(data.data);
-        } catch (error) {
-            console.error('Error fetching tarifas:', error);
-        }
-        setLoading(false);
-    };
+    try {
+        const data = await obtenerCSGeneradas();
+
+        const dataOrdenada = [...data.data].sort((a, b) => {
+            const periodoA = a.periodo?.slice(2) + a.periodo?.slice(0, 2); // YYYYMM
+            const periodoB = b.periodo?.slice(2) + b.periodo?.slice(0, 2);
+            return periodoB.localeCompare(periodoA); // Orden descendente
+        });
+
+        setCuotasSociales(dataOrdenada);
+    } catch (error) {
+        console.error('Error fetching tarifas:', error);
+    }
+    setLoading(false);
+};
+
 
     useEffect(() => {
         fetchCuotasSociales();
