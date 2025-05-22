@@ -19,6 +19,7 @@ import { useUser } from '../../context/UserContext';
 import { armarLiquidacionApi } from '../../services/generarReciboApi';
 import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
+import '../../components/styles/DialogConfirmacion.css'
 
 const GestorArmarLiquidacionInstructores = () => {
     const [movimientos, setMovimientos] = useState([]);
@@ -424,9 +425,9 @@ const GestorArmarLiquidacionInstructores = () => {
 
             <Dialog
                 header="Confirmar"
-                className="modal-confirmar-habilitacion"
+                className="dialogConfirmar"
                 visible={showConfirmDialog}
-                style={{ width: '350px' }}
+                style={{ width: '400px' }}
                 modal
                 footer={
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
@@ -451,7 +452,7 @@ const GestorArmarLiquidacionInstructores = () => {
                 }
                 onHide={() => setShowConfirmDialog(false)}
             >
-                <p>¿Está seguro de que desea ejecutar las liquidaciones indicadas?</p>
+                <p>¿Está seguro de que desea <b>ejecutar las liquidaciones indicadas</b>?</p>
             </Dialog>
 
             <Dialog

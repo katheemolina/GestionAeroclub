@@ -23,6 +23,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import BuildIcon from '@mui/icons-material/Build';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
+import '../../components/styles/DialogConfirmacion.css'
 
 
 
@@ -654,9 +655,12 @@ const handleSave = async () => {
                 } > <p>¿Está seguro de que desea cambiar el estado de esta aeronave?</p>
             </Dialog>
 
-           
-
-            <Dialog c visible={polizaDialog} onHide={() => setPolizaDialog(false)} header="Actualizar Póliza"
+        
+            <Dialog 
+                c visible={polizaDialog} 
+                onHide={() => setPolizaDialog(false)} 
+                header="Actualizar Póliza"
+                className='dialogConfirmar'
                 footer={<Button className='gestor-btn-confirmar' label="Actualizar" onClick={handleActualizarPoliza} />}>
                 <div className="p-field">   
                     <label htmlFor="aseguradora">Aseguradora</label>
@@ -689,10 +693,12 @@ const handleSave = async () => {
                 </div> 
             </Dialog>
 
-            <Dialog visible={intervaloDialog} 
-                    onHide={() => setIntervaloDialog(false)} 
-                    header="Actualizar Intervalo de Inspección"
-                    footer={<Button className='gestor-btn-confirmar' label="Actualizar" onClick={handleActualizarIntervalo}  />}>
+            <Dialog 
+                visible={intervaloDialog} 
+                onHide={() => setIntervaloDialog(false)} 
+                header="Actualizar Intervalo de Inspección"
+                className='dialogConfirmar'
+                footer={<Button className='gestor-btn-confirmar' label="Actualizar" onClick={handleActualizarIntervalo}  />}>
                 <div className="p-field">
                         <label htmlFor="intervalo_inspeccion">Intervalo de Inspección (Horas)</label>
                         <InputText

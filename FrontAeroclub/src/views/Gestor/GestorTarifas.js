@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MultiSelect } from 'primereact/multiselect';
+import '../../components/styles/DialogConfirmacion.css'
 
 
 
@@ -404,7 +405,8 @@ const dateHastaBodyTemplate = (rowData) => {
             </Dialog>
 
             <Dialog
-                header="Confirmación"
+                header="Confirmar"
+                className="dialogConfirmar"
                 visible={deleteDialog}
                 onHide={() => setDeleteDialog(false)}
                 style={{ width: '400px' }}
@@ -414,7 +416,7 @@ const dateHastaBodyTemplate = (rowData) => {
                         <Button className='p-button-secondary gestor-btn-cancelar' style={{marginRight: '0'}} label="Eliminar" icon="pi pi-check" onClick={handleDelete}/>
                     </div>
                 }>
-                <p>¿Está seguro que desea eliminar esta tarifa?</p>
+                <p>¿Está seguro que desea <b>eliminar esta tarifa?</b></p>
             </Dialog>
 
 

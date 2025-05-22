@@ -168,29 +168,7 @@
 }
 
 /* Estilos para el botón de procesar */
-.procesar-button {
-  margin: 1rem 0;
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
-.procesar-button:hover {
-  background-color: #45a049;
-}
-
-.procesar-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
 
 /* Estilos para el header */
 .header {

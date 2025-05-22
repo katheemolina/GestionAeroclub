@@ -14,6 +14,10 @@
     background-color: var(--action-positive-hover);
 }
 
+.gestor-btn-confirmar:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 .modal-confirmar-habilitacion .p-dialog-content{
     padding-top: 10px;
     padding-bottom: 20px;

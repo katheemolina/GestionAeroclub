@@ -91,13 +91,54 @@ function AsociadoLibroVuelo() {
       </header>
       <ToastContainer/>
       <KpiBox data={kpiData} />
-      <DataTable value={data} paginator rows={15} scrollable scrollHeight="800px">
-        <Column field="fecha" header="Fecha" sortable body={plantillaFecha}/>
-        <Column field="matricula" header="Aeronave" sortable />
-        <Column field="origen" header="Origen" sortable />
-        <Column field="destino" header="Destino" sortable />
-        <Column field="tiempo_vuelo" header="Tiempo de vuelo" sortable filter filterPlaceholder="Buscar por tiempo de vuelo" filterMatchMode="contains" showFilterMenu={false}
-                    body={(rowData) => `${rowData.tiempo_vuelo} hs`}   ></Column>
+      <DataTable value={data} paginator rows={15} scrollable scrollHeight="800px" filterDisplay="row">
+        <Column 
+          field="fecha" 
+          header="Fecha" 
+          sortable 
+          filter
+          filterPlaceholder="Buscar por fecha"
+          filterMatchMode="contains"
+          dataType="date"
+          filterType='date'
+          showFilterMenu={false}
+          body={plantillaFecha}/>
+        <Column 
+          field="matricula" 
+          header="Aeronave" 
+          sortable 
+          filter
+          filterPlaceholder="Buscar por aeronave"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          />
+        <Column 
+          field="origen" 
+          header="Origen" 
+          sortable 
+          filter
+          filterPlaceholder="Buscar por origen"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          />
+        <Column 
+          field="destino" 
+          header="Destino" 
+          sortable 
+          filter
+          filterPlaceholder="Buscar por destino"
+          filterMatchMode="contains"
+          showFilterMenu={false}
+          />
+        <Column 
+          field="tiempo_vuelo" 
+          header="Tiempo de vuelo" 
+          sortable 
+          filter 
+          filterPlaceholder="Buscar por tiempo de vuelo" 
+          filterMatchMode="contains" 
+          showFilterMenu={false}
+          body={(rowData) => `${rowData.tiempo_vuelo} hs`}   ></Column>
         <Column body={actionTemplate} header="Acciones" style={{ width: '80px' }} />
       </DataTable>
 

@@ -120,7 +120,7 @@
   background: #f8f9fa;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .p-dialog .p-dialog-content {
@@ -128,7 +128,7 @@
 }
 
 .p-dialog .p-dialog-header .p-dialog-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #2c3e50;
   font-weight: 600;
 }
