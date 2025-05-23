@@ -150,7 +150,7 @@ const GestorAeronavesServicios = () => {
                 setServicios([...servicios, servicioConFecha]);
     
                 setSelectedRowData(servicioConFecha);
-    
+                
                 toast.success("Servicio agregado correctamente.");
 
                 setTriggerEffect(!triggerEffect);  // Esto cambia el valor y dispara el useEffect

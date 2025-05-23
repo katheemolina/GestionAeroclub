@@ -11,29 +11,44 @@ export const obtenerDatosDelUsuario = async (idUsuario) => {
 
 // Función para obtener el estado del CMA de un usuario
 export const obtenerEstadoCMA = async (idUsuario) => {
+  try {
     const response = await fetch(`${API_URL}/usuarios/${idUsuario}/cma`);
     if (!response.ok) {
-        throw new Error('Error al obtener el estado del CMA');
+      return {}; // Devuelve un objeto vacío si la respuesta no es exitosa
     }
-    return response.json();
+    const data = await response.json();
+    return data ?? {}; // Devuelve el contenido o un objeto vacío si viene null/undefined
+  } catch (error) {
+    return {}; // Si hay error de red u otro, devuelve objeto vacío
+  }
 };
 
 // Función para obtener los tipos de licencias de la base
 export const obtenerLicencias = async () => {
-    const response = await fetch(`${API_URL}/licencias`)
+  try {
+    const response = await fetch(`${API_URL}/licencias`);
     if (!response.ok) {
-        throw new Error('Error al obtener las licencias');
+      return []; // Si la respuesta no es exitosa, devolvés un array vacío
     }
-    return response.json();
-}
+    const data = await response.json();
+    return Array.isArray(data) ? data : []; // Por si la respuesta no es un array
+  } catch (error) {
+    return []; // Si hay un error de red u otro, devolvés un array vacío
+  }
+};
 
 // Función para obtener las licencias de un usuario
 export const obtenerLicenciasPorUsuario = async (idUsuario) => {
+  try {
     const response = await fetch(`${API_URL}/usuarios/${idUsuario}/licencias`);
     if (!response.ok) {
-        throw new Error('Error al obtener las licencias del usuario');
+      return []; // No lanza error, no loguea nada
     }
-    return response.json();
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    return []; // Silenciosamente devuelve un array vacío si hay error
+  }
 };
 
 

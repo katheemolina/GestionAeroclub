@@ -52,7 +52,6 @@ function Dashboard() {
 
         //console.log("Hora por usuario: ",horasResponse)
 
-
         const usuario = usuarioResponse?.[0] || {};
         const saldoData = saldoResponse?.[0] || {};
         const horasData = horasResponse?.[0] || {};
@@ -96,8 +95,6 @@ function Dashboard() {
     return `${fechaFormateada} ${horaParte}`;
   };
   
-  
-
   const cmaClass = useMemo(() => userData.cma === 'Vigente' ? 'cma-vigente' : 'cma-no-vigente', [userData.cma]);
 
   if (loading) {
