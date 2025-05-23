@@ -91,7 +91,7 @@ const GestorAeronavesServicios = () => {
             // Obtener el listado de aeronaves y buscar la correspondiente
             obtenerAeronaves().then((aeronaves) => {
                 const aeronaveSeleccionada = aeronaves.find(a => a.id_aeronave === id_aeronave);
-                console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
+                //console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
                 if (aeronaveSeleccionada) {
                     setAeronave(aeronaveSeleccionada); // Establecer la aeronave seleccionada en el estado
                     // Calcular las horas voladas: horas_historicas_voladas + horas_vuelo_aeronave
@@ -145,7 +145,7 @@ const GestorAeronavesServicios = () => {
                 setServicios([...servicios, servicioConFecha]);
     
                 setSelectedRowData(servicioConFecha);
-    
+                
                 toast.success("Servicio agregado correctamente.");
 
                 setTriggerEffect(!triggerEffect);  // Esto cambia el valor y dispara el useEffect
