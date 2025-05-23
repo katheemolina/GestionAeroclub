@@ -94,14 +94,15 @@
   }
 
 /* Estilo al pasar el ratón sobre un enlace */
-/* .sidebar-navbar-link:hover {
-    color: var(--brand-color); 
-    background-color: var(--brand-color-light); Fondo rojo cuando se pasa el ratón
-    transform: scale(1.05); Agranda el botón un 5%
-} */
+.sidebar-navbar-link:hover {
+    color: white; 
+    transform: scale(1.05);
+     
+    
+}
 
-/* .sidebar-navbar-link.active {
-    background-color: var(--brand-color); Color de fondo cuando el botón está activo
-    color: white; Color del texto en el botón activo
-    font-weight: bold; Opcional: para resaltar más el botón
-} */
+ .sidebar-navbar-link.active {
+    background-color: var(--brand-color-dark);
+    color: white; 
+    font-weight: bold; 
+} 

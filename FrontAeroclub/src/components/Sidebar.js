@@ -70,15 +70,15 @@ function Sidebar() {
         <BotonesPorRol />
         <div className="sidebar-navbar">
           <p style={{ padding: '1rem', color: '#888' }}>Esperando que selecciones un rol...</p>
-        </div>
-        <div className="logout-fixed">
+        
           <Boton
             icon={<LogoutIcon />}
             texto="Cerrar Sesión"
-            estilos="logout-button"
+            estilos="sidebar-navbar-link"
             logout={true}
-          />
-        </div>
+            />
+        
+            </div>
       </div>
     );
   }
