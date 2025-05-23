@@ -24,10 +24,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const GestorAeronavesServicios = () => {
     const location = useLocation();
     const { id_aeronave } = location.state || {};
-     const [aeronave, setAeronave] = useState(null);
-     const [servicios, setServicios] = useState([]); // Estado para los servicios de la aeronave
-     const [loading, setLoading] = useState(true); // Estado para manejar la carga de datos
-     const [mostrarDialog, setMostrarDialog] = useState(false); // Estado para mostrar el dialog
+    const [aeronave, setAeronave] = useState(null);
+    const [servicios, setServicios] = useState([]); // Estado para los servicios de la aeronave
+    const [loading, setLoading] = useState(true); // Estado para manejar la carga de datos
+    const [mostrarDialog, setMostrarDialog] = useState(false); // Estado para mostrar el dialog
     const [servicioData, setServicioData] = useState({
         fecha: '',
         horas_anteriores: 0,
@@ -91,7 +91,7 @@ const GestorAeronavesServicios = () => {
             // Obtener el listado de aeronaves y buscar la correspondiente
             obtenerAeronaves().then((aeronaves) => {
                 const aeronaveSeleccionada = aeronaves.find(a => a.id_aeronave === id_aeronave);
-                console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
+                //console.log("Aeronave Seleccionada: ",aeronaveSeleccionada)
                 if (aeronaveSeleccionada) {
                     setAeronave(aeronaveSeleccionada); // Establecer la aeronave seleccionada en el estado
                     // Calcular las horas voladas: horas_historicas_voladas + horas_vuelo_aeronave
@@ -135,7 +135,12 @@ const GestorAeronavesServicios = () => {
 
      // Función para manejar la inserción del servicio
      const handleSubmit = () => {
-        insertarServicio(servicioData)
+
+    const servicioAGuardar = {
+        ...servicioData,
+        observaciones: servicioData.observaciones || 'Ninguna', // Asegura que nunca sea undefined
+    };
+        insertarServicio(servicioAGuardar)
             .then((newServicio) => {
                 const servicioConFecha = {
                     ...newServicio,
@@ -255,7 +260,8 @@ const GestorAeronavesServicios = () => {
                         <InputText 
                             name="observaciones" 
                             value={servicioData.observaciones} 
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
+                            placeholder="Ninguna"
                         />
                     </div>
 

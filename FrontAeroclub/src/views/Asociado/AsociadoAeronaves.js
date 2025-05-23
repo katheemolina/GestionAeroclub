@@ -153,11 +153,17 @@ const AeronaveCrud = () => {
                 <Column 
                     field="horas_para_inspeccion" 
                     header="Hs próximo service" 
-                    sortable filter filterPlaceholder="Buscar por horas" 
+                    sortable 
+                    filter 
+                    filterPlaceholder="Buscar por horas" 
                     filterMatchMode="contains" 
                     showFilterMenu={false} 
-                    showClearButton={false} 
+                    showClearButton={false}
+                    body={(rowData) => `${parseFloat(rowData.horas_para_inspeccion).toFixed(1)} hs`}
                 />
+
+
+
                 <Column sortable filter showFilterMenu={false} field="estado" header="Estado" body={estadoTemplate} filterElement={(options) => (
                     <Dropdown value={estadoFiltro} options={OpcionesEstados} onChange={(e) => onEstadoChange(e, options)} placeholder="Seleccione un estado" 
                         style={{ width: '100%', height: '40px',  padding: '10px'}}/>)}/>
