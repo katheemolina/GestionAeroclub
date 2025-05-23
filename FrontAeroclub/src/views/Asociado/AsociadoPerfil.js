@@ -231,6 +231,12 @@ const handleSubmit = async (e) => {
   try {
     await actualizarDatosDelUsuario(usuarioId, formData);
     toast.success("Datos actualizados correctamente");
+    
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+
 
     // Vuelve a cargar los datos del usuario sin recargar la página
     await fetchData();
